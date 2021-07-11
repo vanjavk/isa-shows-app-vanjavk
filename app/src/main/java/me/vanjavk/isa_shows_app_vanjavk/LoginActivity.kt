@@ -31,16 +31,6 @@ class LoginActivity : AppCompatActivity(){
         binding.loginButton.setOnClickListener {
 
 
-            if (etLoginUsername.length() < 1) {
-                Toast.makeText(this, "Please enter username.", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            if (etLoginPassword.text.toString().length <= 0) {
-                Toast.makeText(this, "Please enter password.", Toast.LENGTH_SHORT)
-                    .show()
-                return@setOnClickListener
-            }
-
             val intent = WelcomeActivity.buildIntent(this, binding.emailInput.text.toString())
             startActivity(intent)
         }
@@ -49,6 +39,9 @@ class LoginActivity : AppCompatActivity(){
     private fun checkInputsValid() {
         binding.loginButton.isEnabled = false
         if (binding.emailInput.text.toString().isValidEmail()){
+            return
+        }
+        if (binding.passwordInput.text.toString().length <6){
             return
         }
 
