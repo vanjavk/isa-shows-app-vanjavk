@@ -38,7 +38,7 @@
         android:id="@+id/loginInfoText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="@id/loginText"
         app:layout_constraintTop_toBottomOf="@id/loginText"
         android:text="In order to continue please log in."
@@ -64,7 +64,8 @@
         android:layout_marginRight="25dp"
         ></EditText>
     <com.google.android.material.textfield.TextInputLayout
-
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+app:boxStrokeColor="@color/white"
         android:id="@+id/passwordInputLayout"
         app:layout_constraintStart_toStartOf="@id/emailInput"
         app:layout_constraintTop_toBottomOf="@id/emailInput"
@@ -73,14 +74,12 @@
         android:hint="Password"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
+        app:hintTextColor="@color/white"
         app:passwordToggleEnabled="true"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        app:boxStrokeColor="@color/white">
-
-    >
-
-
+        app:endIconTint="@color/white"
+        >
     <com.google.android.material.textfield.TextInputEditText
+
         app:layout_constraintStart_toStartOf="@id/emailInput"
         app:layout_constraintTop_toBottomOf="@id/emailInput"
         android:layout_marginLeft="25dp"
@@ -90,4 +89,23 @@
         />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/loginButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Login"
+        android:textColor="@color/purple_infinum"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginBottom="32dp"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:textAllCaps="false"
+        android:radius="10dp"
+        app:cornerRadius="50dp"
+        android:textStyle="bold"
+        android:backgroundTint="@color/white"
+    />
 </androidx.constraintlayout.widget.ConstraintLayout>
