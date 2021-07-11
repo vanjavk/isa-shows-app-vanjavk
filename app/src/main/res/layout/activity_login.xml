@@ -6,8 +6,24 @@
     android:layout_height="match_parent"
     android:background="@color/purple_infinum"
     tools:context=".LoginActivity">
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
 
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:src="@drawable/topleftillustration"
+        ></ImageView>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/toprightillustration"
+        ></ImageView>
     <TextView
+        android:id="@+id/showsText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Shows"
@@ -20,6 +36,15 @@
         android:layout_marginLeft="109dp"
         ></TextView>
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintEnd_toStartOf="@+id/showsText"
+        app:layout_constraintTop_toTopOf="@id/showsText"
+        android:layout_marginRight="19dp"
+        android:src="@drawable/triangle"
+        ></ImageView>
     <TextView
         android:id="@+id/loginText"
         android:layout_width="wrap_content"
@@ -45,8 +70,12 @@
         android:textColor="@color/white"
         android:textSize="14sp"
         ></TextView>
-    <EditText
-        android:id="@+id/emailInput"
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:boxStrokeColor="@color/white"
+        android:id="@+id/emailInputLayout"
         app:layout_constraintStart_toStartOf="@id/loginInfoText"
         app:layout_constraintTop_toBottomOf="@id/loginInfoText"
         android:layout_width="match_parent"
@@ -54,21 +83,27 @@
         android:hint="Email"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
-        android:shadowColor="@color/white"
-        android:outlineAmbientShadowColor="@color/white"
-        android:outlineSpotShadowColor="@color/white"
-        android:textColorHighlight="@color/white"
-        android:textColorLink="@color/white"
+        app:hintTextColor="@color/white"
+        app:endIconTint="@color/white"
+        >
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/emailInput"
+            app:layout_constraintStart_toStartOf="@id/loginInfoText"
+            app:layout_constraintTop_toBottomOf="@id/loginInfoText"
+            android:textColor="@color/white"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
 
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        ></EditText>
     <com.google.android.material.textfield.TextInputLayout
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
 app:boxStrokeColor="@color/white"
         android:id="@+id/passwordInputLayout"
-        app:layout_constraintStart_toStartOf="@id/emailInput"
-        app:layout_constraintTop_toBottomOf="@id/emailInput"
+        app:layout_constraintStart_toStartOf="@id/emailInputLayout"
+        app:layout_constraintTop_toBottomOf="@id/emailInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Password"
@@ -76,12 +111,13 @@ app:boxStrokeColor="@color/white"
         android:textColorHint="@color/white"
         app:hintTextColor="@color/white"
         app:passwordToggleEnabled="true"
+        app:passwordToggleTint="@color/white"
         app:endIconTint="@color/white"
         >
     <com.google.android.material.textfield.TextInputEditText
 android:id="@+id/passwordInput"
-        app:layout_constraintStart_toStartOf="@id/emailInput"
-        app:layout_constraintTop_toBottomOf="@id/emailInput"
+        app:layout_constraintStart_toStartOf="@id/emailInputLayout"
+        app:layout_constraintTop_toBottomOf="@id/emailInputLayout"
         android:textColor="@color/white"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
@@ -91,6 +127,7 @@ android:id="@+id/passwordInput"
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
+        android:enabled="false"
         android:id="@+id/loginButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

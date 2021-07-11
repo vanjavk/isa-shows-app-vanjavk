@@ -2,6 +2,7 @@ package me.vanjavk.isa_shows_app_vanjavk
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.Window
 import androidx.appcompat.app.AppCompatActivity
 import me.vanjavk.isa_shows_app_vanjavk.databinding.ActivityWelcomeBinding
 
@@ -24,6 +25,7 @@ class WelcomeActivity : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
 
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         binding = ActivityWelcomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
