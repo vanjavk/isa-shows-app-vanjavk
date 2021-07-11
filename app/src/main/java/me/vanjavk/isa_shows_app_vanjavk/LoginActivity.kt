@@ -27,6 +27,9 @@ class LoginActivity : AppCompatActivity(){
         binding.emailInput.doAfterTextChanged {
             checkInputsValid()
         }
+        binding.passwordInput.doAfterTextChanged {
+            checkInputsValid()
+        }
 
         binding.loginButton.setOnClickListener {
 
