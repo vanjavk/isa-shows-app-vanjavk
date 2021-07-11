@@ -25,7 +25,6 @@ class WelcomeActivity : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
 
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         binding = ActivityWelcomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
