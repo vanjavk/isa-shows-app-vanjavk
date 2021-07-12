@@ -28,8 +28,8 @@ class WelcomeActivity : AppCompatActivity(){
         binding = ActivityWelcomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val email = intent.extras?.getString(EXTRA_EMAIL)
-        val username = email!!.substring(0, email!!.indexOf('@'))
+        val email = intent.extras?.getString(EXTRA_EMAIL).orEmpty()
+        val username = email.substring(0, email.indexOf('@'))
 
         binding.welcomeText.text="Welcome, $username!"
 

@@ -1,15 +1,9 @@
 package me.vanjavk.isa_shows_app_vanjavk
 
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
-import android.view.Window
-import android.view.WindowManager
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
-import androidx.core.widget.doOnTextChanged
 import me.vanjavk.isa_shows_app_vanjavk.databinding.ActivityLoginBinding
 
 class LoginActivity : AppCompatActivity(){
@@ -18,16 +12,13 @@ class LoginActivity : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
 
-
-
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        initButton()
-
+        initLoginButton()
     }
 
-    private fun initButton() {
+    private fun initLoginButton() {
         binding.emailInput.doAfterTextChanged {
             checkInputsValid()
         }
@@ -36,8 +27,6 @@ class LoginActivity : AppCompatActivity(){
         }
 
         binding.loginButton.setOnClickListener {
-
-
             val intent = WelcomeActivity.buildIntent(this, binding.emailInput.text.toString())
             startActivity(intent)
         }
@@ -48,7 +37,7 @@ class LoginActivity : AppCompatActivity(){
         if (binding.emailInput.text.toString().isValidEmail()){
             return
         }
-        if (binding.passwordInput.text.toString().length <6){
+        if (binding.passwordInput.text.toString().length < MIN_PASSWORD_LENGTH){
             return
         }
 
