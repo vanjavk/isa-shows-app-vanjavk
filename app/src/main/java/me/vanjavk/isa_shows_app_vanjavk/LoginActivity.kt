@@ -1,15 +1,17 @@
 package me.vanjavk.isa_shows_app_vanjavk
 
-
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
 import me.vanjavk.isa_shows_app_vanjavk.databinding.ActivityLoginBinding
 
-class LoginActivity : AppCompatActivity(){
+class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
 
-    override fun onCreate(savedInstanceState: Bundle?){
+    private var emailValid = false
+    private var passwordValid = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
@@ -35,13 +37,10 @@ class LoginActivity : AppCompatActivity(){
         }
     }
 
-    var emailValid = false
-    var passwordValid = false
-
     private fun checkEmailValid() {
-        if (binding.emailInput.text.toString().isValidEmail()){
+        if (binding.emailInput.text.toString().isValidEmail()) {
             binding.emailInputLayout.error = "Invalid email!"
-            emailValid=false
+            emailValid = false
             return
         }
         binding.emailInputLayout.error = null
@@ -49,7 +48,7 @@ class LoginActivity : AppCompatActivity(){
     }
 
     private fun checkPasswordValid() {
-        if (binding.passwordInput.text.toString().length < MIN_PASSWORD_LENGTH){
+        if (binding.passwordInput.text.toString().length < MIN_PASSWORD_LENGTH) {
             binding.passwordInputLayout.error = "Password too short"
             passwordValid = false
             return

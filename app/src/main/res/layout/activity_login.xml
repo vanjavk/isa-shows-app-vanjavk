@@ -58,7 +58,7 @@
         android:textSize="30sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/loginInfoText"
-        app:layout_constraintStart_toStartOf="@id/passwordInputLayout"></TextView>
+        app:layout_constraintStart_toStartOf="@id/passwordInputLayout" />
 
     <TextView
         android:id="@+id/loginInfoText"
@@ -69,7 +69,7 @@
         android:textColor="@color/white"
         android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@id/emailInputLayout"
-        app:layout_constraintStart_toStartOf="@id/passwordInputLayout"></TextView>
+        app:layout_constraintStart_toStartOf="@id/passwordInputLayout" />
 
 
     <com.google.android.material.textfield.TextInputLayout
