@@ -18,11 +18,14 @@ class LoginActivity : AppCompatActivity(){
         initLoginButton()
     }
 
+
     private fun initLoginButton() {
         binding.emailInput.doAfterTextChanged {
+            checkEmailValid()
             checkInputsValid()
         }
         binding.passwordInput.doAfterTextChanged {
+            checkPasswordValid()
             checkInputsValid()
         }
 
@@ -32,15 +35,30 @@ class LoginActivity : AppCompatActivity(){
         }
     }
 
-    private fun checkInputsValid() {
-        binding.loginButton.isEnabled = false
-        if (binding.emailInput.text.toString().isValidEmail()){
-            return
-        }
-        if (binding.passwordInput.text.toString().length < MIN_PASSWORD_LENGTH){
-            return
-        }
+    var emailValid = false
+    var passwordValid = false
 
-        binding.loginButton.isEnabled = true
+    private fun checkEmailValid() {
+        if (binding.emailInput.text.toString().isValidEmail()){
+            binding.emailInputLayout.error = "Invalid email!"
+            emailValid=false
+            return
+        }
+        binding.emailInputLayout.error = null
+        emailValid = true
+    }
+
+    private fun checkPasswordValid() {
+        if (binding.passwordInput.text.toString().length < MIN_PASSWORD_LENGTH){
+            binding.passwordInputLayout.error = "Password too short"
+            passwordValid = false
+            return
+        }
+        binding.passwordInputLayout.error = null
+        passwordValid = true
+    }
+
+    private fun checkInputsValid() {
+        binding.loginButton.isEnabled = passwordValid && emailValid
     }
 }
