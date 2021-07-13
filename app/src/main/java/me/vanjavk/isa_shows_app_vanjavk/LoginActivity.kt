@@ -30,7 +30,7 @@ class LoginActivity : AppCompatActivity(){
         }
 
         binding.loginButton.setOnClickListener {
-            val intent = WelcomeActivity.buildIntent(this, binding.emailInput.text.toString())
+            val intent = WelcomeActivity.buildIntent(binding.emailInput.text.toString())
             startActivity(intent)
         }
     }

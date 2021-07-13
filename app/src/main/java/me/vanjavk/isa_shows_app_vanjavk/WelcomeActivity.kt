@@ -13,8 +13,8 @@ class WelcomeActivity : AppCompatActivity(){
     companion object {
         private const val EXTRA_EMAIL = "EXTRA_EMAIL"
 
-        fun buildIntent(activity: Activity, email: String) : Intent {
-            val intent = Intent(activity, WelcomeActivity::class.java)
+        fun buildIntent(email: String) : Intent {
+            val intent = Intent("me.vanjavk.LOGIN")
             intent.putExtra(EXTRA_EMAIL, email)
             return intent
         }
