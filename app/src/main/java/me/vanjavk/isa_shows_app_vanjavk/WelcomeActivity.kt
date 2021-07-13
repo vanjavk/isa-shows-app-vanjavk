@@ -8,8 +8,6 @@ import me.vanjavk.isa_shows_app_vanjavk.databinding.ActivityWelcomeBinding
 
 class WelcomeActivity : AppCompatActivity(){
 
-
-
     private lateinit var binding: ActivityWelcomeBinding
 
     companion object {
