@@ -52,25 +52,24 @@
         android:id="@+id/loginText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="373dp"
+        android:layout_marginBottom="16dp"
         android:text="Login"
         android:textColor="@color/white"
         android:textSize="30sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></TextView>
+        app:layout_constraintBottom_toTopOf="@id/loginInfoText"
+        app:layout_constraintStart_toStartOf="@id/passwordInputLayout"></TextView>
 
     <TextView
         android:id="@+id/loginInfoText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginBottom="32dp"
         android:text="In order to continue please log in."
         android:textColor="@color/white"
         android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="@id/loginText"
-        app:layout_constraintTop_toBottomOf="@id/loginText"></TextView>
+        app:layout_constraintBottom_toTopOf="@id/emailInputLayout"
+        app:layout_constraintStart_toStartOf="@id/passwordInputLayout"></TextView>
 
 
     <com.google.android.material.textfield.TextInputLayout
@@ -78,25 +77,24 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginBottom="24dp"
         android:hint="Email"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
         app:boxStrokeColor="@color/white"
         app:endIconTint="@color/white"
         app:hintTextColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@id/passwordInputLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/loginInfoText"
-
-        >
+        app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/emailInput"
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="24dp"
-            android:layout_marginRight="24dp"
+            android:singleLine="true"
             android:textColor="@color/white" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -105,26 +103,28 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginBottom="50dp"
         android:hint="Password"
+
         android:textColor="@color/white"
         android:textColorHint="@color/white"
         app:boxStrokeColor="@color/white"
         app:endIconTint="@color/white"
         app:hintTextColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@id/loginButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/emailInputLayout"
-
         app:passwordToggleEnabled="true"
         app:passwordToggleTint="@color/white">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/passwordInput"
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="24dp"
-            android:layout_marginRight="24dp"
+            android:inputType="textPassword"
+            android:singleLine="true"
             android:textColor="@color/white" />
     </com.google.android.material.textfield.TextInputLayout>
 
