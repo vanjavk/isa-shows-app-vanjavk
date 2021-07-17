@@ -1,4 +1,4 @@
-package me.vanjavk.shows_vanjabuturac
+package me.vanjavk.isa_shows_app_vanjavk
 
 import org.junit.Test
 
