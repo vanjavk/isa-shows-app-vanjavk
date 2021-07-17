@@ -12,15 +12,21 @@
         android:layout_marginVertical="16dp"
         app:cardCornerRadius="8dp">
 
-        <FrameLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
+
             android:layout_width="match_parent"
-            android:layout_height="200dp">
+            android:layout_height="match_parent">
 
             <ImageView
-                android:id="@+id/superheroImage"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:id="@+id/showImage"
+                android:layout_width="0dp"
+                android:layout_height="192dp"
                 android:scaleType="fitCenter"
+                app:layout_constraintEnd_toEndOf="parent"
+
+                android:src="@drawable/topleftillustration"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:src="@drawable/triangle"/>
 
             <View
@@ -40,7 +46,7 @@
                 android:textStyle="bold"
                 tools:text="Superman"/>
 
-        </FrameLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
 
