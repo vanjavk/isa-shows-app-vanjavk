@@ -16,12 +16,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".WelcomeActivity">
-            <intent-filter>
-                <action android:name="me.vanjavk.LOGIN" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".ShowsActivity"/>
 
     </application>
 
