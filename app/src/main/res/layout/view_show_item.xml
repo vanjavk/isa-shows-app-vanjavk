@@ -21,30 +21,40 @@
                 android:id="@+id/showImage"
                 android:layout_width="0dp"
                 android:layout_height="192dp"
-                android:scaleType="fitCenter"
+                android:scaleType="centerCrop"
+                android:src="@drawable/show_butterflyeffect"
                 app:layout_constraintEnd_toEndOf="parent"
-
-                android:src="@drawable/topleftillustration"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:src="@drawable/triangle"/>
+                tools:src="@drawable/show_butterflyeffect" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_gravity="bottom"
-                android:background="@android:color/holo_orange_dark"/>
 
             <TextView
-                android:id="@+id/superheroName"
-                android:layout_width="match_parent"
+                android:id="@+id/showTitle"
+                app:layout_constraintTop_toBottomOf="@+id/showImage"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:padding="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
                 android:textColor="@android:color/black"
-                android:textSize="18sp"
+                android:textFontWeight="500"
+                android:textSize="20sp"
+                tools:text="Butterfly effect" />
+
+            <TextView
+                android:id="@+id/showGenre"
+
+                app:layout_constraintBottom_toBottomOf="@id/showTitle"
+                app:layout_constraintStart_toEndOf="@id/showTitle"
+                app:layout_constraintTop_toTopOf="@id/showTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:textColor="@android:color/darker_gray"
                 android:textStyle="bold"
-                tools:text="Superman"/>
+                android:textSize="15sp"
+                tools:text="Drama Sci-fi Thriller" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
