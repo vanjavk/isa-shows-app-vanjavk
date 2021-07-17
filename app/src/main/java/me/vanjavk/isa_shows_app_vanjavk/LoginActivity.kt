@@ -41,20 +41,20 @@ class LoginActivity : AppCompatActivity() {
         if (binding.emailInput.text.toString().isValidEmail()) {
             binding.emailInputLayout.error = "Invalid email!"
             emailValid = false
-            return
+        } else {
+            binding.emailInputLayout.error = null
+            emailValid = true
         }
-        binding.emailInputLayout.error = null
-        emailValid = true
     }
 
     private fun checkPasswordValid() {
         if (binding.passwordInput.text.toString().length < MIN_PASSWORD_LENGTH) {
             binding.passwordInputLayout.error = "Password too short"
             passwordValid = false
-            return
+        } else {
+            binding.passwordInputLayout.error = null
+            passwordValid = true
         }
-        binding.passwordInputLayout.error = null
-        passwordValid = true
     }
 
     private fun checkInputsValid() {
