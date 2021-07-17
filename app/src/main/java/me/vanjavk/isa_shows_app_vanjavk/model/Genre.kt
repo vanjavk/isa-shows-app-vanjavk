@@ -1,0 +1,30 @@
+package me.vanjavk.isa_shows_app_vanjavk.model
+
+enum class Genre(val string: String){
+    ADVENTURE("Adventure"),
+    ANIMATION("Animation"),
+    BIOGRAPHY("Biography"),
+    COMEDY("Comedy"),
+    CRIME("Crime"),
+    DOCUMENTARY("Documentary"),
+    DRAMA("Drama"),
+    FAMILY("Family"),
+    FANTASY("Fantasy"),
+    FILMNOIR("Film-Noir"),
+    GAMESHOW("Game-Show"),
+    HISTORY("History"),
+    HORROR("Horror"),
+    MUSICAL("Musical"),
+    MUSIC("Music"),
+    MYSTERY("Mystery"),
+    NEWS("News"),
+    REALITYTV("Reality-TV"),
+    ROMANCE("Romance"),
+    SCIFI("Sci-Fi"),
+    SHORT("Short"),
+    SPORT("Sport"),
+    TALKSHOW("Talk-Show"),
+    THRILLER("Thriller"),
+    WAR("War"),
+    WESTERN("Western")
+}
