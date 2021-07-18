@@ -7,9 +7,14 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.widget.RatingBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import me.vanjavk.isa_shows_app_vanjavk.databinding.ActivityShowDetailsBinding
+import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogAddReviewBinding
+import me.vanjavk.isa_shows_app_vanjavk.model.Review
 import me.vanjavk.isa_shows_app_vanjavk.model.Show
 
 class ShowsDetailsActivity : AppCompatActivity() {
@@ -48,7 +53,42 @@ class ShowsDetailsActivity : AppCompatActivity() {
 
         setContentView(binding.root)
 
+        initWriteReviewButton()
         initReviewsRecycler()
+    }
+
+    private fun initWriteReviewButton() {
+        binding.writeReviewButton.setOnClickListener {
+            showAddReviewBottomSheet()
+        }
+    }
+
+    private fun showAddReviewBottomSheet() {
+
+        val dialog = BottomSheetDialog(this)
+
+        val bottomSheetBinding = DialogAddReviewBinding.inflate(layoutInflater)
+        dialog.setContentView(bottomSheetBinding.root)
+
+        val review = Review("hardkodiranoimeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            bottomSheetBinding.commentInput.text.toString(), bottomSheetBinding.starRatingBar.numStars)
+
+        bottomSheetBinding.starRatingBar.setOnRatingBarChangeListener { _: RatingBar, _: Float, _: Boolean -> bottomSheetBinding.confirmButton.isEnabled = true
+        }
+
+        bottomSheetBinding.confirmButton.setOnClickListener {
+            addReviewToList(review)
+            dialog.dismiss()
+        }
+
+        dialog.show()
+
+    }
+
+    private fun addReviewToList(review: Review) {
+        show.reviews.add(review)
+        reviewsAdapter?.addItem(review)
+        refreshReviews()
     }
 
     private fun initReviewsRecycler() {
@@ -57,6 +97,14 @@ class ShowsDetailsActivity : AppCompatActivity() {
 
         binding.reviewsRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.reviewsRecyclerView.adapter = reviewsAdapter
+        binding.reviewsRecyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+
+        refreshReviews()
+
+        reviewsAdapter?.setItems(show.reviews)
+    }
+
+    private fun refreshReviews() {
         if (show.reviews.isEmpty()) {
             binding.reviewsRecyclerView.visibility = GONE
             binding.showReviewRating.visibility = GONE
@@ -71,7 +119,6 @@ class ShowsDetailsActivity : AppCompatActivity() {
             binding.showRatingBar.rating = averageRating
             binding.showRatingBar.visibility = VISIBLE
             binding.noReviewsYet.visibility = GONE
-            reviewsAdapter?.setItems(show.reviews)
         }
     }
 

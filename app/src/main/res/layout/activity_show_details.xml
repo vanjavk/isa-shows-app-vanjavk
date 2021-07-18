@@ -98,24 +98,23 @@
 
             <RatingBar
                 android:id="@+id/showRatingBar"
+                style="@style/Widget.AppCompat.RatingBar.Indicator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:foregroundTint="@color/purple_infinum"
                 android:numStars="5"
                 android:rating="3.5"
-                android:style="@style/Widget.AppCompat.RatingBar.Indicator"
                 android:theme="@style/RatingBar" />
 
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/reviewsRecyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="40dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="24dp"
                 android:visibility="visible"
-                app:rvDividerDrawable="@drawable/row_item_divider"
-                app:rvDividerMode="middle"
                 tools:listitem="@layout/item_review" />
 
             <TextView
