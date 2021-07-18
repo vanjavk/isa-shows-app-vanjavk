@@ -107,21 +107,28 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <View
-        android:id="@+id/whiteBackgroundView"
+    <com.google.android.material.bottomnavigation.BottomNavigationView
         android:layout_width="match_parent"
         android:layout_height="93dp"
         android:layout_gravity="bottom"
-        android:background="@color/white"/>
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/writeReviewButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginBottom="24dp"
-        android:text="Write a review"
-        android:textAllCaps="false"
-        app:cornerRadius="21.5dp" />
+        >
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/writeReviewButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="24dp"
+            android:text="Write a review"
+            android:textAllCaps="false"
+            app:cornerRadius="21.5dp" />
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
+<!--    <View-->
+<!--        android:id="@+id/whiteBackgroundView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="93dp"-->
+<!--        android:layout_gravity="bottom"-->
+<!--        android:background="@color/white"/>-->
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
