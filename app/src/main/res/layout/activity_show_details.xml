@@ -42,7 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_marginBottom="93dp"
+        android:paddingBottom="93dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context=".ScrollBasedActivity">
 
@@ -104,6 +104,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:foregroundTint="@color/purple_infinum"
+                android:stepSize="0.1"
                 android:numStars="5"
                 android:rating="3.5"
                 android:theme="@style/RatingBar" />

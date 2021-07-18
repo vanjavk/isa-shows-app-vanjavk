@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginVertical="16dp"
     android:orientation="vertical">
@@ -39,7 +39,7 @@
             app:layout_constraintEnd_toStartOf="@+id/ratingStarValue"
             app:layout_constraintStart_toEndOf="@id/profileIconImageCardView"
             app:layout_constraintTop_toTopOf="@id/profileIconImageCardView"
-            tools:text="testasdf sadfsadfsadfasdfsdafdsfasdfasdfsadfsdfsdfsdfsdfsd" />
+            tools:text="testasdf " />
 
         <TextView
             android:id="@+id/ratingStarValue"

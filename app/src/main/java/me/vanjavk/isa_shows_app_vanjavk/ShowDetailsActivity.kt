@@ -70,13 +70,15 @@ class ShowsDetailsActivity : AppCompatActivity() {
         val bottomSheetBinding = DialogAddReviewBinding.inflate(layoutInflater)
         dialog.setContentView(bottomSheetBinding.root)
 
-        val review = Review("hardkodiranoimeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-            bottomSheetBinding.commentInput.text.toString(), bottomSheetBinding.starRatingBar.numStars)
+
 
         bottomSheetBinding.starRatingBar.setOnRatingBarChangeListener { _: RatingBar, _: Float, _: Boolean -> bottomSheetBinding.confirmButton.isEnabled = true
         }
 
         bottomSheetBinding.confirmButton.setOnClickListener {
+            val review = Review("hardkodiranoimeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                bottomSheetBinding.commentInput.text.toString(), bottomSheetBinding.starRatingBar.rating.toInt()
+            )
             addReviewToList(review)
             dialog.dismiss()
         }
@@ -86,8 +88,8 @@ class ShowsDetailsActivity : AppCompatActivity() {
     }
 
     private fun addReviewToList(review: Review) {
-        show.reviews.add(review)
         reviewsAdapter?.addItem(review)
+        show.reviews.add(review)
         refreshReviews()
     }
 
