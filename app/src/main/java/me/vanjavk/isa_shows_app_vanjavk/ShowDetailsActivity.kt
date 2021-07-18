@@ -21,6 +21,7 @@ class ShowsDetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         binding = ActivityShowDetailsBinding.inflate(layoutInflater)
+        actionBar?.title = ""
         setContentView(binding.root)
 
     }
