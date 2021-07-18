@@ -50,17 +50,6 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <!--            <TextView-->
-            <!--                android:id="@+id/showTitle"-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_marginStart="24dp"-->
-            <!--                android:layout_marginTop="64dp"-->
-            <!--                android:textColor="@color/black"-->
-            <!--                android:textSize="36sp"-->
-            <!--                android:textStyle="bold"-->
-            <!--                tools:text="Memento" />-->
-
             <androidx.cardview.widget.CardView
                 android:id="@+id/showItemCardView"
                 android:layout_width="match_parent"
@@ -99,12 +88,21 @@
                 tools:text="Reviews" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/showsRecyclerView"
+                android:id="@+id/reviewsRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="40dp"
-                android:visibility="visible"
+                android:visibility="gone"
                 tools:listitem="@layout/view_show_item" />
+
+            <TextView
+                android:layout_marginTop="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textSize="17sp"
+                android:textAlignment="center"
+                android:text="No reviews yet." />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
