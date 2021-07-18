@@ -2,6 +2,7 @@ package me.vanjavk.isa_shows_app_vanjavk
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.RecyclerView
 import me.vanjavk.isa_shows_app_vanjavk.databinding.ViewShowItemBinding
 import me.vanjavk.isa_shows_app_vanjavk.model.Show
@@ -16,12 +17,13 @@ class ShowsAdapter(
      * Called when RecyclerView needs a new ViewHolder to represent an item.
      */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShowViewHolder {
-        // Create a view from
+
         val binding = ViewShowItemBinding.inflate(LayoutInflater.from(parent.context))
+        //kao neki fix
 
-
+        //s obzirom da nemogu staviti height u dp stavio sam sve u jos jedan framelayout
         binding.root.layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT)
-        // Create a ViewHolder with that view
+
         return ShowViewHolder(binding)
     }
 

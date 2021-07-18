@@ -112,13 +112,6 @@ class ShowsActivity : AppCompatActivity() {
         binding.showsRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.showsRecyclerView.adapter = showsAdapter
 
-        binding.showsRecyclerView.addItemDecoration(
-            DividerItemDecoration(
-                this,
-                DividerItemDecoration.VERTICAL
-            )
-        )
-
         showsAdapter?.setItems(shows)
     }
 

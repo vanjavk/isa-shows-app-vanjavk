@@ -1,83 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/showItemFrameLayout"
+    android:id="@+id/showItemFrameLayoutParent"
     android:layout_width="match_parent"
-    android:layout_height="304dp"
-    android:clipToPadding="false"
-    android:paddingBottom="16dp">
-    <!--    takodjer padding nevalja-->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/showItemCardView"
+    android:layout_height="wrap_content"
+    android:paddingBottom="16dp"
+    android:clipToPadding="false">
+
+    <FrameLayout
+        android:id="@+id/showItemFrameLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:cardCornerRadius="8dp">
+        android:layout_height="304dp"
+        android:layout_marginHorizontal="24dp"
+        android:clipToPadding="false">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-
-            android:id="@+id/showItemConstraintLayout"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/showItemCardView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            app:cardCornerRadius="8dp">
 
-            <ImageView
-                android:id="@+id/showImage"
-                android:layout_width="0dp"
-                android:layout_height="192dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/show_butterflyeffect"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:src="@drawable/show_butterflyeffect" />
+            <androidx.constraintlayout.widget.ConstraintLayout
 
+                android:id="@+id/showItemConstraintLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/showTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:textColor="@android:color/black"
-                android:textFontWeight="500"
-                android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/showImage"
-                tools:text="Butterfly effect" />
-
-            <TextView
-                android:id="@+id/showGenre"
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:textColor="@android:color/darker_gray"
-                android:textSize="10sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@id/showTitle"
-                app:layout_constraintStart_toEndOf="@id/showTitle"
-                app:layout_constraintTop_toTopOf="@id/showTitle"
-                tools:text="Drama Sci-fi Thriller" />
-
-            <TextView
-                android:id="@+id/showDescription"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:fontFamily="sans-serif"
-                android:maxLines="2"
-                android:paddingBottom="16dp"
-                android:textColor="@android:color/darker_gray"
-                android:textFontWeight="400"
-                android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/showTitle"
-                tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" />
-            <!-- NEVALJA PADDING -->
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.cardview.widget.CardView>
+                <ImageView
+                    android:id="@+id/showImage"
+                    android:layout_width="0dp"
+                    android:layout_height="192dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/show_butterflyeffect"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@drawable/show_butterflyeffect" />
 
 
+                <TextView
+                    android:id="@+id/showTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:textColor="@android:color/black"
+                    android:textFontWeight="500"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/showImage"
+                    tools:text="Butterfly effect" />
+
+                <TextView
+                    android:id="@+id/showGenre"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@id/showTitle"
+                    app:layout_constraintStart_toEndOf="@id/showTitle"
+                    app:layout_constraintTop_toTopOf="@id/showTitle"
+                    tools:text="Drama Sci-fi Thriller" />
+
+                <TextView
+                    android:id="@+id/showDescription"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:fontFamily="sans-serif"
+                    android:maxLines="2"
+                    android:paddingBottom="16dp"
+                    android:textColor="@android:color/darker_gray"
+                    android:textFontWeight="400"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/showTitle"
+                    tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" />
+                <!-- NEVALJA PADDING -->
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+
+    </FrameLayout>
 </FrameLayout>
