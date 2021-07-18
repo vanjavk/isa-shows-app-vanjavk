@@ -7,6 +7,7 @@ data class Show(
     val title: String,
     val description: String,
     val genre: List<Genre>,
+
     @DrawableRes val imageResourceId: Int
 ) {
     fun genresToString(): String {
