@@ -18,6 +18,9 @@ class ShowsAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShowViewHolder {
         // Create a view from
         val binding = ViewShowItemBinding.inflate(LayoutInflater.from(parent.context))
+
+
+        binding.root.layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT)
         // Create a ViewHolder with that view
         return ShowViewHolder(binding)
     }
@@ -50,11 +53,11 @@ class ShowsAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Show) {
-            // Load the image
-            binding.superheroImage.setImageResource(item.imageResourceId)
 
-            // Load the name
-            binding.superheroName.text = item.name
+            binding.showImage.setImageResource(item.imageResourceId)
+            binding.showTitle.text = item.title
+            binding.showGenre.text = item.genresToString()
+            binding.showDescription.text = item.description
 
             binding.root.setOnClickListener {
                 onItemClickCallback(item)

@@ -8,4 +8,8 @@ data class Show(
     val description: String,
     val genre: List<Genre>,
     @DrawableRes val imageResourceId: Int
-)
+) {
+    fun genresToString(): String {
+        return genre.joinToString(", ")
+    }
+}
