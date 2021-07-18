@@ -12,4 +12,9 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
     </style>
+
+    <style name="RatingBar" parent="Theme.AppCompat">
+        <item name="colorControlNormal">@color/purple_infinum</item>
+        <item name="colorControlActivated">@color/purple_infinum</item>
+    </style>
 </resources>

@@ -82,18 +82,41 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
+                android:text="Reviews"
                 android:textColor="@color/black"
                 android:textSize="24sp"
-                android:textStyle="bold"
-                tools:text="Reviews" />
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/showReviewRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:textSize="17sp"
+                tools:text="3 REVIEWS, 3.63 AVERAGE" />
+
+            <RatingBar
+                android:id="@+id/showRatingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:foregroundTint="@color/purple_infinum"
+                android:numStars="5"
+                android:rating="3.5"
+                android:style="@style/Widget.AppCompat.RatingBar.Indicator"
+                android:theme="@style/RatingBar" />
+
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/reviewsRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="40dp"
-                android:visibility="gone"
-                tools:listitem="@layout/view_show_item" />
+                android:visibility="visible"
+                app:rvDividerDrawable="@drawable/row_item_divider"
+                app:rvDividerMode="middle"
+                tools:listitem="@layout/item_review" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -111,7 +134,8 @@
         android:layout_width="match_parent"
         android:layout_height="93dp"
         android:layout_gravity="bottom"
-        >
+        android:background="@color/white">
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/writeReviewButton"
             android:layout_width="match_parent"
@@ -123,12 +147,6 @@
             android:textAllCaps="false"
             app:cornerRadius="21.5dp" />
     </com.google.android.material.bottomnavigation.BottomNavigationView>
-<!--    <View-->
-<!--        android:id="@+id/whiteBackgroundView"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="93dp"-->
-<!--        android:layout_gravity="bottom"-->
-<!--        android:background="@color/white"/>-->
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
