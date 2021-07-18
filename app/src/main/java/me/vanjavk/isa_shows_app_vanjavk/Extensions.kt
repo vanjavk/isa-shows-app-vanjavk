@@ -5,6 +5,7 @@ import me.vanjavk.isa_shows_app_vanjavk.model.Genre
 import me.vanjavk.isa_shows_app_vanjavk.model.Show
 
 const val MIN_PASSWORD_LENGTH = 6
+const val EXTRA_ID = "EXTRA_ID"
 
 fun CharSequence?.isValidEmail() = !(!isNullOrEmpty() && Patterns.EMAIL_ADDRESS.matcher(this).matches())
 

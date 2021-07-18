@@ -49,7 +49,7 @@ class ShowsActivity : AppCompatActivity() {
 
     private fun initShowsRecycler() {
         showsAdapter = ShowsAdapter(emptyList()) { item ->
-            Toast.makeText(this, item.title, Toast.LENGTH_SHORT).show()
+            startActivity(ShowsDetailsActivity.buildIntent(this, item.ID))
         }
 
         binding.showsRecyclerView.layoutManager = LinearLayoutManager(this)
