@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/purple_infinum"
+    android:background="@color/purple_infinum_yark"
     tools:context=".LoginActivity">
 
     <ImageView
@@ -141,7 +141,7 @@
         android:fontFamily="sans-serif-condensed-medium"
         android:text="Login"
         android:textAllCaps="false"
-        android:textColor="@color/purple_infinum"
+        android:textColor="@color/purple_infinum_yark"
         android:textStyle="bold"
         app:cornerRadius="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
