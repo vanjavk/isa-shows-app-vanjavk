@@ -38,10 +38,19 @@ class ShowsFragment : Fragment() {
 
         initShowsRecycler()
 
-        initAddShowHideButton()
+        initShowHideButton()
+
+        initLogoutButton()
     }
 
-    private fun initAddShowHideButton() {
+    private fun initLogoutButton() {
+        binding.logoutButton.setOnClickListener {
+            ShowsFragmentDirections.actionLogout()
+                .let { findNavController().navigate(it) }
+        }
+    }
+
+    private fun initShowHideButton() {
         binding.showHideButton.setOnClickListener {
             binding.showsRecyclerView.apply {
                 isVisible = !isVisible
