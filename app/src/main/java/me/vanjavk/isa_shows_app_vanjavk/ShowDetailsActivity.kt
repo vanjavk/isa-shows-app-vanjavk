@@ -107,6 +107,7 @@ class ShowsDetailsActivity : AppCompatActivity() {
         reviewsAdapter?.setItems(show.reviews)
     }
 
+
     private fun refreshReviews() {
         if (show.reviews.isEmpty()) {
             binding.reviewsRecyclerView.visibility = GONE
@@ -117,7 +118,7 @@ class ShowsDetailsActivity : AppCompatActivity() {
             val averageRating = show.reviews.sumOf { it.stars } / show.reviews.count().toFloat()
             binding.reviewsRecyclerView.visibility = VISIBLE
             binding.showReviewRating.text =
-                "${show.reviews.count()} REVIEWS, ${averageRating} AVERAGE"
+                "${show.reviews.count()} REVIEWS, ${"%.2f".format(averageRating)} AVERAGE"
             binding.showReviewRating.visibility = VISIBLE
             binding.showRatingBar.rating = averageRating
             binding.showRatingBar.visibility = VISIBLE
