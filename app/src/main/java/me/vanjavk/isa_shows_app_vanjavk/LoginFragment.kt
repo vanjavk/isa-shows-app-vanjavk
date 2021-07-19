@@ -13,8 +13,6 @@ class LoginFragment : Fragment() {
 
     private var _binding: FragmentLoginBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     private var emailValid = false
@@ -31,11 +29,6 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        binding.root.setOnClickListener {
-//            val action = LoginFragmentDirections.actionFirstToSecond(9)
-//            findNavController().navigate(action)
-//        }
-
         initLoginButton()
     }
 
@@ -50,10 +43,9 @@ class LoginFragment : Fragment() {
         }
 
         binding.loginButton.setOnClickListener {
-//            val intent = ShowsActivity.buildIntent(this)
-//            startActivity(intent)
-            val action = LoginFragmentDirections.actionLoginToShows()
-            findNavController().navigate(action)
+            LoginFragmentDirections.actionLoginToShows(binding.emailInput.text.toString())
+                .let { findNavController().navigate(it) }
+
         }
     }
 
@@ -84,6 +76,5 @@ class LoginFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-//        Toast.makeText(context, "FLO: $this", Toast.LENGTH_LONG).show()
     }
 }

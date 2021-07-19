@@ -5,19 +5,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowsBinding
 
 class ShowsFragment : Fragment() {
 
     private var _binding: FragmentShowsBinding? = null
-    // This property is only valid between onCreateView and
-    // onDestroyView.
+
     private val binding get() = _binding!!
 
-//    val args: ShowsFragmentArgs by navArgs()
+    val args: ShowsFragmentArgs by navArgs()
+
+    private var showsAdapter: ShowsAdapter? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,11 +35,30 @@ class ShowsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        binding.root.setOnClickListener {
-//            findNavController().navigate(R.id.action_second_to_third)
-//        }
-//        binding.test.doOnTextChanged { text, start, before, count ->  }
-//        Toast.makeText(context, "Poslani broj je ${args.myArg}", Toast.LENGTH_SHORT).show()
+
+        initShowsRecycler()
+
+        initAddShowHideButton()
+    }
+
+    private fun initAddShowHideButton() {
+        binding.showHideButton.setOnClickListener {
+            binding.showsRecyclerView.apply {
+                isVisible = !isVisible
+            }
+        }
+    }
+
+    private fun initShowsRecycler() {
+        showsAdapter = ShowsAdapter(emptyList()) { item ->
+            ShowsFragmentDirections.actionShowToDetails(args.email, item.ID)
+                .let { findNavController().navigate(it) }
+        }
+
+        binding.showsRecyclerView.layoutManager = LinearLayoutManager(activity)
+        binding.showsRecyclerView.adapter = showsAdapter
+
+        showsAdapter?.setItems(shows)
     }
 
     override fun onDestroyView() {
