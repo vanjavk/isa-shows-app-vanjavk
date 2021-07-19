@@ -15,7 +15,8 @@
     app:layout_constraintTop_toTopOf="parent"
     app:layout_constraintBottom_toBottomOf="parent"
     android:orientation="vertical"
-    android:clipChildren="false">
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
     <TextView
         android:layout_width="wrap_content"
@@ -43,7 +44,8 @@
         android:layout_marginTop="40dp"
         android:visibility="visible"
         tools:listitem="@layout/view_show_item"
-        android:clipChildren="false"/>
+        android:clipChildren="false"
+        android:clipToPadding="false"/>
 
     <RelativeLayout
         android:id="@+id/emptyShowsRelativeLayout"
