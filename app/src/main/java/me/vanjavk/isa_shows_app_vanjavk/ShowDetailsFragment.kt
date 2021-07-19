@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RatingBar
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -39,6 +40,7 @@ class ShowDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentShowDetailsBinding.inflate(inflater, container, false)
+        setHasOptionsMenu(true);
         return binding.root
     }
 
@@ -77,12 +79,15 @@ class ShowDetailsFragment : Fragment() {
         val bottomSheetBinding = DialogAddReviewBinding.inflate(layoutInflater)
         dialog.setContentView(bottomSheetBinding.root)
 
-        bottomSheetBinding.starRatingBar.setOnRatingBarChangeListener { _: RatingBar, _: Float, _: Boolean -> bottomSheetBinding.confirmButton.isEnabled = true
+        bottomSheetBinding.starRatingBar.setOnRatingBarChangeListener { _: RatingBar, _: Float, _: Boolean ->
+            bottomSheetBinding.confirmButton.isEnabled = true
         }
 
         bottomSheetBinding.confirmButton.setOnClickListener {
-            val review = Review(args.email.getUsername(),
-                bottomSheetBinding.commentInput.text.toString(), bottomSheetBinding.starRatingBar.rating.toInt()
+            val review = Review(
+                args.email.getUsername(),
+                bottomSheetBinding.commentInput.text.toString(),
+                bottomSheetBinding.starRatingBar.rating.toInt()
             )
             addReviewToList(review)
             dialog.dismiss()
@@ -102,7 +107,12 @@ class ShowDetailsFragment : Fragment() {
 
         binding.reviewsRecyclerView.layoutManager = LinearLayoutManager(activity)
         binding.reviewsRecyclerView.adapter = reviewsAdapter
-        binding.reviewsRecyclerView.addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
+        binding.reviewsRecyclerView.addItemDecoration(
+            DividerItemDecoration(
+                activity,
+                DividerItemDecoration.VERTICAL
+            )
+        )
 
         refreshReviews()
 
