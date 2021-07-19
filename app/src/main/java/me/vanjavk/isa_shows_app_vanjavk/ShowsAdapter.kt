@@ -13,16 +13,9 @@ class ShowsAdapter(
     private val onItemClickCallback: (Show) -> Unit
 ) : RecyclerView.Adapter<ShowsAdapter.ShowViewHolder>() {
 
-    /**
-     * Called when RecyclerView needs a new ViewHolder to represent an item.
-     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShowViewHolder {
 
         val binding = ViewShowItemBinding.inflate(LayoutInflater.from(parent.context))
-        //kao neki fix
-
-        //s obzirom da nemogu staviti height u dp stavio sam sve u jos jedan framelayout
-//        binding.root.layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT)
 
         return ShowViewHolder(binding)
     }
@@ -31,9 +24,6 @@ class ShowsAdapter(
         return items.size
     }
 
-    /**
-     * Called by the RecyclerView to display the data at the specified position.
-     */
     override fun onBindViewHolder(holder: ShowViewHolder, position: Int) {
         holder.bind(items[position])
     }
@@ -48,9 +38,6 @@ class ShowsAdapter(
         notifyItemInserted(items.size)
     }
 
-    /**
-     * Custom-made ViewHolder, used to match the data to the concrete view.
-     */
     inner class ShowViewHolder(private val binding: ViewShowItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
