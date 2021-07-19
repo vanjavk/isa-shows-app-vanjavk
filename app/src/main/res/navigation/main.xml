@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="me.vanjavk.isa_shows_app_vanjavk.LoginFragment"
+        tools:layout="@layout/fragment_login">
+
+        <action
+            android:id="@+id/action_login_to_shows"
+            app:destination="@id/showsFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/showsFragment"
+        android:name="me.vanjavk.isa_shows_app_vanjavk.ShowsFragment"
+        tools:layout="@layout/fragment_shows">
+
+<!--        <argument-->
+<!--            android:name="myArg"-->
+<!--            app:argType="integer"/>-->
+
+<!--        <action-->
+<!--            android:id="@+id/action_second_to_third"-->
+<!--            app:destination="@id/third"/>-->
+    </fragment>
+
+<!--    <fragment-->
+<!--        android:id="@+id/third"-->
+<!--        android:name="com.infinum.isa.playground.lecturefour.ThirdFragment"-->
+<!--        tools:layout="@layout/fragment_third">-->
+
+<!--        <action-->
+<!--            android:id="@+id/action_third_to_first"-->
+<!--            app:destination="@id/first"-->
+<!--            app:popUpTo="@id/first"-->
+<!--            app:popUpToInclusive="true"/>-->
+<!--    </fragment>-->
+</navigation>
