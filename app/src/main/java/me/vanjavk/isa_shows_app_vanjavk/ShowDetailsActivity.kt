@@ -77,7 +77,7 @@ class ShowsDetailsActivity : AppCompatActivity() {
         }
 
         bottomSheetBinding.confirmButton.setOnClickListener {
-            val review = Review("hardkodiranoimeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            val review = Review("hardkodira",
                 bottomSheetBinding.commentInput.text.toString(), bottomSheetBinding.starRatingBar.rating.toInt()
             )
             addReviewToList(review)

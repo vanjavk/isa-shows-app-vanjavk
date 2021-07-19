@@ -49,7 +49,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:clipChildren="false">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/showItemCardView"
@@ -117,7 +118,8 @@
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginTop="24dp"
                 android:visibility="visible"
-                tools:listitem="@layout/item_review" />
+                tools:listitem="@layout/item_review"
+                android:clipChildren="false"/>
 
             <TextView
                 android:id="@+id/noReviewsYet"

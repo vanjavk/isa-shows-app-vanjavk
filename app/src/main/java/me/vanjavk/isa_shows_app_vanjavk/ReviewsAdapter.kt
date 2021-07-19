@@ -15,10 +15,6 @@ class ReviewsAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewViewHolder {
 
         val binding = ItemReviewBinding.inflate(LayoutInflater.from(parent.context))
-        //kao neki fix
-
-        //s obzirom da nemogu staviti height u dp stavio sam sve u jos jedan framelayout
-//        binding.root.layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT)
 
         return ReviewViewHolder(binding)
     }

@@ -22,8 +22,6 @@ class ShowsActivity : AppCompatActivity() {
         }
     }
 
-
-
     private lateinit var binding: ActivityShowsBinding
 
     private var showsAdapter: ShowsAdapter? = null

@@ -30,7 +30,7 @@
                     android:id="@+id/profileIconImage"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/ic_smiley" />
+                    android:src="@drawable/ic_painting_art_svgrepo_com" />
             </androidx.cardview.widget.CardView>
 
             <TextView
