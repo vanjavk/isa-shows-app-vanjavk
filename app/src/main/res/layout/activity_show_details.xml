@@ -19,12 +19,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-
             android:minHeight="60dp"
             app:contentScrim="@color/white"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:toolbarId="@+id/toolbar">
-
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -36,7 +34,6 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
-
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -152,6 +149,5 @@
             android:textAllCaps="false"
             app:cornerRadius="21.5dp" />
     </FrameLayout>
-
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

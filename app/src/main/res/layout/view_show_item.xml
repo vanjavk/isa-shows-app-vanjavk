@@ -6,14 +6,9 @@
     android:id="@+id/showItemFrameLayoutParent"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clipToPadding="false"
     android:clipChildren="false"
+    android:clipToPadding="false"
     android:paddingBottom="16dp">
-
-<!--    <View-->
-<!--        android:id="@+id/DUMMYVIEW"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="0dp" />-->
 
     <FrameLayout
         android:id="@+id/showItemFrameLayout"
@@ -44,7 +39,6 @@
                     app:layout_constraintTop_toTopOf="parent"
                     tools:src="@drawable/show_butterflyeffect" />
 
-
                 <TextView
                     android:id="@+id/showTitle"
                     android:layout_width="wrap_content"
@@ -60,7 +54,6 @@
 
                 <TextView
                     android:id="@+id/showGenre"
-
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -88,11 +81,8 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/showTitle"
                     tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" />
-                <!-- NEVALJA PADDING -->
+
             </androidx.constraintlayout.widget.ConstraintLayout>
-
         </androidx.cardview.widget.CardView>
-
-
     </FrameLayout>
 </FrameLayout>

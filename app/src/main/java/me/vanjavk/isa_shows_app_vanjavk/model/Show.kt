@@ -11,6 +11,6 @@ data class Show(
     val reviews: MutableList<Review> = mutableListOf()
 ) {
     fun genresToString(): String {
-        return genre.map{ it.string }.joinToString(", ")
+        return genre.joinToString(", ") { it.string }
     }
 }

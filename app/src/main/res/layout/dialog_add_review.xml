@@ -24,8 +24,8 @@
         android:layout_marginStart="24dp"
         android:foregroundTint="@color/purple_infinum"
         android:numStars="5"
-        android:stepSize="1"
         android:rating="0"
+        android:stepSize="1"
         android:theme="@style/RatingBar"
         tools:rating="4" />
 

@@ -20,7 +20,6 @@ class LoginActivity : AppCompatActivity() {
         initLoginButton()
     }
 
-
     private fun initLoginButton() {
         binding.emailInput.doAfterTextChanged {
             checkEmailValid()

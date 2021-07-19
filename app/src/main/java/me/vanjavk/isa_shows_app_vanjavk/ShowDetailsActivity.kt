@@ -42,13 +42,12 @@ class ShowsDetailsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
-        val ID = intent.extras?.get(EXTRA_ID)
-        show = shows.find { it.ID == ID }!!
-        //  ovaj screeen je besmislen bez validnog show ida, da je sad prava aplikacija vjv bi napravio da ako ne nadje da javi neki alert error i vrati na prethodno
+        val id = intent.extras?.get(EXTRA_ID)
+        show = shows.find { it.ID == id }!!
+        //  ovaj screen je besmislen bez validnog show ida, da je sad prava aplikacija vjv bi napravio da ako ne nadje da javi neki alert error i vrati na prethodno
 
         binding.toolbarLayout.title = show.title
 
-        //binding.showTitle.text = show.title
         binding.showImage.setImageResource(show.imageResourceId)
         binding.showDescription.text = show.description
 
@@ -71,8 +70,6 @@ class ShowsDetailsActivity : AppCompatActivity() {
         val bottomSheetBinding = DialogAddReviewBinding.inflate(layoutInflater)
         dialog.setContentView(bottomSheetBinding.root)
 
-
-
         bottomSheetBinding.starRatingBar.setOnRatingBarChangeListener { _: RatingBar, _: Float, _: Boolean -> bottomSheetBinding.confirmButton.isEnabled = true
         }
 
@@ -83,9 +80,7 @@ class ShowsDetailsActivity : AppCompatActivity() {
             addReviewToList(review)
             dialog.dismiss()
         }
-
         dialog.show()
-
     }
 
     private fun addReviewToList(review: Review) {
@@ -127,7 +122,7 @@ class ShowsDetailsActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.getItemId()) {
+        return when (item.itemId) {
             R.id.home -> {
                 finish()
                 true

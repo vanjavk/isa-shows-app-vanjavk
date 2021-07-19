@@ -64,5 +64,4 @@
                 android:textSize="17sp" />
         </LinearLayout>
     </RelativeLayout>
-
 </LinearLayout>

@@ -25,7 +25,6 @@
                 app:cardCornerRadius="25dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
-
                 <ImageView
                     android:id="@+id/profileIconImage"
                     android:layout_width="match_parent"
@@ -45,7 +44,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/ratingStarValue"
                 app:layout_constraintStart_toEndOf="@id/profileIconImageCardView"
                 app:layout_constraintTop_toTopOf="@id/profileIconImageCardView"
-                tools:text="testasdf " />
+                tools:text="Imenko.Prezimenovic" />
 
             <TextView
                 android:id="@+id/ratingStarValue"
@@ -59,7 +58,6 @@
                 tools:text="3.7" />
 
             <ImageView
-
                 android:id="@+id/starFullImage"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
@@ -68,8 +66,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/profileIconImageCardView"
                 app:tint="@color/purple_infinum" />
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView

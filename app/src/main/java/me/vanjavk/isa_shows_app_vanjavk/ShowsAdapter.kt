@@ -2,7 +2,6 @@ package me.vanjavk.isa_shows_app_vanjavk
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.RecyclerView
 import me.vanjavk.isa_shows_app_vanjavk.databinding.ViewShowItemBinding
 import me.vanjavk.isa_shows_app_vanjavk.model.Show
