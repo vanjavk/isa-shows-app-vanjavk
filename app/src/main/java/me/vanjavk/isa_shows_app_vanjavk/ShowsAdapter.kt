@@ -22,7 +22,7 @@ class ShowsAdapter(
         //kao neki fix
 
         //s obzirom da nemogu staviti height u dp stavio sam sve u jos jedan framelayout
-        binding.root.layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT)
+//        binding.root.layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT)
 
         return ShowViewHolder(binding)
     }
