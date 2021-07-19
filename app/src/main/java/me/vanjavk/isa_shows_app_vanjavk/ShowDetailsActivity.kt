@@ -44,6 +44,7 @@ class ShowsDetailsActivity : AppCompatActivity() {
 
         val ID = intent.extras?.get(EXTRA_ID)
         show = shows.find { it.ID == ID }!!
+        //  ovaj screeen je besmislen bez validnog show ida, da je sad prava aplikacija vjv bi napravio da ako ne nadje da javi neki alert error i vrati na prethodno
 
         binding.toolbarLayout.title = show.title
 
