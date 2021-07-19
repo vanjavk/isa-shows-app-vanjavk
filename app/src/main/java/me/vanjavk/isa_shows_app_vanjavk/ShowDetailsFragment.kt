@@ -141,8 +141,12 @@ class ShowDetailsFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.home -> {
-                ShowDetailsFragmentDirections.actionBackToShows(args.email)
-                    .let { findNavController().navigate(it) }
+
+//                ShowDetailsFragmentDirections.actionBackToShows(args.email)
+//                    .let { findNavController().navigate(it) }
+//
+//                this.parentFragmentManager.popBackStackImmediate()// da mi zapamti poziciju?
+                activity?.onBackPressed()
                 true
             }
             else -> super.onOptionsItemSelected(item)
