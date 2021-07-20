@@ -3,8 +3,8 @@ package me.vanjavk.isa_shows_app_vanjavk
 import android.util.Patterns
 
 const val MIN_PASSWORD_LENGTH = 6
-const val EXTRA_ID = "EXTRA_ID"
-const val EXTRA_EMAIL = "EXTRA_EMAIL"
+const val LOGGED_IN_KEY = "LOGGED_IN_KEY"
+const val USER_EMAIL_KEY = "USER_EMAIL_KEY"
 
 fun CharSequence?.isValidEmail() = !(!isNullOrEmpty() && Patterns.EMAIL_ADDRESS.matcher(this).matches())
 
