@@ -1,6 +1,6 @@
 package me.vanjavk.isa_shows_app_vanjavk
 
-import android.R
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -8,11 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RatingBar
 import android.widget.Toast
+import me.vanjavk.isa_shows_app_vanjavk.R
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -34,9 +37,9 @@ class ShowDetailsFragment : Fragment() {
 
     private var reviewsAdapter: ReviewsAdapter? = null
 
-    private val showsViewModel: ShowsViewModel by viewModels()
+    private val showsViewModel: ShowsViewModel by navGraphViewModels(R.id.mainGraph)
 
-    private val showDetailsViewModel: ShowDetailsViewModel by viewModels()
+    private val showDetailsViewModel: ShowDetailsViewModel  by navGraphViewModels(R.id.mainGraph)
 
 
     override fun onCreateView(
@@ -59,7 +62,7 @@ class ShowDetailsFragment : Fragment() {
 
         val id = args.showID
 
-        showDetailsViewModel.initShow(showsViewModel.getShowsLiveData(), id)
+        showDetailsViewModel.initShow(showsViewModel.getShows(), id)
 
         showDetailsViewModel.getShowLiveData().observe(requireActivity(), { show ->
             updateViews(show)
@@ -85,6 +88,7 @@ class ShowDetailsFragment : Fragment() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     private fun showAddReviewBottomSheet() {
 
         val activity = activity as AppCompatActivity
@@ -110,10 +114,9 @@ class ShowDetailsFragment : Fragment() {
         dialog.show()
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     private fun addReviewToList(review: Review) {
-//        reviewsAdapter?.addItem(review)
-        showDetailsViewModel.addReview(review)
-//        refreshReviews()
+        showsViewModel.updateShow(showDetailsViewModel.addReview(review))
     }
 
     private fun initReviewsRecycler() {
@@ -128,10 +131,6 @@ class ShowDetailsFragment : Fragment() {
                 DividerItemDecoration.VERTICAL
             )
         )
-
-//        refreshReviews()
-
-//        reviewsAdapter?.setItems(show.reviews)
     }
 
 

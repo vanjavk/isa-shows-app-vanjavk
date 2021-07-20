@@ -22,14 +22,15 @@ class ShowDetailsViewModel : ViewModel() {
         return showLiveData
     }
 
-    fun initShow(showsLiveData: LiveData<List<Show>>, id: String) {
-        show = showsLiveData.value?.find { it.ID == id }!!
+    fun initShow(shows: List<Show>, id: String) {
+        show = shows.find { it.ID == id }!!
         showLiveData.value = show
     }
 
-    fun addReview(review: Review) {
+    fun addReview(review: Review): Show {
         show.reviews.add(review)
         showLiveData.value = show
+        return show
     }
 
 

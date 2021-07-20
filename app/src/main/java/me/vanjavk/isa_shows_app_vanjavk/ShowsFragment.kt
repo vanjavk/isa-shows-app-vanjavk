@@ -9,6 +9,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowsBinding
 import me.vanjavk.isa_shows_app_vanjavk.model.Show
@@ -22,7 +23,7 @@ class ShowsFragment : Fragment() {
 
     private var showsAdapter: ShowsAdapter? = null
 
-    private val showsViewModel: ShowsViewModel by viewModels()
+    private val showsViewModel: ShowsViewModel by navGraphViewModels(R.id.mainGraph)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,9 +37,9 @@ class ShowsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (showsViewModel.getShowsLiveData().value.isNullOrEmpty()){
-            showsViewModel.initShows()
-        }
+
+        showsViewModel.initShows()
+
 
         initShowsRecycler()
 

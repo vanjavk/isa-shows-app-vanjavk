@@ -1,5 +1,7 @@
 package me.vanjavk.isa_shows_app_vanjavk.viewmodel
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -67,6 +69,7 @@ class ShowsViewModel : ViewModel() {
             R.drawable.show_requiemforadream
         ),
     )
+
     private val showsLiveData: MutableLiveData<List<Show>> by lazy {
         MutableLiveData<List<Show>>()
     }
@@ -75,7 +78,24 @@ class ShowsViewModel : ViewModel() {
         return showsLiveData
     }
 
+    fun getShows():List<Show> {
+        return shows
+    }
+
+
     fun initShows() {
+        showsLiveData.value = shows
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    fun updateShow(modifiedShow: Show){
+        shows.replaceAll { show ->
+            if (show.ID==modifiedShow.ID){
+                modifiedShow
+            }else{
+                show
+            }
+        }
         showsLiveData.value = shows
     }
 
