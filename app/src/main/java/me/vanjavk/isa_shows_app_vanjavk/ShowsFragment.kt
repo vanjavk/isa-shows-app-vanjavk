@@ -23,7 +23,7 @@ class ShowsFragment : Fragment() {
 
     private var showsAdapter: ShowsAdapter? = null
 
-    private val showsViewModel: ShowsViewModel by navGraphViewModels(R.id.mainGraph)
+    private val showsViewModel: ShowsViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
