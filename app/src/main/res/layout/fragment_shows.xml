@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <com.google.android.material.card.MaterialCardView
         android:layout_width="24dp"
         android:layout_height="24dp"
@@ -15,7 +14,9 @@
         android:layout_marginEnd="16dp"
         android:back="@color/purple_infinum"
         app:cardCornerRadius="60dp">
+
         <ImageView
+            android:id="@+id/profileIconImage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:src="@drawable/ic_painting_art" />

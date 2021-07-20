@@ -5,13 +5,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
+import android.widget.RatingBar
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogAddReviewBinding
+import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogUserProfileBinding
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowsBinding
+import me.vanjavk.isa_shows_app_vanjavk.model.Review
 import me.vanjavk.isa_shows_app_vanjavk.model.Show
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowsViewModel
 
@@ -45,15 +49,30 @@ class ShowsFragment : Fragment() {
             updateItems(shows)
         })
 
-        initLogoutButton()
+        initUserProfileButton()
     }
 
     private fun updateItems(shows: List<Show>) {
         showsAdapter?.setItems(shows)
     }
 
-    private fun initLogoutButton() {
-        binding.logoutButton.setOnClickListener {
+    private fun initUserProfileButton() {
+        binding.profileIconImage.setOnClickListener {
+            userProfileBottomSheet()
+        }
+    }
+
+    private fun userProfileBottomSheet() {
+
+        val activity = activity as AppCompatActivity
+
+        val dialog = BottomSheetDialog(activity)
+
+        val bottomSheetBinding = DialogUserProfileBinding.inflate(layoutInflater)
+        dialog.setContentView(bottomSheetBinding.root)
+
+        bottomSheetBinding.logoutButton.setOnClickListener {
+            userProfileBottomSheet()
             val sharedPref =
                 activity?.getPreferences(Context.MODE_PRIVATE) ?: return@setOnClickListener
             with(sharedPref.edit()) {
@@ -65,7 +84,11 @@ class ShowsFragment : Fragment() {
             }
             ShowsFragmentDirections.actionLogout()
                 .let { findNavController().navigate(it) }
+            dialog.dismiss()
         }
+
+
+        dialog.show()
     }
 
     private fun initShowsRecycler() {
