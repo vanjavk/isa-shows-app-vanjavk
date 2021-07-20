@@ -6,6 +6,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RatingBar
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -60,6 +61,7 @@ class ShowDetailsFragment : Fragment() {
         showDetailsViewModel.initShow(showsViewModel.getShows(), id)
 
         val show = showDetailsViewModel.getShowLiveData().value ?: run {
+            Toast.makeText(activity, "Couldn't find show with that ID", Toast.LENGTH_SHORT).show()
             activity.onBackPressed()
             return
         }
