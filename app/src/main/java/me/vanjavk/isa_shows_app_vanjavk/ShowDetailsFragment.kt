@@ -59,10 +59,6 @@ class ShowDetailsFragment : Fragment() {
 
         showDetailsViewModel.initShow(showsViewModel.getShows(), id)
 
-        showDetailsViewModel.getShowLiveData().observe(viewLifecycleOwner, { show ->
-            updateViews(show)
-        })
-
         val show = showDetailsViewModel.getShowLiveData().value ?: run {
             activity.onBackPressed()
             return
@@ -71,6 +67,10 @@ class ShowDetailsFragment : Fragment() {
         binding.toolbarLayout.title = show.title
         binding.showImage.setImageResource(show.imageResourceId)
         binding.showDescription.text = show.description
+
+        showDetailsViewModel.getShowLiveData().observe(viewLifecycleOwner, { show ->
+            updateViews(show)
+        })
 
         initWriteReviewButton()
         initReviewsRecycler()

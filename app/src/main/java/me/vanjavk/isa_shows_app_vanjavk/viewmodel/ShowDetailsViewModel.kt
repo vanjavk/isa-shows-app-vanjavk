@@ -23,7 +23,7 @@ class ShowDetailsViewModel : ViewModel() {
     }
 
     fun initShow(shows: List<Show>, id: String) {
-        show = shows.find { it.ID == id }!!
+        show = shows.find { it.ID == id } ?: return
         showLiveData.value = show
     }
 
