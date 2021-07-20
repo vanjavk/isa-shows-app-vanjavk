@@ -37,9 +37,9 @@ class ShowDetailsFragment : Fragment() {
 
     private var reviewsAdapter: ReviewsAdapter? = null
 
-    private val showsViewModel: ShowsViewModel by navGraphViewModels(R.id.mainGraph)
+    private val showsViewModel: ShowsViewModel by viewModels()
 
-    private val showDetailsViewModel: ShowDetailsViewModel  by navGraphViewModels(R.id.mainGraph)
+    private val showDetailsViewModel: ShowDetailsViewModel by viewModels()
 
 
     override fun onCreateView(
