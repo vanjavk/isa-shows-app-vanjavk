@@ -23,7 +23,7 @@ class ShowsFragment : Fragment() {
 
     private var showsAdapter: ShowsAdapter? = null
 
-    private val showsViewModel: ShowsViewModel by viewModels()
+    private val showsViewModel: ShowsViewModel by navGraphViewModels(R.id.main)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,7 +41,7 @@ class ShowsFragment : Fragment() {
 
         initShowsRecycler()
 
-        showsViewModel.getShowsLiveData().observe(requireActivity(), { shows ->
+        showsViewModel.getShowsLiveData().observe(viewLifecycleOwner, { shows ->
             updateItems(shows)
         })
 
