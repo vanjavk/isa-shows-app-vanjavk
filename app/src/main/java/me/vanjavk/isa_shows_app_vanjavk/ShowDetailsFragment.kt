@@ -61,7 +61,7 @@ class ShowDetailsFragment : Fragment() {
         showDetailsViewModel.initShow(showsViewModel.getShows(), id)
 
         val show = showDetailsViewModel.getShowLiveData().value ?: run {
-            Toast.makeText(activity, "Couldn't find show with that ID", Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, getString(R.string.error_show_id_not_found), Toast.LENGTH_SHORT).show()
             activity.onBackPressed()
             return
         }
