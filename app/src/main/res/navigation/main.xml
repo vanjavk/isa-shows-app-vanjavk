@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/mainGraph"
     app:startDestination="@id/loginFragment">
 
     <fragment
@@ -52,7 +52,8 @@
             android:id="@+id/action_back_to_shows"
             app:destination="@id/showsFragment"
             app:popUpTo="@id/showsFragment"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="true"/>
 
     </fragment>
+
 </navigation>
