@@ -46,8 +46,6 @@ class ShowsFragment : Fragment() {
             updateItems(shows)
         })
 
-        initShowHideButton()
-
         initLogoutButton()
     }
 
@@ -68,14 +66,6 @@ class ShowsFragment : Fragment() {
             }
             ShowsFragmentDirections.actionLogout()
                 .let { findNavController().navigate(it) }
-        }
-    }
-
-    private fun initShowHideButton() {
-        binding.showHideButton.setOnClickListener {
-            binding.showsRecyclerView.apply {
-                isVisible = !isVisible
-            }
         }
     }
 
