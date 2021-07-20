@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     app:startDestination="@id/loginFragment">
 
@@ -12,7 +13,9 @@
 
         <action
             android:id="@+id/action_login_to_shows"
-            app:destination="@id/showsFragment"/>
+            app:destination="@id/showsFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -22,17 +25,20 @@
 
         <argument
             android:name="email"
-            app:argType="string"/>
-
-        <action
-            android:id="@+id/action_show_to_details"
-            app:destination="@id/showDetailsFragment"/>
-
+            app:argType="string" />
         <action
             android:id="@+id/action_logout"
             app:destination="@id/loginFragment"
-            app:popUpTo="@id/loginFragment"
-            app:popUpToInclusive="true"/>
+            app:popUpTo="@id/showsFragment"
+            app:popUpToInclusive="true" />
+
+        <action
+            android:id="@+id/action_show_to_details"
+            app:destination="@id/showDetailsFragment"
+            app:popUpTo="@id/showDetailsFragment"
+            app:popUpToInclusive="true"
+            app:popUpToSaveState="true"/>
+
     </fragment>
 
     <fragment
@@ -42,15 +48,17 @@
 
         <argument
             android:name="email"
-            app:argType="string"/>
+            app:argType="string" />
 
         <argument
             android:name="showID"
-            app:argType="string"/>
+            app:argType="string" />
 
         <action
             android:id="@+id/action_back_to_shows"
             app:destination="@id/showsFragment"
-            app:popUpTo="@id/showsFragment"/>
+            app:popUpTo="@id/showsFragment"
+            app:popUpToInclusive="true"
+            app:restoreState="true" />
     </fragment>
 </navigation>

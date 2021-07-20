@@ -142,11 +142,9 @@ class ShowDetailsFragment : Fragment() {
         return when (item.itemId) {
             R.id.home -> {
 
-//                ShowDetailsFragmentDirections.actionBackToShows(args.email)
-//                    .let { findNavController().navigate(it) }
-//
-//                this.parentFragmentManager.popBackStackImmediate()// da mi zapamti poziciju?
-                activity?.onBackPressed()
+                ShowDetailsFragmentDirections.actionBackToShows(args.email)
+                    .let { findNavController().navigate(it) }
+
                 true
             }
             else -> super.onOptionsItemSelected(item)
