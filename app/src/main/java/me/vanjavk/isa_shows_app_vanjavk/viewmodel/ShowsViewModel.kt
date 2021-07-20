@@ -91,10 +91,4 @@ class ShowsViewModel : ViewModel() {
         showsLiveData.value = shows
     }
 
-    fun addShow(show: Show) {
-        shows.add(show)
-        showsLiveData.value = shows
-    }
-
-
 }
