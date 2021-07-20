@@ -5,14 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowsBinding
+import me.vanjavk.isa_shows_app_vanjavk.model.Show
+import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowsViewModel
 
 class ShowsFragment : Fragment() {
 
@@ -22,6 +22,7 @@ class ShowsFragment : Fragment() {
 
     private var showsAdapter: ShowsAdapter? = null
 
+    private val showsViewModel: ShowsViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,11 +36,23 @@ class ShowsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        if (showsViewModel.getShowsLiveData().value.isNullOrEmpty()){
+            showsViewModel.initShows()
+        }
+
         initShowsRecycler()
+
+        showsViewModel.getShowsLiveData().observe(requireActivity(), { shows ->
+            updateItems(shows)
+        })
 
         initShowHideButton()
 
         initLogoutButton()
+    }
+
+    private fun updateItems(shows: List<Show>) {
+        showsAdapter?.setItems(shows)
     }
 
     private fun initLogoutButton() {
@@ -79,8 +92,6 @@ class ShowsFragment : Fragment() {
 
         binding.showsRecyclerView.layoutManager = LinearLayoutManager(activity)
         binding.showsRecyclerView.adapter = showsAdapter
-
-        showsAdapter?.setItems(shows)
     }
 
     override fun onDestroyView() {

@@ -10,6 +10,7 @@ import android.widget.RatingBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -19,6 +20,7 @@ import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogAddReviewBinding
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowDetailsBinding
 import me.vanjavk.isa_shows_app_vanjavk.model.Review
 import me.vanjavk.isa_shows_app_vanjavk.model.Show
+import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowsViewModel
 
 
 class ShowDetailsFragment : Fragment() {
@@ -27,11 +29,13 @@ class ShowDetailsFragment : Fragment() {
 
     private val binding get() = _binding!!
 
-    val args: ShowDetailsFragmentArgs by navArgs()
+    private val args: ShowDetailsFragmentArgs by navArgs()
 
     private var reviewsAdapter: ReviewsAdapter? = null
 
     private lateinit var show: Show
+
+    private val showsViewModel: ShowsViewModel by viewModels()
 
 
     override fun onCreateView(
@@ -53,7 +57,7 @@ class ShowDetailsFragment : Fragment() {
         activity.supportActionBar?.setDisplayShowHomeEnabled(true)
 
         val id = args.showID
-        show = shows.find { it.ID == id }!!
+        show = showsViewModel.getShowsLiveData().value?.find { it.ID == id }!!
 
         binding.toolbarLayout.title = show.title
 
