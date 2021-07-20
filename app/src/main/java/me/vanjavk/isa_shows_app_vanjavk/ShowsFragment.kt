@@ -74,7 +74,7 @@ class ShowsFragment : Fragment() {
             val email = sharedPref.getString(getString(R.string.user_email_key), "Default_user").orEmpty()
 
             ShowsFragmentDirections.actionShowToDetails(
-                email, item.ID+"a"
+                email, item.ID
             )
                 .let { findNavController().navigate(it) }
         }
