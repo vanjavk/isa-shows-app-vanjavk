@@ -88,7 +88,6 @@ class ShowDetailsFragment : Fragment() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
     private fun showAddReviewBottomSheet() {
 
         val activity = activity as AppCompatActivity
@@ -114,7 +113,6 @@ class ShowDetailsFragment : Fragment() {
         dialog.show()
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
     private fun addReviewToList(review: Review) {
         showsViewModel.updateShow(showDetailsViewModel.addReview(review))
     }
