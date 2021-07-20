@@ -47,21 +47,14 @@ class LoginFragment : Fragment() {
         }
 
         binding.loginButton.setOnClickListener {
-            val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: run {
-                Toast.makeText(
-                    activity,
-                    "Error has occurred. Aborting current task.",
-                    Toast.LENGTH_LONG
-                ).show()
-                return@setOnClickListener
-            }
+            val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return@setOnClickListener
 
             val email = binding.emailInput.text.toString()
             val rememberMe = binding.rememberMeCheckBox.isChecked
 
             with(sharedPref.edit()) {
-                putBoolean(LOGGED_IN_KEY, rememberMe)
-                putString(USER_EMAIL_KEY, email)
+                putBoolean(getString(R.string.logged_in_key), rememberMe)
+                putString(getString(R.string.user_email_key), email)
                 apply()
             }
 
