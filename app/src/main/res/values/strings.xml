@@ -27,4 +27,7 @@
     <string name="logout">Logout</string>
     <string name="change_profile_photo">Change profile photo</string>
     <string name="error_show_id_not_found">Error! Couldn\'t find show with that ID.</string>
+    <string name="write_a_review">Write a review</string>
+    <string name="comment">Comment</string>
+    <string name="confirm">Confirm</string>
 </resources>
