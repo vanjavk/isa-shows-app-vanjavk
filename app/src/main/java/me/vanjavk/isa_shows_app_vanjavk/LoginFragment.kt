@@ -1,9 +1,11 @@
 package me.vanjavk.isa_shows_app_vanjavk
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -23,6 +25,8 @@ class LoginFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -43,11 +47,30 @@ class LoginFragment : Fragment() {
         }
 
         binding.loginButton.setOnClickListener {
-            LoginFragmentDirections.actionLoginToShows(binding.emailInput.text.toString())
-                .let { findNavController().navigate(it) }
+            val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: run {
+                Toast.makeText(
+                    activity,
+                    "Error has occurred. Aborting current task.",
+                    Toast.LENGTH_LONG
+                ).show()
+                return@setOnClickListener
+            }
 
+            val email = binding.emailInput.text.toString()
+            val rememberMe = binding.rememberMeCheckBox.isChecked
+
+            with(sharedPref.edit()) {
+                putBoolean(LOGGED_IN_KEY, rememberMe)
+                putString(USER_EMAIL_KEY, email)
+                apply()
+            }
+
+            LoginFragmentDirections.actionLoginToShows(email)
+                .let { findNavController().navigate(it) }
         }
+
     }
+
 
     private fun checkEmailValid() {
         if (binding.emailInput.text.toString().isValidEmail()) {
