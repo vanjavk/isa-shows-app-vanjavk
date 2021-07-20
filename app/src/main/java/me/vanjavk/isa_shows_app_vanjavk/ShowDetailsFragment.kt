@@ -37,9 +37,9 @@ class ShowDetailsFragment : Fragment() {
 
     private var reviewsAdapter: ReviewsAdapter? = null
 
-    private val showsViewModel: ShowsViewModel by viewModels()
+    private val showsViewModel: ShowsViewModel by navGraphViewModels(R.id.main)
 
-    private val showDetailsViewModel: ShowDetailsViewModel by viewModels()
+    private val showDetailsViewModel: ShowDetailsViewModel by navGraphViewModels(R.id.main)
 
 
     override fun onCreateView(
@@ -64,7 +64,7 @@ class ShowDetailsFragment : Fragment() {
 
         showDetailsViewModel.initShow(showsViewModel.getShows(), id)
 
-        showDetailsViewModel.getShowLiveData().observe(requireActivity(), { show ->
+        showDetailsViewModel.getShowLiveData().observe(viewLifecycleOwner, { show ->
             updateViews(show)
         })
 
