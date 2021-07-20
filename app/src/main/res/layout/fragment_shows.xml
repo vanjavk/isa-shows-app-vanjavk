@@ -12,7 +12,6 @@
         android:layout_gravity="right"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:back="@color/purple_infinum"
         app:cardCornerRadius="60dp">
 
         <ImageView
