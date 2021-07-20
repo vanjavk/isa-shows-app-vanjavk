@@ -72,9 +72,8 @@ class ShowsFragment : Fragment() {
         dialog.setContentView(bottomSheetBinding.root)
 
         bottomSheetBinding.logoutButton.setOnClickListener {
-            userProfileBottomSheet()
             val sharedPref =
-                activity?.getPreferences(Context.MODE_PRIVATE) ?: return@setOnClickListener
+                activity.getPreferences(Context.MODE_PRIVATE) ?: return@setOnClickListener
             with(sharedPref.edit()) {
                 putBoolean(
                     getString(me.vanjavk.isa_shows_app_vanjavk.R.string.logged_in_key),
@@ -86,7 +85,6 @@ class ShowsFragment : Fragment() {
                 .let { findNavController().navigate(it) }
             dialog.dismiss()
         }
-
 
         dialog.show()
     }
