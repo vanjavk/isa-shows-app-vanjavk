@@ -34,10 +34,7 @@
 
         <action
             android:id="@+id/action_show_to_details"
-            app:destination="@id/showDetailsFragment"
-            app:popUpTo="@id/showDetailsFragment"
-            app:popUpToInclusive="true"
-            app:popUpToSaveState="true"/>
+            app:destination="@id/showDetailsFragment"/>
 
     </fragment>
 
@@ -58,7 +55,6 @@
             android:id="@+id/action_back_to_shows"
             app:destination="@id/showsFragment"
             app:popUpTo="@id/showsFragment"
-            app:popUpToInclusive="true"
-            app:restoreState="true" />
+            app:popUpToInclusive="true"/>
     </fragment>
 </navigation>
