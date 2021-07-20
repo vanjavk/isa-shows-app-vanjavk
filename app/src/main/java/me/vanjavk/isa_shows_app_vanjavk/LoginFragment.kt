@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentLoginBinding
 
@@ -25,6 +26,12 @@ class LoginFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return null
+        val loggedIn = sharedPref.getBoolean(getString(R.string.logged_in_key), false)
+        if (loggedIn) {
+            LoginFragmentDirections.actionLoginToShows()
+                .let { findNavController().navigate(it) }
+        }
 
 
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
@@ -47,7 +54,8 @@ class LoginFragment : Fragment() {
         }
 
         binding.loginButton.setOnClickListener {
-            val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return@setOnClickListener
+            val sharedPref =
+                activity?.getPreferences(Context.MODE_PRIVATE) ?: return@setOnClickListener
 
             val email = binding.emailInput.text.toString()
             val rememberMe = binding.rememberMeCheckBox.isChecked
@@ -58,7 +66,7 @@ class LoginFragment : Fragment() {
                 apply()
             }
 
-            LoginFragmentDirections.actionLoginToShows(email)
+            LoginFragmentDirections.actionLoginToShows()
                 .let { findNavController().navigate(it) }
         }
 

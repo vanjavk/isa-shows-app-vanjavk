@@ -141,7 +141,7 @@ class ShowDetailsFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.home -> {
-                ShowDetailsFragmentDirections.actionBackToShows(args.email)
+                ShowDetailsFragmentDirections.actionBackToShows()
                     .let { findNavController().navigate(it) }
                 true
             }
