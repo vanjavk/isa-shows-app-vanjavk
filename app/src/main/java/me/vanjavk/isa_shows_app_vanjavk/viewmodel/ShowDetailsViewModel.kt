@@ -14,8 +14,6 @@ class ShowDetailsViewModel : ViewModel() {
 
     private lateinit var show: Show
 
-    private val showsViewModel: ShowsViewModel by viewModels()
-
     private val showLiveData: MutableLiveData<Show> by lazy {
         MutableLiveData<Show>()
     }
@@ -24,10 +22,8 @@ class ShowDetailsViewModel : ViewModel() {
         return showLiveData
     }
 
-    fun initShow(id: String) {
-
-        show = ShowsViewModel.getShowsLiveData().value?.find { it.ID == id }!!
-
+    fun initShow(showsLiveData: LiveData<List<Show>>, id: String) {
+        show = showsLiveData.value?.find { it.ID == id }!!
         showLiveData.value = show
     }
 

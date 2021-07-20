@@ -20,6 +20,7 @@ import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogAddReviewBinding
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowDetailsBinding
 import me.vanjavk.isa_shows_app_vanjavk.model.Review
 import me.vanjavk.isa_shows_app_vanjavk.model.Show
+import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowDetailsViewModel
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowsViewModel
 
 
@@ -33,9 +34,9 @@ class ShowDetailsFragment : Fragment() {
 
     private var reviewsAdapter: ReviewsAdapter? = null
 
-    private lateinit var show: Show
-
     private val showsViewModel: ShowsViewModel by viewModels()
+
+    private val showDetailsViewModel: ShowDetailsViewModel by viewModels()
 
 
     override fun onCreateView(
@@ -57,15 +58,25 @@ class ShowDetailsFragment : Fragment() {
         activity.supportActionBar?.setDisplayShowHomeEnabled(true)
 
         val id = args.showID
-        show = showsViewModel.getShowsLiveData().value?.find { it.ID == id }!!
 
-        binding.toolbarLayout.title = show.title
+        showDetailsViewModel.initShow(showsViewModel.getShowsLiveData(), id)
 
-        binding.showImage.setImageResource(show.imageResourceId)
-        binding.showDescription.text = show.description
+        showDetailsViewModel.getShowLiveData().observe(requireActivity(), { show ->
+            updateViews(show)
+        })
 
         initWriteReviewButton()
         initReviewsRecycler()
+    }
+
+    private fun updateViews(show: Show) {
+        binding.toolbarLayout.title = show.title
+        binding.showImage.setImageResource(show.imageResourceId)
+        binding.showDescription.text = show.description
+
+        refreshReviews(show)
+
+        reviewsAdapter?.setItems(show.reviews)
     }
 
     private fun initWriteReviewButton() {
@@ -100,9 +111,9 @@ class ShowDetailsFragment : Fragment() {
     }
 
     private fun addReviewToList(review: Review) {
-        reviewsAdapter?.addItem(review)
-        show.reviews.add(review)
-        refreshReviews()
+//        reviewsAdapter?.addItem(review)
+        showDetailsViewModel.addReview(review)
+//        refreshReviews()
     }
 
     private fun initReviewsRecycler() {
@@ -118,13 +129,13 @@ class ShowDetailsFragment : Fragment() {
             )
         )
 
-        refreshReviews()
+//        refreshReviews()
 
-        reviewsAdapter?.setItems(show.reviews)
+//        reviewsAdapter?.setItems(show.reviews)
     }
 
 
-    private fun refreshReviews() {
+    private fun refreshReviews(show: Show) {
         if (show.reviews.isEmpty()) {
             binding.reviewsRecyclerView.visibility = View.GONE
             binding.showReviewRating.visibility = View.GONE
