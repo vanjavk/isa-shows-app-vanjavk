@@ -24,4 +24,7 @@
     <string name="user_email_key">USER_EMAIL_KEY</string>
     <string name='no_permission' formatted='false'>Please check your permissions in Settings.</string>
     <string name='settings' formatted='false'>Settings</string>
+    <string name="logout">Logout</string>
+    <string name="change_profile_photo">Change profile photo</string>
+    <string name="error_show_id_not_found">Error! Couldn\'t find show with that ID.</string>
 </resources>
