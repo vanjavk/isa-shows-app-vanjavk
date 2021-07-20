@@ -1,5 +1,6 @@
 package me.vanjavk.isa_shows_app_vanjavk
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -45,6 +46,15 @@ class ShowsFragment : Fragment() {
 
     private fun initLogoutButton() {
         binding.logoutButton.setOnClickListener {
+            val sharedPref =
+                activity?.getPreferences(Context.MODE_PRIVATE) ?: return@setOnClickListener
+            with(sharedPref.edit()) {
+                putBoolean(
+                    getString(me.vanjavk.isa_shows_app_vanjavk.R.string.logged_in_key),
+                    false
+                )
+                apply()
+            }
             ShowsFragmentDirections.actionLogout()
                 .let { findNavController().navigate(it) }
         }
