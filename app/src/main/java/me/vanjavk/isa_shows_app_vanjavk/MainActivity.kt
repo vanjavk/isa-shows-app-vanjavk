@@ -15,12 +15,5 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        val sharedPref = getPreferences(Context.MODE_PRIVATE)
-        val loggedIn = sharedPref.getBoolean(getString(R.string.logged_in_key), false)
-        if (loggedIn) {
-            binding.navHostFragmentMain.findNavController().graph.startDestination =
-                R.id.showsFragment
-        }
     }
 }

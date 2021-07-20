@@ -20,8 +20,6 @@ class ShowsFragment : Fragment() {
 
     private val binding get() = _binding!!
 
-    val args: ShowsFragmentArgs by navArgs()
-
     private var showsAdapter: ShowsAdapter? = null
 
 
@@ -70,7 +68,12 @@ class ShowsFragment : Fragment() {
 
     private fun initShowsRecycler() {
         showsAdapter = ShowsAdapter(emptyList()) { item ->
-            ShowsFragmentDirections.actionShowToDetails(args.email, item.ID)
+            val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return@ShowsAdapter
+            val email = sharedPref.getString(getString(R.string.user_email_key), "Default_user").orEmpty()
+
+            ShowsFragmentDirections.actionShowToDetails(
+                email, item.ID
+            )
                 .let { findNavController().navigate(it) }
         }
 
