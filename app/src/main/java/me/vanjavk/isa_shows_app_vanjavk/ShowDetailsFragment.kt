@@ -1,18 +1,13 @@
 package me.vanjavk.isa_shows_app_vanjavk
 
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RatingBar
-import android.widget.Toast
-import me.vanjavk.isa_shows_app_vanjavk.R
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
@@ -68,14 +63,21 @@ class ShowDetailsFragment : Fragment() {
             updateViews(show)
         })
 
+        val show = showDetailsViewModel.getShowLiveData().value ?: run {
+            activity.onBackPressed()
+            return
+        }
+
+        binding.toolbarLayout.title = show.title
+        binding.showImage.setImageResource(show.imageResourceId)
+        binding.showDescription.text = show.description
+
         initWriteReviewButton()
         initReviewsRecycler()
     }
 
+
     private fun updateViews(show: Show) {
-        binding.toolbarLayout.title = show.title
-        binding.showImage.setImageResource(show.imageResourceId)
-        binding.showDescription.text = show.description
 
         refreshReviews(show)
 
@@ -152,7 +154,7 @@ class ShowDetailsFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.home -> {
+            android.R.id.home -> {
                 ShowDetailsFragmentDirections.actionBackToShows()
                     .let { findNavController().navigate(it) }
                 true
