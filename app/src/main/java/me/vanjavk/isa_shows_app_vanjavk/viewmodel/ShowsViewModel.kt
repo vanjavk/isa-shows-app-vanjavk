@@ -82,20 +82,12 @@ class ShowsViewModel : ViewModel() {
         return shows
     }
 
-
     fun initShows() {
         showsLiveData.value = shows
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
     fun updateShow(modifiedShow: Show){
-        shows.replaceAll { show ->
-            if (show.ID==modifiedShow.ID){
-                modifiedShow
-            }else{
-                show
-            }
-        }
+        shows.find { it.ID == modifiedShow.ID }?.reviews=modifiedShow.reviews
         showsLiveData.value = shows
     }
 

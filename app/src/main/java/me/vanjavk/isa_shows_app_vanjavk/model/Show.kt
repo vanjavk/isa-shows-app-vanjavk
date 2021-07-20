@@ -8,7 +8,7 @@ data class Show(
     val description: String,
     val genre: List<Genre>,
     @DrawableRes val imageResourceId: Int,
-    val reviews: MutableList<Review> = mutableListOf()
+    var reviews: MutableList<Review> = mutableListOf()
 ) {
     fun genresToString(): String {
         return genre.joinToString(", ") { it.string }
