@@ -17,12 +17,20 @@ class ShowDetailsViewModel : ViewModel() {
         MutableLiveData<Show>()
     }
 
+    private val reviewsLiveData: MutableLiveData<List<Review>> by lazy {
+        MutableLiveData<List<Review>>()
+    }
+
     private val ratingInfoLiveData: MutableLiveData<RatingInfo> by lazy {
         MutableLiveData<RatingInfo>()
     }
 
     fun getShowLiveData(): LiveData<Show> {
         return showLiveData
+    }
+
+    fun getReviewsLiveData(): LiveData<List<Review>> {
+        return reviewsLiveData
     }
 
     fun getRatingInfoLiveData(): LiveData<RatingInfo> {
