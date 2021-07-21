@@ -19,6 +19,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogAddReviewBinding
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowDetailsBinding
 import me.vanjavk.isa_shows_app_vanjavk.model.RatingInfo
+import me.vanjavk.isa_shows_app_vanjavk.model.Review
 import me.vanjavk.isa_shows_app_vanjavk.model.Show
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowDetailsViewModel
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowsViewModel
@@ -72,12 +73,13 @@ class ShowDetailsFragment : Fragment() {
             return
         }
 
-        binding.toolbarLayout.title = show.title
-        binding.showImage.setImageResource(show.imageResourceId)
-        binding.showDescription.text = show.description
-
         showDetailsViewModel.getShowLiveData().observe(viewLifecycleOwner, { show ->
-            updateReviews(show)
+            updateShow(show)
+            updateReviews(show.reviews)
+        })
+
+        showDetailsViewModel.getReviewsLiveData().observe(viewLifecycleOwner, { reviews ->
+            updateReviews(reviews.last())
         })
 
         showDetailsViewModel.getRatingInfoLiveData().observe(viewLifecycleOwner, { ratingInfo ->
@@ -86,6 +88,10 @@ class ShowDetailsFragment : Fragment() {
 
         initWriteReviewButton()
         initReviewsRecycler()
+    }
+
+    private fun updateShow(show: Show) {
+
     }
 
     private fun updateRatingInfo(ratingInfo: RatingInfo) {
@@ -107,8 +113,12 @@ class ShowDetailsFragment : Fragment() {
         }
     }
 
-    private fun updateReviews(show: Show) {
-        reviewsAdapter?.setItems(show.reviews)
+    private fun updateReviews(reviews: List<Review>) {
+        reviewsAdapter?.setItems(reviews)
+    }
+
+    private fun updateReviews(review: Review) {
+        reviewsAdapter?.addItem(review)
     }
 
     private fun initWriteReviewButton() {
