@@ -130,22 +130,22 @@ class ShowsFragment : Fragment() {
 
         val activity = activity as AppCompatActivity
 
-        val dialog = BottomSheetDialog(activity)
-
-        val bottomSheetBinding = DialogUserProfileBinding.inflate(layoutInflater)
-        dialog.setContentView(bottomSheetBinding.root)
-
-        setImageFromStorage(bottomSheetBinding.userProfileImage)
-
-
         val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
         if (sharedPref == null) {
             Toast.makeText(activity, "Action failed. Aborting...", Toast.LENGTH_SHORT).show()
-            activity.onBackPressed()
             return
         }
+
+        val dialog = BottomSheetDialog(activity)
+
+        val bottomSheetBinding = DialogUserProfileBinding.inflate(layoutInflater)
+
+        dialog.setContentView(bottomSheetBinding.root)
         val email =
             sharedPref.getString(getString(R.string.user_email_key), "Default_user").orEmpty()
+
+        setImageFromStorage(bottomSheetBinding.userProfileImage)
+
         bottomSheetBinding.userEmail.text=email
 
         bottomSheetBinding.changeProfilePhotoButton.setOnClickListener {
