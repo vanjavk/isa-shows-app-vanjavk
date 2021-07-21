@@ -32,11 +32,6 @@ class ReviewsAdapter(
         notifyDataSetChanged()
     }
 
-    fun addItem(review: Review) {
-        items = items + review
-        notifyItemInserted(items.size)
-    }
-
     inner class ReviewViewHolder(private val binding: ItemReviewBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
