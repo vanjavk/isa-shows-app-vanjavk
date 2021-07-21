@@ -1,11 +1,13 @@
 package me.vanjavk.isa_shows_app_vanjavk
 
+import android.Manifest
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RatingBar
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -28,6 +30,10 @@ class ShowsFragment : Fragment() {
     private var showsAdapter: ShowsAdapter? = null
 
     private val showsViewModel: ShowsViewModel by navGraphViewModels(R.id.main)
+
+    private val locationPermissionForCamera = preparePermissionsContract(onPermissionsGranted = {
+        Toast.makeText(activity, "imam permissions yeyyyeye", Toast.LENGTH_SHORT).show()
+    })
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,6 +76,10 @@ class ShowsFragment : Fragment() {
 
         val bottomSheetBinding = DialogUserProfileBinding.inflate(layoutInflater)
         dialog.setContentView(bottomSheetBinding.root)
+
+        bottomSheetBinding.changeProfilePhotoButton.setOnClickListener {
+            locationPermissionForCamera.launch(arrayOf(Manifest.permission.CAMERA))
+        }
 
         bottomSheetBinding.logoutButton.setOnClickListener {
             val sharedPref =
