@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context=".ShowsDetailsActivity">
+    android:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
@@ -39,7 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:paddingBottom="92dp"
+        android:paddingBottom="88dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context=".ScrollBasedActivity">
 
@@ -81,7 +80,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:text="Reviews"
+                android:text="@string/reviews"
                 android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold" />
@@ -124,7 +123,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginVertical="40dp"
-                android:text="No reviews yet."
+                android:text="@string/no_reviews_yet"
                 android:textAlignment="center"
                 android:textSize="17sp" />
 
@@ -145,7 +144,7 @@
             android:layout_gravity="center"
             android:layout_marginHorizontal="24dp"
             android:backgroundTint="@color/purple_infinum"
-            android:text="Write a review"
+            android:text="@string/write_a_review"
             android:textAllCaps="false"
             app:cornerRadius="21.5dp" />
     </FrameLayout>

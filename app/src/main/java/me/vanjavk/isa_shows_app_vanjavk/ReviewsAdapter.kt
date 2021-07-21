@@ -1,7 +1,6 @@
 package me.vanjavk.isa_shows_app_vanjavk
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.View.GONE
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -42,13 +41,13 @@ class ReviewsAdapter(
 
         fun bind(item: Review) {
 
-            binding.ratingStarValue.text = item.stars.toString()
+            binding.ratingStarValue.text = item.rating.toString()
             binding.reviewerName.text = item.name
 
-            if (item.content.isEmpty()) {
+            if (item.comment.isEmpty()) {
                 binding.reviewContent.visibility = GONE
             } else {
-                binding.reviewContent.text = item.content
+                binding.reviewContent.text = item.comment
             }
 
         }

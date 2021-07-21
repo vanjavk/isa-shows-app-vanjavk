@@ -20,8 +20,8 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/profileIconImageCardView"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 app:cardCornerRadius="25dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -44,7 +44,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/ratingStarValue"
                 app:layout_constraintStart_toEndOf="@id/profileIconImageCardView"
                 app:layout_constraintTop_toTopOf="@id/profileIconImageCardView"
-                tools:text="Imenko.Prezimenovic" />
+                tools:text="@string/placeholder_name" />
 
             <TextView
                 android:id="@+id/ratingStarValue"
@@ -55,7 +55,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/starFullImage"
                 app:layout_constraintEnd_toStartOf="@id/starFullImage"
                 app:layout_constraintTop_toTopOf="@id/starFullImage"
-                tools:text="3.7" />
+                tools:text="3" />
 
             <ImageView
                 android:id="@+id/starFullImage"
@@ -74,7 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:textColor="@color/black"
-            tools:text="It was good. I laughed a lot, it matches my sense of humor perfectly. Loved it!" />
+            tools:text="@string/placeholder_comment" />
 
     </LinearLayout>
 </FrameLayout>
