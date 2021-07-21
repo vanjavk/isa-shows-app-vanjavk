@@ -9,6 +9,7 @@ import android.widget.RatingBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
@@ -33,8 +34,7 @@ class ShowDetailsFragment : Fragment() {
 
     private var reviewsAdapter: ReviewsAdapter? = null
 
-    private val showDetailsViewModel: ShowDetailsViewModel by navGraphViewModels(R.id.main)
-
+    private val showDetailsViewModel: ShowDetailsViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -150,7 +150,6 @@ class ShowDetailsFragment : Fragment() {
     }
 
     private fun initReviewsRecycler() {
-
         reviewsAdapter = ReviewsAdapter(emptyList())
 
         binding.reviewsRecyclerView.layoutManager = LinearLayoutManager(activity)
@@ -162,7 +161,6 @@ class ShowDetailsFragment : Fragment() {
             )
         )
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
