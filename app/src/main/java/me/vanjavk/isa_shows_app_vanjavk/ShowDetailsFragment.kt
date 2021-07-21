@@ -59,7 +59,7 @@ class ShowDetailsFragment : Fragment() {
 
         val id = args.showID
 
-        showDetailsViewModel.initShow(showsViewModel.getShows(), id)
+        showDetailsViewModel.initShow(showsViewModel.getShow(id))
 
         val show = showDetailsViewModel.getShowLiveData().value ?: run {
             Toast.makeText(activity, getString(R.string.error_show_id_not_found), Toast.LENGTH_SHORT).show()
@@ -121,10 +121,7 @@ class ShowDetailsFragment : Fragment() {
     }
 
     private fun addReviewToList(review: Review) {
-//        showsViewModel.addReview(Pair(args.showID,review))
-
         showDetailsViewModel.addReview(review)
-        showDetailsViewModel.changetitletest()
     }
 
     private fun initReviewsRecycler() {
