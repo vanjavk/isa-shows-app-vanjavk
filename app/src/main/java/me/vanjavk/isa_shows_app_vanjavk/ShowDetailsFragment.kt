@@ -68,7 +68,7 @@ class ShowDetailsFragment : Fragment() {
         })
 
         showDetailsViewModel.getReviewLiveData().observe(viewLifecycleOwner, { review ->
-            updateReviews(review)
+            updateReviews()
         })
 
         showDetailsViewModel.getRatingInfoLiveData().observe(viewLifecycleOwner, { ratingInfo ->
@@ -108,8 +108,8 @@ class ShowDetailsFragment : Fragment() {
         reviewsAdapter?.setItems(reviews)
     }
 
-    private fun updateReviews(review: Review) {
-        reviewsAdapter?.addItem(review)
+    private fun updateReviews() {
+        reviewsAdapter?.itemCount?.let { reviewsAdapter?.notifyItemInserted(it) }
     }
 
     private fun initWriteReviewButton() {
