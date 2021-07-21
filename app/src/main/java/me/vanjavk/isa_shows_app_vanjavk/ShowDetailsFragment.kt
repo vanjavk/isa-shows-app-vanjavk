@@ -62,16 +62,16 @@ class ShowDetailsFragment : Fragment() {
 
         showDetailsViewModel.initShow(id)
 
-        val show = showDetailsViewModel.getShowLiveData().value
-        if (show == null) {
-            Toast.makeText(
-                activity,
-                getString(R.string.error_show_id_not_found),
-                Toast.LENGTH_SHORT
-            ).show()
-            activity.onBackPressed()
-            return
-        }
+//        val show = showDetailsViewModel.getShowLiveData().value
+//        if (show == null) {
+//            Toast.makeText(
+//                activity,
+//                getString(R.string.error_show_id_not_found),
+//                Toast.LENGTH_SHORT
+//            ).show()
+//            activity.onBackPressed()
+//            return
+//        }
 
         showDetailsViewModel.getShowLiveData().observe(viewLifecycleOwner, { show ->
             updateShow(show)

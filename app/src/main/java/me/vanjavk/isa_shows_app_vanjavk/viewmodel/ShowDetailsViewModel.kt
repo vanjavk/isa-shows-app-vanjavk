@@ -50,11 +50,12 @@ class ShowDetailsViewModel : ViewModel() {
             if (it==null){
                 //error message
             }else{
+                show = it
                 reviews = show.reviews
                 calculateReviews()
+                showLiveData.value = show
             }
         }
-        showLiveData.value = show
     }
 
     fun addReview(name: String, comment: String, rating: Int) {
