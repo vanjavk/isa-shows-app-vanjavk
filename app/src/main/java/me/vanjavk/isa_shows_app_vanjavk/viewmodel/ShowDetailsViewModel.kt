@@ -49,7 +49,6 @@ class ShowDetailsViewModel : ViewModel() {
                 //error message
             }else{
                 show = it
-//                reviews = show.reviews
                 calculateReviews()
                 showLiveData.value = show
             }
@@ -59,10 +58,8 @@ class ShowDetailsViewModel : ViewModel() {
     fun addReview(name: String, comment: String, rating: Int) {
         val review = Review(name, comment, rating)
         show.reviews.add(review)
-//        reviews.add(review)
-        calculateReviews()
         reviewLiveData.value = review
-//        showLiveData.value = show
+        calculateReviews()
     }
 
 
