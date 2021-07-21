@@ -121,7 +121,10 @@ class ShowDetailsFragment : Fragment() {
     }
 
     private fun addReviewToList(review: Review) {
-        showsViewModel.addReview(showDetailsViewModel.addReview(review))
+//        showsViewModel.addReview(Pair(args.showID,review))
+
+        showDetailsViewModel.addReview(review)
+        showDetailsViewModel.changetitletest()
     }
 
     private fun initReviewsRecycler() {

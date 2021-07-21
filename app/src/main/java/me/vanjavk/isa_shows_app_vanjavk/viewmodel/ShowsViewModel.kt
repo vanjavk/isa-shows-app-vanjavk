@@ -85,9 +85,4 @@ class ShowsViewModel : ViewModel() {
         showsLiveData.value = shows
     }
 
-    fun addReview(pair: Pair<String, Review>){
-        shows.find { it.ID == pair.first }?.reviews?.add(pair.second)
-        showsLiveData.value = shows
-    }
-
 }
