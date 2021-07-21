@@ -3,21 +3,22 @@ package me.vanjavk.isa_shows_app_vanjavk
 import android.Manifest
 import android.app.Activity.RESULT_OK
 import android.content.ActivityNotFoundException
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.camera.core.ImageCapture
-import androidx.camera.core.ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY
+
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -30,9 +31,6 @@ import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogUserProfileBinding
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowsBinding
 import me.vanjavk.isa_shows_app_vanjavk.model.Show
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowsViewModel
-import java.io.File
-import java.io.IOException
-import java.text.SimpleDateFormat
 import java.util.*
 
 class ShowsFragment : Fragment() {
@@ -45,49 +43,40 @@ class ShowsFragment : Fragment() {
 
     private val showsViewModel: ShowsViewModel by navGraphViewModels(R.id.main)
 
-    private val locationPermissionForCamera = preparePermissionsContract(onPermissionsGranted = {
+    private val permissionForCamera = preparePermissionsContract(onPermissionsGranted = {
         // do camera
         camera()
     })
-
+    private lateinit var uri : Uri
     private fun camera() {
-        val uri = createImageFile(requireContext())?.let {
-            FileProvider.getUriForFile(requireContext(), "me.vanjavk.isa-shows-app-vanjavk",
+        uri = createImageFile(requireContext())?.let {
+            FileProvider.getUriForFile(requireContext(), "me.vanjavk.isa-shows-app-vanjavk.fileprovider",
                 it
             )
-        }
-
-
+        }!!
 
         getCameraImage.launch(uri)
+
 
     }
 
     private val getCameraImage = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
         if (success) {
+            Log.i(TAG, "Got image at: $uri")
 
-            //Do something with the image uri, go nuts!
+            binding.profileIconImage.setImageBitmap(
+                BitmapFactory.decodeFile(
+                    getImageFile(
+                        requireContext()
+                    ).toString()
+                )
+            )
+
         }
     }
 
-    val REQUEST_IMAGE_CAPTURE = 1
+    private fun setImageFromFile() {
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            val imageBitmap = data?.extras?.get("data") as Bitmap
-            binding.profileIconImage.setImageBitmap(imageBitmap)
-        }
-    }
-    lateinit var currentPhotoPath: String
-
-
-    private fun dispatchTakePictureIntent() {
-        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        try {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
-        } catch (e: ActivityNotFoundException) {
-            // display error state to the user
-        }
     }
 
 
@@ -134,7 +123,7 @@ class ShowsFragment : Fragment() {
         dialog.setContentView(bottomSheetBinding.root)
 
         bottomSheetBinding.changeProfilePhotoButton.setOnClickListener {
-            locationPermissionForCamera.launch(arrayOf(Manifest.permission.CAMERA))
+            permissionForCamera.launch(arrayOf(Manifest.permission.CAMERA))
         }
 
         bottomSheetBinding.logoutButton.setOnClickListener {
