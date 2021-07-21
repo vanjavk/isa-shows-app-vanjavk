@@ -3,7 +3,6 @@ package me.vanjavk.isa_shows_app_vanjavk
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RatingBar
@@ -18,7 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogAddReviewBinding
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowDetailsBinding
-import me.vanjavk.isa_shows_app_vanjavk.model.Review
+import me.vanjavk.isa_shows_app_vanjavk.model.RatingInfo
 import me.vanjavk.isa_shows_app_vanjavk.model.Show
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowDetailsViewModel
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowsViewModel
@@ -33,8 +32,6 @@ class ShowDetailsFragment : Fragment() {
     private val args: ShowDetailsFragmentArgs by navArgs()
 
     private var reviewsAdapter: ReviewsAdapter? = null
-
-    private val showsViewModel: ShowsViewModel by navGraphViewModels(R.id.main)
 
     private val showDetailsViewModel: ShowDetailsViewModel by navGraphViewModels(R.id.main)
 
@@ -56,13 +53,21 @@ class ShowDetailsFragment : Fragment() {
         activity.setSupportActionBar(binding.toolbar)
         activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
         activity.supportActionBar?.setDisplayShowHomeEnabled(true)
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController().navigateUp()
+        }
 
         val id = args.showID
 
-        showDetailsViewModel.initShow(showsViewModel.getShow(id))
+        showDetailsViewModel.initShow(id)
 
-        val show = showDetailsViewModel.getShowLiveData().value ?: run {
-            Toast.makeText(activity, getString(R.string.error_show_id_not_found), Toast.LENGTH_SHORT).show()
+        val show = showDetailsViewModel.getShowLiveData().value
+        if (show == null) {
+            Toast.makeText(
+                activity,
+                getString(R.string.error_show_id_not_found),
+                Toast.LENGTH_SHORT
+            ).show()
             activity.onBackPressed()
             return
         }
@@ -72,18 +77,37 @@ class ShowDetailsFragment : Fragment() {
         binding.showDescription.text = show.description
 
         showDetailsViewModel.getShowLiveData().observe(viewLifecycleOwner, { show ->
-            updateViews(show)
+            updateReviews(show)
+        })
+
+        showDetailsViewModel.getRatingInfoLiveData().observe(viewLifecycleOwner, { ratingInfo ->
+            updateRatingInfo(ratingInfo)
         })
 
         initWriteReviewButton()
         initReviewsRecycler()
     }
 
+    private fun updateRatingInfo(ratingInfo: RatingInfo) {
+        if (ratingInfo.numberOfReviews == 0) {
+            binding.reviewsRecyclerView.visibility = View.GONE
+            binding.showReviewRating.visibility = View.GONE
+            binding.showRatingBar.visibility = View.GONE
+            binding.noReviewsYet.visibility = View.VISIBLE
+        } else {
+            binding.noReviewsYet.visibility = View.GONE
+            binding.showReviewRating.visibility = View.VISIBLE
+            binding.showRatingBar.visibility = View.VISIBLE
+            binding.showReviewRating.text = getString(R.string.reviews_rating_info).format(
+                ratingInfo.numberOfReviews,
+                ratingInfo.averageRating
+            )
+            binding.showRatingBar.rating = ratingInfo.averageRating
+            binding.reviewsRecyclerView.visibility = View.VISIBLE
+        }
+    }
 
-    private fun updateViews(show: Show) {
-
-        refreshReviews(show)
-
+    private fun updateReviews(show: Show) {
         reviewsAdapter?.setItems(show.reviews)
     }
 
@@ -107,21 +131,22 @@ class ShowDetailsFragment : Fragment() {
         }
 
         bottomSheetBinding.confirmButton.setOnClickListener {
-            val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return@setOnClickListener
-            val email = sharedPref.getString(getString(R.string.user_email_key), "Default_user").orEmpty()
-            val review = Review(
+            val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
+            if (sharedPref == null) {
+                Toast.makeText(activity, "Action failed. Aborting...", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            val email =
+                sharedPref.getString(getString(R.string.user_email_key), "Default_user").orEmpty()
+
+            showDetailsViewModel.addReview(
                 email.getUsername(),
                 bottomSheetBinding.commentInput.text.toString(),
                 bottomSheetBinding.starRatingBar.rating.toInt()
             )
-            addReviewToList(review)
             dialog.dismiss()
         }
         dialog.show()
-    }
-
-    private fun addReviewToList(review: Review) {
-        showDetailsViewModel.addReview(review)
     }
 
     private fun initReviewsRecycler() {
@@ -138,35 +163,6 @@ class ShowDetailsFragment : Fragment() {
         )
     }
 
-
-    private fun refreshReviews(show: Show) {
-        if (show.reviews.isEmpty()) {
-            binding.reviewsRecyclerView.visibility = View.GONE
-            binding.showReviewRating.visibility = View.GONE
-            binding.showRatingBar.visibility = View.GONE
-            binding.noReviewsYet.visibility = View.VISIBLE
-        } else {
-            val averageRating = show.reviews.sumOf { it.stars } / show.reviews.count().toFloat()
-            binding.reviewsRecyclerView.visibility = View.VISIBLE
-            binding.showReviewRating.text =
-                "${show.reviews.count()} REVIEWS, ${"%.2f".format(averageRating)} AVERAGE"
-            binding.showReviewRating.visibility = View.VISIBLE
-            binding.showRatingBar.rating = averageRating
-            binding.showRatingBar.visibility = View.VISIBLE
-            binding.noReviewsYet.visibility = View.GONE
-        }
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            android.R.id.home -> {
-                ShowDetailsFragmentDirections.actionBackToShows()
-                    .let { findNavController().navigate(it) }
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()
