@@ -105,7 +105,7 @@ class ShowsFragment : Fragment() {
         setImageFromStorage(binding.profileIconImage)
     }
 
-    fun setImageFromStorage(imageView: ImageView){
+    private fun setImageFromStorage(imageView: ImageView){
         val imageFile = getImageFile(
             requireContext()
         )
