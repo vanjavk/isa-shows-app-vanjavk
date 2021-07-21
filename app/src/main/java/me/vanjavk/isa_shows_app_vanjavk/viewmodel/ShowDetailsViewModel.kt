@@ -27,10 +27,10 @@ class ShowDetailsViewModel : ViewModel() {
         showLiveData.value = show
     }
 
-    fun addReview(review: Review): Show {
+    fun addReview(review: Review): Pair<String, Review> {
         show.reviews.add(review)
         showLiveData.value = show
-        return show
+        return Pair(show.ID, review)
     }
 
 
