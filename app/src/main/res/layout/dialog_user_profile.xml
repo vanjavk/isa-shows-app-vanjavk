@@ -15,16 +15,16 @@
         app:cardCornerRadius="60dp"
         app:strokeColor="@color/purple_infinum"
         app:strokeWidth="2dp">
-
         <ImageView
-            android:id="@+id/userProfileButton"
+            android:id="@+id/userProfileImage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:src="@drawable/ic_painting_art"
-            android:contentDescription="User profile icon." />
+            />
     </com.google.android.material.card.MaterialCardView>
 
     <TextView
+        android:id="@+id/userEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

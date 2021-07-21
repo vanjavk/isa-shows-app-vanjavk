@@ -13,12 +13,11 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         app:cardCornerRadius="60dp">
-
         <ImageView
             android:id="@+id/profileIconImage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_painting_art" />
+            tools:src="@drawable/ic_painting_art" />
     </com.google.android.material.card.MaterialCardView>
 
 
