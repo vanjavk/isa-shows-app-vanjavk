@@ -107,7 +107,7 @@ class ShowsFragment : Fragment() {
 
             Log.i(TAG, "AYAYAYAYAYAYAYAY")
             Log.i(TAG, imageFile.toString())
-            //binding.profileIconImage.setImageURI(Uri.fromFile(imageFile))
+            binding.testImage.setImageURI(Uri.fromFile(imageFile))
         }
 
     }
