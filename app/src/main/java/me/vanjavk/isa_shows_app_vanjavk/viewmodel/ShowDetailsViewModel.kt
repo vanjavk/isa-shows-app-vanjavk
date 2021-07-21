@@ -46,7 +46,7 @@ class ShowDetailsViewModel : ViewModel() {
     fun initShow(id: String) {
         shows.find { it.id == id }.let{
             if (it==null){
-                //error message
+                show = shows[0]
             }else{
                 show = it
                 calculateReviews()
