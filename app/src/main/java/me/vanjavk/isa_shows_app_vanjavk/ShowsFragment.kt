@@ -15,6 +15,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -25,6 +26,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewbinding.ViewBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import me.vanjavk.isa_shows_app_vanjavk.FileUtil.createImageFile
 import me.vanjavk.isa_shows_app_vanjavk.FileUtil.getImageFile
@@ -100,16 +102,18 @@ class ShowsFragment : Fragment() {
 
         initUserProfileButton()
 
+        setImageFromStorage(binding.profileIconImage)
+    }
+
+    fun setImageFromStorage(imageView: ImageView){
         val imageFile = getImageFile(
             requireContext()
         )
         if (imageFile != null) {
-
-            Log.i(TAG, "AYAYAYAYAYAYAYAY")
-            Log.i(TAG, imageFile.toString())
-            binding.testImage.setImageURI(Uri.fromFile(imageFile))
+            imageView.setImageURI(Uri.fromFile(imageFile))
+        }else{
+            imageView.setImageResource(R.drawable.ic_painting_art)
         }
-
     }
 
     private fun updateItems(shows: List<Show>) {
@@ -131,16 +135,24 @@ class ShowsFragment : Fragment() {
         val bottomSheetBinding = DialogUserProfileBinding.inflate(layoutInflater)
         dialog.setContentView(bottomSheetBinding.root)
 
+        setImageFromStorage(bottomSheetBinding.userProfileImage)
+
+
+        val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
+        if (sharedPref == null) {
+            Toast.makeText(activity, "Action failed. Aborting...", Toast.LENGTH_SHORT).show()
+            activity.onBackPressed()
+            return
+        }
+        val email =
+            sharedPref.getString(getString(R.string.user_email_key), "Default_user").orEmpty()
+        bottomSheetBinding.userEmail.text=email
+
         bottomSheetBinding.changeProfilePhotoButton.setOnClickListener {
             permissionForCamera.launch(arrayOf(Manifest.permission.CAMERA))
         }
 
         bottomSheetBinding.logoutButton.setOnClickListener {
-            val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
-            if (sharedPref == null) {
-                Toast.makeText(activity, "Action failed. Aborting...", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
             with(sharedPref.edit()) {
                 putBoolean(
                     getString(me.vanjavk.isa_shows_app_vanjavk.R.string.logged_in_key),
