@@ -62,17 +62,6 @@ class ShowDetailsFragment : Fragment() {
 
         showDetailsViewModel.initShow(id)
 
-//        val show = showDetailsViewModel.getShowLiveData().value
-//        if (show == null) {
-//            Toast.makeText(
-//                activity,
-//                getString(R.string.error_show_id_not_found),
-//                Toast.LENGTH_SHORT
-//            ).show()
-//            activity.onBackPressed()
-//            return
-//        }
-
         showDetailsViewModel.getShowLiveData().observe(viewLifecycleOwner, { show ->
             updateShow(show)
             updateReviews(show.reviews)
@@ -104,6 +93,7 @@ class ShowDetailsFragment : Fragment() {
             binding.noReviewsYet.visibility = View.VISIBLE
         } else {
             binding.noReviewsYet.visibility = View.GONE
+            binding.reviewsRecyclerView.visibility = View.VISIBLE
             binding.showReviewRating.visibility = View.VISIBLE
             binding.showRatingBar.visibility = View.VISIBLE
             binding.showReviewRating.text = getString(R.string.reviews_rating_info).format(
@@ -111,7 +101,6 @@ class ShowDetailsFragment : Fragment() {
                 ratingInfo.averageRating
             )
             binding.showRatingBar.rating = ratingInfo.averageRating
-            binding.reviewsRecyclerView.visibility = View.VISIBLE
         }
     }
 
@@ -148,6 +137,7 @@ class ShowDetailsFragment : Fragment() {
                 Toast.makeText(activity, "Action failed. Aborting...", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+
             val email =
                 sharedPref.getString(getString(R.string.user_email_key), "Default_user").orEmpty()
 

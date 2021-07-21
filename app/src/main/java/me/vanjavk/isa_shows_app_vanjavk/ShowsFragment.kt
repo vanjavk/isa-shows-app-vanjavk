@@ -36,7 +36,7 @@ class ShowsFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentShowsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -79,8 +79,11 @@ class ShowsFragment : Fragment() {
         }
 
         bottomSheetBinding.logoutButton.setOnClickListener {
-            val sharedPref =
-                activity.getPreferences(Context.MODE_PRIVATE) ?: return@setOnClickListener
+            val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
+            if (sharedPref == null) {
+                Toast.makeText(activity, "Action failed. Aborting...", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             with(sharedPref.edit()) {
                 putBoolean(
                     getString(me.vanjavk.isa_shows_app_vanjavk.R.string.logged_in_key),
