@@ -13,6 +13,8 @@ class ShowDetailsViewModel : ViewModel() {
 
     private lateinit var show: Show
 
+    private lateinit var reviews: MutableList<Review>
+
     private val showLiveData: MutableLiveData<Show> by lazy {
         MutableLiveData<Show>()
     }
@@ -38,25 +40,30 @@ class ShowDetailsViewModel : ViewModel() {
     }
 
     private fun calculateReviews(){
-        val numberOfReviews = show.reviews.count()
-        val averageRating = show.reviews.sumOf { it.rating } / numberOfReviews.toFloat()
+        val numberOfReviews = reviews.count()
+        val averageRating = reviews.sumOf { it.rating } / numberOfReviews.toFloat()
         ratingInfoLiveData.value = RatingInfo(numberOfReviews,averageRating)
     }
 
     fun initShow(id: String) {
-        show = shows.find { it.id == id }!!//help
-//        if (show == null) {
-//            return
-//        }
-        calculateReviews()
+        shows.find { it.id == id }.let{
+            if (it==null){
+                //error message
+            }else{
+                reviews = show.reviews
+                calculateReviews()
+            }
+        }
         showLiveData.value = show
     }
 
     fun addReview(name: String, comment: String, rating: Int) {
         val review = Review(name, comment, rating)
         show.reviews.add(review)
+//        reviews.add(review)
         calculateReviews()
-        showLiveData.value = show
+//        reviewsLiveData.value = reviews
+//        showLiveData.value = show
     }
 
 
