@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY
@@ -23,6 +24,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import me.vanjavk.isa_shows_app_vanjavk.FileUtil.createImageFile
+import me.vanjavk.isa_shows_app_vanjavk.FileUtil.getImageFile
 import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogUserProfileBinding
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowsBinding
 import me.vanjavk.isa_shows_app_vanjavk.model.Show
@@ -43,11 +46,31 @@ class ShowsFragment : Fragment() {
     private val showsViewModel: ShowsViewModel by navGraphViewModels(R.id.main)
 
     private val locationPermissionForCamera = preparePermissionsContract(onPermissionsGranted = {
-        dispatchTakePictureIntent()
+        // do camera
+        camera()
     })
 
-    val REQUEST_IMAGE_CAPTURE = 1
+    private fun camera() {
+        val uri = createImageFile(requireContext())?.let {
+            FileProvider.getUriForFile(requireContext(), "me.vanjavk.isa-shows-app-vanjavk",
+                it
+            )
+        }
 
+
+
+        getCameraImage.launch(uri)
+
+    }
+
+    private val getCameraImage = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+        if (success) {
+
+            //Do something with the image uri, go nuts!
+        }
+    }
+
+    val REQUEST_IMAGE_CAPTURE = 1
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
@@ -57,20 +80,7 @@ class ShowsFragment : Fragment() {
     }
     lateinit var currentPhotoPath: String
 
-    @Throws(IOException::class)
-    private fun createImageFile(): File {
-        // Create an image file name
-        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-        val storageDir: File = Environment.getExternalStorageDirectory()
-        return File.createTempFile(
-            "JPEG_${timeStamp}_", /* prefix */
-            ".jpg", /* suffix */
-            storageDir /* directory */
-        ).apply {
-            // Save a file: path for use with ACTION_VIEW intents
-            currentPhotoPath = absolutePath
-        }
-    }
+
     private fun dispatchTakePictureIntent() {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         try {
