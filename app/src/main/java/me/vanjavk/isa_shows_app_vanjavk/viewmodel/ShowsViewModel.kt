@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import me.vanjavk.isa_shows_app_vanjavk.R
 import me.vanjavk.isa_shows_app_vanjavk.model.Genre
-import me.vanjavk.isa_shows_app_vanjavk.model.Review
 import me.vanjavk.isa_shows_app_vanjavk.model.Show
 
 class ShowsViewModel : ViewModel() {
@@ -77,8 +76,8 @@ class ShowsViewModel : ViewModel() {
         return showsLiveData
     }
 
-    fun getShows():List<Show> {
-        return shows
+    fun getShow(id: String): Show? {
+        return shows.find { it.ID == id }
     }
 
     fun initShows() {
