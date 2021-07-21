@@ -78,8 +78,8 @@ class ShowDetailsFragment : Fragment() {
             updateReviews(show.reviews)
         })
 
-        showDetailsViewModel.getReviewsLiveData().observe(viewLifecycleOwner, { reviews ->
-            updateReviews(reviews.last())
+        showDetailsViewModel.getReviewLiveData().observe(viewLifecycleOwner, { review ->
+            updateReviews(review)
         })
 
         showDetailsViewModel.getRatingInfoLiveData().observe(viewLifecycleOwner, { ratingInfo ->
@@ -91,7 +91,9 @@ class ShowDetailsFragment : Fragment() {
     }
 
     private fun updateShow(show: Show) {
-
+        binding.toolbarLayout.title = show.title
+        binding.showImage.setImageResource(show.imageResourceId)
+        binding.showDescription.text = show.description
     }
 
     private fun updateRatingInfo(ratingInfo: RatingInfo) {
