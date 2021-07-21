@@ -41,7 +41,7 @@ class ShowDetailsFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentShowDetailsBinding.inflate(inflater, container, false)
         setHasOptionsMenu(true);
         return binding.root
