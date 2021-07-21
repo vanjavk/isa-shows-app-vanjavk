@@ -20,6 +20,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 
 import androidx.core.content.FileProvider
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
@@ -57,20 +58,17 @@ class ShowsFragment : Fragment() {
 
         getCameraImage.launch(uri)
 
-
     }
-
     private val getCameraImage = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
         if (success) {
             Log.i(TAG, "Got image at: $uri")
-
-            binding.profileIconImage.setImageBitmap(
-                BitmapFactory.decodeFile(
-                    getImageFile(
-                        requireContext()
-                    ).toString()
-                )
+            val imageFile = getImageFile(
+                requireContext()
             )
+            if (imageFile != null) {
+                Log.i(TAG, "Got image at: $uri")
+                binding.profileIconImage.setImageURI(Uri.fromFile(imageFile))
+            }
 
         }
     }
@@ -101,6 +99,17 @@ class ShowsFragment : Fragment() {
         })
 
         initUserProfileButton()
+
+        val imageFile = getImageFile(
+            requireContext()
+        )
+        if (imageFile != null) {
+
+            Log.i(TAG, "AYAYAYAYAYAYAYAY")
+            Log.i(TAG, imageFile.toString())
+            //binding.profileIconImage.setImageURI(Uri.fromFile(imageFile))
+        }
+
     }
 
     private fun updateItems(shows: List<Show>) {
