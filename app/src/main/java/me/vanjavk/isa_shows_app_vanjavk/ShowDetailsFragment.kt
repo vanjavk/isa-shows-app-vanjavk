@@ -1,5 +1,6 @@
 package me.vanjavk.isa_shows_app_vanjavk
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -106,8 +107,10 @@ class ShowDetailsFragment : Fragment() {
         }
 
         bottomSheetBinding.confirmButton.setOnClickListener {
+            val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return@setOnClickListener
+            val email = sharedPref.getString(getString(R.string.user_email_key), "Default_user").orEmpty()
             val review = Review(
-                args.email.getUsername(),
+                email.getUsername(),
                 bottomSheetBinding.commentInput.text.toString(),
                 bottomSheetBinding.starRatingBar.rating.toInt()
             )
@@ -118,7 +121,7 @@ class ShowDetailsFragment : Fragment() {
     }
 
     private fun addReviewToList(review: Review) {
-        showsViewModel.updateShow(showDetailsViewModel.addReview(review))
+        showsViewModel.addReview(showDetailsViewModel.addReview(review))
     }
 
     private fun initReviewsRecycler() {

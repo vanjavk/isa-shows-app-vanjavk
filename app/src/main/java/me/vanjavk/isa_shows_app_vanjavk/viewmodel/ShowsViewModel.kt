@@ -1,12 +1,11 @@
 package me.vanjavk.isa_shows_app_vanjavk.viewmodel
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import me.vanjavk.isa_shows_app_vanjavk.R
 import me.vanjavk.isa_shows_app_vanjavk.model.Genre
+import me.vanjavk.isa_shows_app_vanjavk.model.Review
 import me.vanjavk.isa_shows_app_vanjavk.model.Show
 
 class ShowsViewModel : ViewModel() {
@@ -86,8 +85,8 @@ class ShowsViewModel : ViewModel() {
         showsLiveData.value = shows
     }
 
-    fun updateShow(modifiedShow: Show){
-        shows.find { it.ID == modifiedShow.ID }?.reviews=modifiedShow.reviews
+    fun addReview(pair: Pair<String, Review>){
+        shows.find { it.ID == pair.first }?.reviews?.add(pair.second)
         showsLiveData.value = shows
     }
 

@@ -41,10 +41,6 @@
         tools:layout="@layout/fragment_show_details">
 
         <argument
-            android:name="email"
-            app:argType="string" />
-
-        <argument
             android:name="showID"
             app:argType="string" />
 
