@@ -1,17 +1,9 @@
 package me.vanjavk.isa_shows_app_vanjavk
 
 import android.Manifest
-import android.app.Activity.RESULT_OK
-import android.content.ActivityNotFoundException
-import android.content.ContentValues.TAG
 import android.content.Context
-import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,12 +13,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 
 import androidx.core.content.FileProvider
-import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.viewbinding.ViewBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import me.vanjavk.isa_shows_app_vanjavk.FileUtil.createImageFile
 import me.vanjavk.isa_shows_app_vanjavk.FileUtil.getImageFile
@@ -34,6 +24,7 @@ import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogUserProfileBinding
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowsBinding
 import me.vanjavk.isa_shows_app_vanjavk.model.Show
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowsViewModel
+import java.io.File
 import java.util.*
 
 class ShowsFragment : Fragment() {
@@ -44,7 +35,7 @@ class ShowsFragment : Fragment() {
 
     private var showsAdapter: ShowsAdapter? = null
 
-    private val showsViewModel: ShowsViewModel by navGraphViewModels(R.id.main)
+    private val showsViewModel: ShowsViewModel by viewModels()
 
     private val permissionForCamera = preparePermissionsContract(onPermissionsGranted = {
         val uri = createImageFile(requireContext())?.let {
@@ -66,7 +57,8 @@ class ShowsFragment : Fragment() {
                 requireContext()
             )
             if (imageFile != null) {
-                binding.profileIconImage.setImageURI(Uri.fromFile(imageFile))
+                showsViewModel.setImage(imageFile)
+
             }
 
         }
@@ -92,15 +84,20 @@ class ShowsFragment : Fragment() {
             updateItems(shows)
         })
 
-        initUserProfileButton()
-        setImageFromStorage(binding.testImage)
-        setImageFromStorage(binding.profileIconImage)
-    }
+        showsViewModel.getUserProfilePictureLiveData().observe(viewLifecycleOwner, { imageFile ->
+            setImageFromFile(binding.profileIconImage, imageFile)
+        })
 
-    private fun setImageFromStorage(imageView: ImageView){
         val imageFile = getImageFile(
             requireContext()
         )
+        if (imageFile!=null){
+            showsViewModel.setImage(imageFile)
+        }
+        initUserProfileButton()
+    }
+
+    private fun setImageFromFile(imageView: ImageView, imageFile: File){
         if (imageFile != null) {
             imageView.setImageURI(Uri.fromFile(imageFile))
         }else{
@@ -136,7 +133,17 @@ class ShowsFragment : Fragment() {
         val email =
             sharedPref.getString(getString(R.string.user_email_key), "Default_user").orEmpty()
 
-        setImageFromStorage(bottomSheetBinding.userProfileImage)
+        showsViewModel.getUserProfilePictureLiveData().observe(viewLifecycleOwner, { imageFile ->
+            setImageFromFile(bottomSheetBinding.userProfileImage, imageFile)
+        })
+
+        val imageFile = getImageFile(
+            requireContext()
+        )
+        if (imageFile!=null){
+            showsViewModel.setImage(imageFile)
+            setImageFromFile(bottomSheetBinding.userProfileImage, imageFile)
+        }
 
         bottomSheetBinding.userEmail.text=email
 
