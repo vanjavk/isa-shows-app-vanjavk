@@ -27,12 +27,6 @@
         android:textSize="36sp"
         android:textStyle="bold" />
 
-    <ImageView
-        android:id="@+id/testImage"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:src="@drawable/ic_painting_art" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/showsRecyclerView"
         android:layout_width="match_parent"
