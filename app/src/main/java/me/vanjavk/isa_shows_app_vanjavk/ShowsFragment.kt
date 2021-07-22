@@ -101,7 +101,7 @@ class ShowsFragment : Fragment() {
         })
 
         initUserProfileButton()
-
+        setImageFromStorage(binding.testImage)
         setImageFromStorage(binding.profileIconImage)
     }
 
