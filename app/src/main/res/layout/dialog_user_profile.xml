@@ -4,24 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:clipToPadding="false"
+    android:clipChildren="false">
 
-    <com.google.android.material.card.MaterialCardView
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/userProfileImage"
         android:layout_width="96dp"
         android:layout_height="96dp"
         android:layout_gravity="center"
         android:layout_marginTop="40dp"
         android:layout_marginBottom="32dp"
-        app:cardCornerRadius="60dp"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"
+        android:src="@drawable/ic_painting_art"
         app:strokeColor="@color/purple_infinum"
-        app:strokeWidth="2dp">
-        <ImageView
-            android:id="@+id/userProfileImage"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:src="@drawable/ic_painting_art"
-            />
-    </com.google.android.material.card.MaterialCardView>
+        app:strokeWidth="2dp"
+        android:forceHasOverlappingRendering="true"
+        />
 
     <TextView
         android:id="@+id/userEmail"
