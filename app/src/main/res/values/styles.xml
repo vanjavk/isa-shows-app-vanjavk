@@ -17,4 +17,9 @@
         <item name="colorControlNormal">@color/purple_infinum</item>
         <item name="colorControlActivated">@color/purple_infinum</item>
     </style>
+
+    <style name="ShapeAppearanceOverlay.App.CornerSize50Percent" parent="">
+        <item name="cornerSize">50%</item>
+        <item name="cornerFamily">rounded</item>
+    </style>
 </resources>
