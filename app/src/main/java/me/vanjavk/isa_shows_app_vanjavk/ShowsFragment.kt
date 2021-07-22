@@ -47,38 +47,30 @@ class ShowsFragment : Fragment() {
     private val showsViewModel: ShowsViewModel by navGraphViewModels(R.id.main)
 
     private val permissionForCamera = preparePermissionsContract(onPermissionsGranted = {
-        // do camera
-        camera()
-    })
-    private lateinit var uri : Uri
-    private fun camera() {
-        uri = createImageFile(requireContext())?.let {
+        val uri = createImageFile(requireContext())?.let {
             FileProvider.getUriForFile(requireContext(), "me.vanjavk.isa-shows-app-vanjavk.fileprovider",
                 it
             )
-        }!!
-
+        }
+        if (uri==null){
+            Toast.makeText(activity, "Error! Couldn't read image from storage.", Toast.LENGTH_SHORT).show()
+            return@preparePermissionsContract
+        }
         getCameraImage.launch(uri)
+    })
 
-    }
+
     private val getCameraImage = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
         if (success) {
-            Log.i(TAG, "Got image at: $uri")
             val imageFile = getImageFile(
                 requireContext()
             )
             if (imageFile != null) {
-                Log.i(TAG, "Got image at: $uri")
                 binding.profileIconImage.setImageURI(Uri.fromFile(imageFile))
             }
 
         }
     }
-
-    private fun setImageFromFile() {
-
-    }
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
