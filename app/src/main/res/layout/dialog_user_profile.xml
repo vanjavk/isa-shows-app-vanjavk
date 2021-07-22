@@ -5,13 +5,12 @@
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:orientation="vertical"
-    android:clipToPadding="false"
     android:clipChildren="false">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/userProfileImage"
-        android:layout_width="96dp"
-        android:layout_height="96dp"
+        android:layout_width="104dp"
+        android:layout_height="104dp"
         android:layout_gravity="center"
         android:layout_marginTop="40dp"
         android:layout_marginBottom="32dp"
@@ -19,7 +18,8 @@
         android:src="@drawable/ic_painting_art"
         app:strokeColor="@color/purple_infinum"
         app:strokeWidth="2dp"
-        android:forceHasOverlappingRendering="true"
+        android:padding="8dp"
+
         />
 
     <TextView
