@@ -17,6 +17,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import me.vanjavk.isa_shows_app_vanjavk.FileUtil.createImageFile
 import me.vanjavk.isa_shows_app_vanjavk.FileUtil.getImageFile
@@ -98,11 +100,14 @@ class ShowsFragment : Fragment() {
     }
 
     private fun setImageFromFile(imageView: ImageView, imageFile: File){
-        if (imageFile != null) {
-            imageView.setImageURI(Uri.fromFile(imageFile))
-        }else{
-            imageView.setImageResource(R.drawable.ic_painting_art)
-        }
+        Glide.with(this).load(imageFile).diskCacheStrategy(DiskCacheStrategy.NONE)
+            .skipMemoryCache(true).into(imageView)
+
+//        if (imageFile != null) {
+//            imageView.setImageURI(Uri.fromFile(imageFile))
+//        }else{
+//            imageView.setImageResource(R.drawable.ic_painting_art)
+//        }
     }
 
     private fun updateItems(shows: List<Show>) {
@@ -141,7 +146,6 @@ class ShowsFragment : Fragment() {
             requireContext()
         )
         if (imageFile!=null){
-            showsViewModel.setImage(imageFile)
             setImageFromFile(bottomSheetBinding.userProfileImage, imageFile)
         }
 
