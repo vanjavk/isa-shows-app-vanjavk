@@ -16,8 +16,9 @@ class ShowsActivity : AppCompatActivity() {
 
     companion object {
 
-        fun buildIntent(activity: Activity): Intent {
+        fun buildIntent(activity: Activity, email: String): Intent {
             val intent = Intent(activity, ShowsActivity::class.java)
+            intent.putExtra(EXTRA_EMAIL, email)
             return intent
         }
     }
@@ -46,8 +47,9 @@ class ShowsActivity : AppCompatActivity() {
     }
 
     private fun initShowsRecycler() {
+        val email = intent.extras?.get(EXTRA_EMAIL).toString()
         showsAdapter = ShowsAdapter(emptyList()) { item ->
-            startActivity(ShowsDetailsActivity.buildIntent(this, item.ID))
+            startActivity(ShowsDetailsActivity.buildIntent(this, item.ID, email))
         }
 
         binding.showsRecyclerView.layoutManager = LinearLayoutManager(this)

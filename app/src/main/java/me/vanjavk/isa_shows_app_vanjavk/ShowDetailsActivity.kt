@@ -21,10 +21,10 @@ import me.vanjavk.isa_shows_app_vanjavk.model.Show
 class ShowsDetailsActivity : AppCompatActivity() {
 
     companion object {
-        fun buildIntent(activity: Activity, ID: String): Intent {
+        fun buildIntent(activity: Activity, ID: String, email: String): Intent {
             val intent = Intent(activity, ShowsDetailsActivity::class.java)
             intent.putExtra(EXTRA_ID, ID)
-            intent.putExtra(EXTRA_EMAIL, ID)
+            intent.putExtra(EXTRA_EMAIL, email)
             return intent
         }
     }
