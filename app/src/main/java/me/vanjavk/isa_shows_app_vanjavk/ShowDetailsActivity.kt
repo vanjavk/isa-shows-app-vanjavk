@@ -24,6 +24,7 @@ class ShowsDetailsActivity : AppCompatActivity() {
         fun buildIntent(activity: Activity, ID: String): Intent {
             val intent = Intent(activity, ShowsDetailsActivity::class.java)
             intent.putExtra(EXTRA_ID, ID)
+            intent.putExtra(EXTRA_EMAIL, ID)
             return intent
         }
     }
@@ -81,9 +82,10 @@ class ShowsDetailsActivity : AppCompatActivity() {
             bottomSheetBinding.confirmButton.isEnabled = true
         }
 
+        val email = intent.extras?.get(EXTRA_EMAIL).toString()
         bottomSheetBinding.confirmButton.setOnClickListener {
             val review = Review(
-                "hardkodira",
+                email,
                 bottomSheetBinding.commentInput.text.toString(),
                 bottomSheetBinding.starRatingBar.rating.toInt()
             )
