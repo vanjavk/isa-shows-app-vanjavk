@@ -45,7 +45,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/ratingStarValue"
                 app:layout_constraintStart_toEndOf="@id/profileIconImageCardView"
                 app:layout_constraintTop_toTopOf="@id/profileIconImageCardView"
-                tools:text="Imenko.Prezimenovic" />
+                tools:text="@string/placeholder_name" />
 
             <TextView
                 android:id="@+id/ratingStarValue"
@@ -75,7 +75,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:textColor="@color/black"
-            tools:text="It was good. I laughed a lot, it matches my sense of humor perfectly. Loved it!" />
+            tools:text="@string/placeholder_comment" />
 
     </LinearLayout>
 </FrameLayout>

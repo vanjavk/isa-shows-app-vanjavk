@@ -20,7 +20,7 @@
             android:id="@+id/showItemCardView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:cardCornerRadius="8dp">
+            app:cardCornerRadius="4dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
 
@@ -50,7 +50,7 @@
                     android:textSize="20sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/showImage"
-                    tools:text="Butterfly effect" />
+                    tools:text="@string/placeholder_title" />
 
                 <TextView
                     android:id="@+id/showGenre"
@@ -63,7 +63,7 @@
                     app:layout_constraintBottom_toBottomOf="@id/showTitle"
                     app:layout_constraintStart_toEndOf="@id/showTitle"
                     app:layout_constraintTop_toTopOf="@id/showTitle"
-                    tools:text="Drama Sci-fi Thriller" />
+                    tools:text="@string/placeholder_genre" />
 
                 <TextView
                     android:id="@+id/showDescription"
@@ -80,7 +80,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/showTitle"
-                    tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" />
+                    tools:text="@string/placeholder_description" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>

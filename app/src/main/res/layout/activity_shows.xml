@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
-        android:text="Shows"
+        android:text="@string/shows"
         android:textColor="@color/black"
         android:textSize="36sp"
         android:textStyle="bold" />
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="16dp"
-        android:text="SHOW/HIDE"
+        android:text="@string/show_hide"
         app:cornerRadius="40dp" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -59,7 +59,7 @@
                 android:id="@+id/searchTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Your shows are not showing. Get it?"
+                android:text="@string/shows_empty"
                 android:textAlignment="center"
                 android:textSize="17sp" />
         </LinearLayout>
