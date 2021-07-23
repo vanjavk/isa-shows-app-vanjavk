@@ -9,7 +9,7 @@
     android:layout_marginHorizontal="24dp"
     android:clipChildren="false"
     android:clipToPadding="false"
-    android:paddingBottom="16dp">
+    android:paddingBottom="32dp">
         <androidx.cardview.widget.CardView
             android:id="@+id/showItemCardView"
             android:layout_width="match_parent"
