@@ -49,23 +49,17 @@
             android:clipChildren="false"
             android:orientation="vertical">
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/showItemCardView"
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/showImage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="24dp"
-                app:cardCornerRadius="12dp">
-
-                <ImageView
-                    android:id="@+id/showImage"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="fitXY"
-                    tools:src="@drawable/show_memento" />
-            </androidx.cardview.widget.CardView>
+                android:scaleType="fitXY"
+                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize12dp"
+                tools:src="@drawable/show_memento" />
 
             <TextView
                 android:id="@+id/showDescription"
@@ -112,8 +106,8 @@
                 android:id="@+id/reviewsRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:clipChildren="false"
                 android:layout_marginTop="24dp"
+                android:clipChildren="false"
                 android:visibility="visible"
                 tools:listitem="@layout/item_review" />
 
