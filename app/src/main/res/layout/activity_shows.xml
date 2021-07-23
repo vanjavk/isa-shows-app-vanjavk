@@ -33,7 +33,9 @@
         android:layout_height="match_parent"
         android:layout_marginTop="40dp"
         android:visibility="visible"
-        tools:listitem="@layout/view_show_item" />
+        tools:listitem="@layout/view_show_item"
+        android:clipChildren="false"
+        android:clipToPadding="false"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/emptyShowsRelativeLayout"
