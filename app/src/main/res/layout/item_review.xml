@@ -9,12 +9,6 @@
     android:clipToPadding="false"
     android:paddingVertical="16dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clipChildren="false"
-        android:orientation="vertical">
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -67,15 +61,17 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/profileIconImageCardView"
                 app:tint="@color/purple_infinum" />
+
+            <TextView
+                android:id="@+id/reviewContent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/profileIconImageCardView"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="16dp"
+                android:textColor="@color/black"
+                tools:text="@string/placeholder_comment" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <TextView
-            android:id="@+id/reviewContent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:textColor="@color/black"
-            tools:text="@string/placeholder_comment" />
-
-    </LinearLayout>
 </FrameLayout>
