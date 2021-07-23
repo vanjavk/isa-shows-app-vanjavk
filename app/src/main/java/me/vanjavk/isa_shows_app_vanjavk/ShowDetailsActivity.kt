@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.RatingBar
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -43,8 +44,14 @@ class ShowsDetailsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
         val id = intent.extras?.get(EXTRA_ID)
-        show = shows.find { it.ID == id }!!
-        //  ovaj screen je besmislen bez validnog show ida, da je sad prava aplikacija vjv bi napravio da ako ne nadje da javi neki alert error i vrati na prethodno
+        val tempShow = shows.find { it.ID == id }
+        if (tempShow == null) {
+            Toast.makeText(this, "Show with specified ID could not be found.", Toast.LENGTH_SHORT)
+                .show()
+            this.onBackPressed()
+        } else {
+            show = tempShow
+        }
 
         binding.toolbarLayout.title = show.title
 
@@ -70,12 +77,15 @@ class ShowsDetailsActivity : AppCompatActivity() {
         val bottomSheetBinding = DialogAddReviewBinding.inflate(layoutInflater)
         dialog.setContentView(bottomSheetBinding.root)
 
-        bottomSheetBinding.starRatingBar.setOnRatingBarChangeListener { _: RatingBar, _: Float, _: Boolean -> bottomSheetBinding.confirmButton.isEnabled = true
+        bottomSheetBinding.starRatingBar.setOnRatingBarChangeListener { _: RatingBar, _: Float, _: Boolean ->
+            bottomSheetBinding.confirmButton.isEnabled = true
         }
 
         bottomSheetBinding.confirmButton.setOnClickListener {
-            val review = Review("hardkodira",
-                bottomSheetBinding.commentInput.text.toString(), bottomSheetBinding.starRatingBar.rating.toInt()
+            val review = Review(
+                "hardkodira",
+                bottomSheetBinding.commentInput.text.toString(),
+                bottomSheetBinding.starRatingBar.rating.toInt()
             )
             addReviewToList(review)
             dialog.dismiss()
@@ -95,7 +105,12 @@ class ShowsDetailsActivity : AppCompatActivity() {
 
         binding.reviewsRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.reviewsRecyclerView.adapter = reviewsAdapter
-        binding.reviewsRecyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+        binding.reviewsRecyclerView.addItemDecoration(
+            DividerItemDecoration(
+                this,
+                DividerItemDecoration.VERTICAL
+            )
+        )
 
         refreshReviews()
 
