@@ -10,6 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Isashowsappvanjavk.NoActionBar"
         >
+        
         <activity android:name=".LoginActivity" />
 
         <activity android:name=".ShowsActivity">
@@ -18,8 +19,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
 
         <activity android:name=".ShowsDetailsActivity" />
 
