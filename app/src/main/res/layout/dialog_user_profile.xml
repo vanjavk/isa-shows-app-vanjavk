@@ -35,7 +35,7 @@
         tools:text="imenko.prezimenovic@hotmail.com" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/changeProfilePhotoButton"
+        android:id="@+id/change_profile_picture_button"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

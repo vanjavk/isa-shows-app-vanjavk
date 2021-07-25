@@ -2,7 +2,7 @@ package me.vanjavk.isa_shows_app_vanjavk
 
 import android.Manifest
 import android.content.Context
-import android.net.Uri
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 
 import androidx.core.content.FileProvider
@@ -41,30 +42,30 @@ class ShowsFragment : Fragment() {
 
     private val permissionForCamera = preparePermissionsContract(onPermissionsGranted = {
         val uri = createImageFile(requireContext())?.let {
-            FileProvider.getUriForFile(requireContext(), "me.vanjavk.isa-shows-app-vanjavk.fileprovider",
+            FileProvider.getUriForFile(
+                requireContext(), "me.vanjavk.isa-shows-app-vanjavk.fileprovider",
                 it
             )
         }
-        if (uri==null){
-            Toast.makeText(activity, "Error! Couldn't read image from storage.", Toast.LENGTH_SHORT).show()
+        if (uri == null) {
+            Toast.makeText(activity, "Error! Couldn't open file from storage.", Toast.LENGTH_SHORT)
+                .show()
             return@preparePermissionsContract
         }
         getCameraImage.launch(uri)
     })
 
-
-    private val getCameraImage = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
-        if (success) {
-            val imageFile = getImageFile(
-                requireContext()
-            )
-            if (imageFile != null) {
-                showsViewModel.setImage(imageFile)
-
+    private val getCameraImage =
+        registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+            if (success) {
+                val imageFile = getImageFile(
+                    requireContext()
+                )
+                if (imageFile != null) {
+                    showsViewModel.setImage(imageFile)
+                }
             }
-
         }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -93,13 +94,13 @@ class ShowsFragment : Fragment() {
         val imageFile = getImageFile(
             requireContext()
         )
-        if (imageFile!=null){
+        if (imageFile != null) {
             showsViewModel.setImage(imageFile)
         }
         initUserProfileButton()
     }
 
-    private fun setImageFromFile(imageView: ImageView, imageFile: File){
+    private fun setImageFromFile(imageView: ImageView, imageFile: File) {
         Glide.with(this).load(imageFile).diskCacheStrategy(DiskCacheStrategy.NONE)
             .skipMemoryCache(true).into(imageView)
 
@@ -145,14 +146,14 @@ class ShowsFragment : Fragment() {
         val imageFile = getImageFile(
             requireContext()
         )
-        if (imageFile!=null){
+        if (imageFile != null) {
             setImageFromFile(bottomSheetBinding.userProfileImage, imageFile)
         }
 
-        bottomSheetBinding.userEmail.text=email
+        bottomSheetBinding.userEmail.text = email
 
-        bottomSheetBinding.changeProfilePhotoButton.setOnClickListener {
-            permissionForCamera.launch(arrayOf(Manifest.permission.CAMERA))
+        bottomSheetBinding.changeProfilePictureButton.setOnClickListener {
+            handleChangeProfilePicture()
         }
 
         bottomSheetBinding.logoutButton.setOnClickListener {
@@ -169,6 +170,40 @@ class ShowsFragment : Fragment() {
         }
 
         dialog.show()
+    }
+
+    private fun handleChangeProfilePicture() {
+        val alertDialog: AlertDialog? = activity?.let {
+            val builder = AlertDialog.Builder(it)
+            builder.apply {
+                setTitle("Choose image source:")
+                setItems(
+                    arrayOf("Camera: Take a photo", "Storage: Browse files", "Cancel"),
+                    DialogInterface.OnClickListener { dialog, which ->
+                        when (which){
+                            0 -> permissionForCamera.launch(arrayOf(Manifest.permission.CAMERA))
+                        }
+                        // The 'which' argument contains the index position
+                        // of the selected item
+                    })
+                setPositiveButton(getString(R.string.continue_string),
+                    DialogInterface.OnClickListener { dialog, id ->
+
+
+                        // User clicked OK button
+                    })
+                setNegativeButton(getString(R.string.cancel),
+                    DialogInterface.OnClickListener { dialog, id ->
+                        // User cancelled the dialog
+                    })
+            }
+            // Set other dialog properties
+
+
+            // Create the AlertDialog
+            builder.create()
+        }
+        alertDialog?.show()
     }
 
     private fun initShowsRecycler() {

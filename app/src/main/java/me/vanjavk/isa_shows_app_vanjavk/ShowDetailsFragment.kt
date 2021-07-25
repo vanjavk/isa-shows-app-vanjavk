@@ -109,7 +109,7 @@ class ShowDetailsFragment : Fragment() {
     }
 
     private fun updateReviews() {
-        reviewsAdapter?.itemCount?.let { reviewsAdapter?.notifyItemInserted(it) }
+        reviewsAdapter?.itemCount?.let { itemCount -> reviewsAdapter?.notifyItemInserted(itemCount) }
     }
 
     private fun initWriteReviewButton() {
