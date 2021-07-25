@@ -35,4 +35,6 @@
     <string name="placeholder_comment">It was good. I laughed a lot, it matches my sense of humor perfectly. Loved it!</string>
     <string name="placeholder_name">Imenko.Prezimenovic</string>
     <string name="reviews_rating_info">%d REVIEWS, %.2f RATING</string>
+    <string name="continue_string">Continue</string>
+    <string name="cancel">Cancel</string>
 </resources>
