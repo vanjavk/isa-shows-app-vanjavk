@@ -157,7 +157,7 @@ class ShowsFragment : Fragment() {
 
         val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
         if (sharedPref == null) {
-            Toast.makeText(activity, "Action failed. Aborting...", Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, getString(R.string.error_shared_pref_is_null), Toast.LENGTH_SHORT).show()
             return
         }
 

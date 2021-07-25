@@ -1,6 +1,9 @@
 package me.vanjavk.isa_shows_app_vanjavk.networking
 
+import android.app.Activity
 import android.content.SharedPreferences
+import com.chuckerteam.chucker.api.ChuckerCollector
+import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -13,8 +16,16 @@ object ApiModule {
 
     lateinit var retrofit: ShowsApiService
 
-    fun initRetrofit(preferences: SharedPreferences) {
+    fun initRetrofit(preferences: SharedPreferences, activity: Activity) {
         val okhttp = OkHttpClient.Builder()
+            .addInterceptor(
+                ChuckerInterceptor.Builder(activity)
+                    .collector(ChuckerCollector(activity))
+                    .maxContentLength(250000L)
+                    .redactHeaders(emptySet())
+                    .alwaysReadResponseBody(false)
+                    .build()
+            )
             .addInterceptor(HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
             })

@@ -17,6 +17,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        ApiModule.initRetrofit(getPreferences(Context.MODE_PRIVATE))
+        ApiModule.initRetrofit(getPreferences(Context.MODE_PRIVATE),this)
     }
 }

@@ -1,6 +1,7 @@
 package me.vanjavk.isa_shows_app_vanjavk
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,10 +10,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentLoginBinding
+import me.vanjavk.isa_shows_app_vanjavk.viewmodel.LoginViewModel
+import me.vanjavk.isa_shows_app_vanjavk.viewmodel.LoginViewModelFactory
 
 class LoginFragment : Fragment() {
 
@@ -22,20 +26,36 @@ class LoginFragment : Fragment() {
 
     private val args: LoginFragmentArgs by navArgs()
 
+//    private val loginViewModel: LoginViewModel by viewModels()
+
+    private lateinit var loginViewModel: LoginViewModel
+    private lateinit var loginViewModelFactory: LoginViewModelFactory
+
     private var emailValid = false
     private var passwordValid = false
+    private var loginInProcess = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return null
+
+        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
+        if (sharedPref == null) {
+            Toast.makeText(activity, getString(R.string.error_shared_pref_is_null), Toast.LENGTH_SHORT).show()
+            return null
+        }
+
         val loggedIn = sharedPref.getBoolean(getString(R.string.logged_in_key), false)
         if (loggedIn) {
             LoginFragmentDirections.actionLoginToShows()
                 .let { findNavController().navigate(it) }
         }
+
+        loginViewModelFactory = LoginViewModelFactory(sharedPref)
+        loginViewModel = ViewModelProvider(this, loginViewModelFactory)
+            .get(LoginViewModel::class.java)
 
 
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
@@ -49,6 +69,20 @@ class LoginFragment : Fragment() {
         if (email != null) {
             initFromRegister(email)
         }
+
+        loginViewModel.getLoginResultLiveData()
+            .observe(this.viewLifecycleOwner) { isLoginSuccessful ->
+                if (isLoginSuccessful) {
+                    LoginFragmentDirections.actionLoginToShows()
+                        .let { findNavController().navigate(it) }
+                } else {
+                    Toast.makeText(activity, "Login unsuccessful!", Toast.LENGTH_SHORT)
+                        .show()
+                    loginInProcess = false
+                    checkLoginButtonEnableable()
+                }
+            }
+
         initLoginButton()
         initRegisterButton()
     }
@@ -69,28 +103,21 @@ class LoginFragment : Fragment() {
     private fun initLoginButton() {
         binding.emailInput.doAfterTextChanged {
             checkEmailValid()
-            checkInputsValid()
+            checkLoginButtonEnableable()
         }
         binding.passwordInput.doAfterTextChanged {
             checkPasswordValid()
-            checkInputsValid()
+            checkLoginButtonEnableable()
         }
 
         binding.loginButton.setOnClickListener {
-            val sharedPref =
-                activity?.getPreferences(Context.MODE_PRIVATE) ?: return@setOnClickListener
-
-            val email = binding.emailInput.text.toString()
-            val rememberMe = binding.rememberMeCheckBox.isChecked
-
-            with(sharedPref.edit()) {
-                putBoolean(getString(R.string.logged_in_key), rememberMe)
-                putString(getString(R.string.user_email_key), email)
-                apply()
-            }
-
-            LoginFragmentDirections.actionLoginToShows()
-                .let { findNavController().navigate(it) }
+            loginInProcess = true
+            checkLoginButtonEnableable()
+            loginViewModel.login(
+                binding.emailInput.text.toString(),
+                binding.passwordInput.text.toString(),
+                binding.rememberMeCheckBox.isChecked
+            )
         }
 
     }
@@ -116,8 +143,8 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun checkInputsValid() {
-        binding.loginButton.isEnabled = passwordValid && emailValid
+    private fun checkLoginButtonEnableable() {
+        binding.loginButton.isEnabled = passwordValid && emailValid && !loginInProcess
     }
 
     override fun onDestroyView() {

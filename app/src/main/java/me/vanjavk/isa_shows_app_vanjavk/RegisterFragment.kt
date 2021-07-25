@@ -110,7 +110,7 @@ class RegisterFragment : Fragment() {
         }
 
         if (binding.passwordInput.text.toString() != binding.passwordConfirmationInput.text.toString()) {
-            binding.passwordConfirmationInputLayout.error = "Passwords are not the same"
+            binding.passwordConfirmationInputLayout.error = getString(R.string.passwords_do_not_match)
             passwordConfirmationValid = false
         } else {
             binding.passwordConfirmationInputLayout.error = null
