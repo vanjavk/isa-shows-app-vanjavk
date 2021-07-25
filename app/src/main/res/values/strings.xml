@@ -27,4 +27,6 @@
     <string name="camera_take_a_photo">Camera: Take a photo</string>
     <string name="gallery_choose_a_photo">Gallery: Choose a photo</string>
     <string name="error_opening_file">Error! Couldn\'t open file for use.</string>
+    <string name="register">Register</string>
+    <string name="repeat_password">Repeat password</string>
 </resources>
