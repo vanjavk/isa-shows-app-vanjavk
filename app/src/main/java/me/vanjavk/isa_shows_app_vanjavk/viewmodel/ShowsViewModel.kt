@@ -2,6 +2,7 @@ package me.vanjavk.isa_shows_app_vanjavk.viewmodel
 
 import Show
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -29,9 +30,12 @@ class ShowsViewModel(var sharedPref: SharedPreferences) : ViewModel() {
                 call: Call<ShowsResponse>,
                 response: Response<ShowsResponse>
             ) {
+                showsLiveData.value = response.body()?.shows
                 showsResultLiveData.value = true
             }
+
             override fun onFailure(call: Call<ShowsResponse>, t: Throwable) {
+                Log.d("TAG", t.message.toString())
                 showsResultLiveData.value = true
             }
 
