@@ -1,5 +1,6 @@
 package me.vanjavk.isa_shows_app_vanjavk
 
+import Show
 import android.Manifest
 import android.content.Context
 import android.content.Intent
@@ -18,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -27,8 +29,10 @@ import me.vanjavk.isa_shows_app_vanjavk.FileUtil.createImageFile
 import me.vanjavk.isa_shows_app_vanjavk.FileUtil.getImageFile
 import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogUserProfileBinding
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowsBinding
-import me.vanjavk.isa_shows_app_vanjavk.model.Show
+import me.vanjavk.isa_shows_app_vanjavk.viewmodel.LoginViewModel
+import me.vanjavk.isa_shows_app_vanjavk.viewmodel.LoginViewModelFactory
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowsViewModel
+import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowsViewModelFactory
 import java.io.File
 import java.lang.Exception
 import java.util.*
@@ -41,7 +45,8 @@ class ShowsFragment : Fragment() {
 
     private var showsAdapter: ShowsAdapter? = null
 
-    private val showsViewModel: ShowsViewModel by viewModels()
+    private lateinit var showsViewModel: ShowsViewModel
+    private lateinit var showsViewModelFactory: ShowsViewModelFactory
 
     private val permissionForFiles = preparePermissionsContract(onPermissionsGranted = {
         val uri = createImageFile(requireContext())?.let {
@@ -58,7 +63,6 @@ class ShowsFragment : Fragment() {
 
         openFile(uri)
     })
-
 
     private fun openFile(pickerInitialUri: Uri) {
         val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
@@ -107,13 +111,28 @@ class ShowsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentShowsBinding.inflate(inflater, container, false)
+
+        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
+        if (sharedPref == null) {
+            Toast.makeText(
+                activity,
+                getString(R.string.error_shared_pref_is_null),
+                Toast.LENGTH_SHORT
+            ).show()
+            activity?.onBackPressed()
+            return binding.root
+        }
+
+        showsViewModelFactory = ShowsViewModelFactory(sharedPref)
+        showsViewModel = ViewModelProvider(this, showsViewModelFactory)
+            .get(ShowsViewModel::class.java)
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        showsViewModel.initShows()
 
         initShowsRecycler()
 
@@ -124,6 +143,16 @@ class ShowsFragment : Fragment() {
         showsViewModel.getUserProfilePictureLiveData().observe(viewLifecycleOwner, { imageFile ->
             setImageFromFile(binding.profileIconImage, imageFile)
         })
+
+        showsViewModel.getShowsResultLiveData()
+            .observe(viewLifecycleOwner, { isGetShowsSuccessful ->
+                if (!isGetShowsSuccessful) {
+                    logout()
+//                    Toast.makeText(activity, "NEUSPJESNO", Toast.LENGTH_SHORT).show()
+                }
+            })
+
+        showsViewModel.getShows()
 
         val imageFile = getImageFile(
             requireContext()
@@ -157,7 +186,11 @@ class ShowsFragment : Fragment() {
 
         val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
         if (sharedPref == null) {
-            Toast.makeText(activity, getString(R.string.error_shared_pref_is_null), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                activity,
+                getString(R.string.error_shared_pref_is_null),
+                Toast.LENGTH_SHORT
+            ).show()
             return
         }
 
@@ -187,19 +220,23 @@ class ShowsFragment : Fragment() {
         }
 
         bottomSheetBinding.logoutButton.setOnClickListener {
-            with(sharedPref.edit()) {
-                putBoolean(
-                    getString(me.vanjavk.isa_shows_app_vanjavk.R.string.logged_in_key),
-                    false
-                )
-                apply()
-            }
-            ShowsFragmentDirections.actionLogout()
-                .let { findNavController().navigate(it) }
+            logout()
             dialog.dismiss()
         }
 
         dialog.show()
+    }
+
+    private fun logout() {
+        with(showsViewModel.getSharedPreferences().edit()) {
+            putBoolean(
+                getString(me.vanjavk.isa_shows_app_vanjavk.R.string.logged_in_key),
+                false
+            )
+            apply()
+        }
+        ShowsFragmentDirections.actionLogout()
+            .let { findNavController().navigate(it) }
     }
 
     private fun handleChangeProfilePicture() {

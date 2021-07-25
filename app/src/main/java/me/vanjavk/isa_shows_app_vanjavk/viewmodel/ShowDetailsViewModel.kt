@@ -1,12 +1,12 @@
 package me.vanjavk.isa_shows_app_vanjavk.viewmodel
 
+import Show
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import me.vanjavk.isa_shows_app_vanjavk.model.RatingInfo
 import me.vanjavk.isa_shows_app_vanjavk.model.Review
-import me.vanjavk.isa_shows_app_vanjavk.model.Show
-import me.vanjavk.isa_shows_app_vanjavk.shows
+
 
 
 class ShowDetailsViewModel : ViewModel() {
@@ -38,26 +38,26 @@ class ShowDetailsViewModel : ViewModel() {
     }
 
     private fun calculateReviews(){
-        val numberOfReviews = show.reviews.count()
-        val averageRating = show.reviews.sumOf { it.rating } / numberOfReviews.toFloat()
+        val numberOfReviews = 0//show.reviews.count()
+        val averageRating = 0f//show.reviews.sumOf { it.rating } / numberOfReviews.toFloat()
         ratingInfoLiveData.value = RatingInfo(numberOfReviews,averageRating)
     }
 
     fun initShow(id: String) {
-        shows.find { it.id == id }.let{
-            if (it==null){
-                show = shows[0]
-            }else{
-                show = it
-                calculateReviews()
-                showLiveData.value = show
-            }
-        }
+//        shows.find { it.id == id }.let{
+//            if (it==null){
+//                show = shows[0]
+//            }else{
+//                show = it
+//                calculateReviews()
+//                showLiveData.value = show
+//            }
+//        }
     }
 
     fun addReview(name: String, comment: String, rating: Int) {
         val review = Review(name, comment, rating)
-        show.reviews.add(review)
+//        show.reviews.add(review)
         reviewLiveData.value = review
         calculateReviews()
     }

@@ -1,11 +1,10 @@
 package me.vanjavk.isa_shows_app_vanjavk.networking
 
-import me.vanjavk.isa_shows_app_vanjavk.model.network.LoginRequest
-import me.vanjavk.isa_shows_app_vanjavk.model.network.LoginResponse
-import me.vanjavk.isa_shows_app_vanjavk.model.network.RegisterRequest
-import me.vanjavk.isa_shows_app_vanjavk.model.network.RegisterResponse
+import me.vanjavk.isa_shows_app_vanjavk.model.network.*
+import okhttp3.Request
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface ShowsApiService {
@@ -14,4 +13,6 @@ interface ShowsApiService {
     fun register(@Body request: RegisterRequest): Call<RegisterResponse>
     @POST("/users/sign_in")
     fun login(@Body request: LoginRequest): Call<LoginResponse>
+    @GET("/shows")
+    fun getShows(): Call<ShowsResponse>
 }

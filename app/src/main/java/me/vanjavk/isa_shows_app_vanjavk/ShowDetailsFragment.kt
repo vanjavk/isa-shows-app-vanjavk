@@ -1,5 +1,6 @@
 package me.vanjavk.isa_shows_app_vanjavk
 
+import Show
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -20,7 +21,6 @@ import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogAddReviewBinding
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowDetailsBinding
 import me.vanjavk.isa_shows_app_vanjavk.model.RatingInfo
 import me.vanjavk.isa_shows_app_vanjavk.model.Review
-import me.vanjavk.isa_shows_app_vanjavk.model.Show
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowDetailsViewModel
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowsViewModel
 
@@ -64,7 +64,7 @@ class ShowDetailsFragment : Fragment() {
 
         showDetailsViewModel.getShowLiveData().observe(viewLifecycleOwner, { show ->
             updateShow(show)
-            updateReviews(show.reviews)
+//            updateReviews(show.reviews)
         })
 
         showDetailsViewModel.getReviewLiveData().observe(viewLifecycleOwner, { review ->
@@ -81,7 +81,7 @@ class ShowDetailsFragment : Fragment() {
 
     private fun updateShow(show: Show) {
         binding.toolbarLayout.title = show.title
-        binding.showImage.setImageResource(show.imageResourceId)
+//        binding.showImage.setImageResource(show.imageResourceId)
         binding.showDescription.text = show.description
     }
 

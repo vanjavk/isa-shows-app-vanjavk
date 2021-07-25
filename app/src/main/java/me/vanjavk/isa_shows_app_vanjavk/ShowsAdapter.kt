@@ -1,10 +1,10 @@
 package me.vanjavk.isa_shows_app_vanjavk
 
+import Show
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import me.vanjavk.isa_shows_app_vanjavk.databinding.ViewShowItemBinding
-import me.vanjavk.isa_shows_app_vanjavk.model.Show
 
 
 class ShowsAdapter(
@@ -42,9 +42,9 @@ class ShowsAdapter(
 
         fun bind(item: Show) {
 
-            binding.showImage.setImageResource(item.imageResourceId)
+//            binding.showImage.setImageResource(item.imageResourceId)
             binding.showTitle.text = item.title
-            binding.showGenre.text = item.genresToString()
+//            binding.showGenre.text = item.genresToString()
             binding.showDescription.text = item.description
 
             binding.root.setOnClickListener {
