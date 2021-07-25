@@ -10,11 +10,22 @@
         android:name="me.vanjavk.isa_shows_app_vanjavk.LoginFragment"
         tools:layout="@layout/fragment_login">
 
+        <argument
+            android:name="email"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+
         <action
             android:id="@+id/action_login_to_shows"
             app:destination="@id/showsFragment"
             app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="true" />
+
+        <action
+            android:id="@+id/action_login_to_register"
+            app:destination="@id/registerFragment" />
+
 
     </fragment>
 
@@ -44,6 +55,17 @@
             android:name="showID"
             app:argType="string" />
 
+    </fragment>
+
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="me.vanjavk.isa_shows_app_vanjavk.RegisterFragment"
+        tools:layout="@layout/fragment_register">
+        <action
+            android:id="@+id/action_register_to_login"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
 </navigation>

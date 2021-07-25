@@ -4,91 +4,59 @@ import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
-import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentLoginBinding
+import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentRegisterBinding
 
-class LoginFragment : Fragment() {
+class RegisterFragment : Fragment() {
 
-    private var _binding: FragmentLoginBinding? = null
+    private var _binding: FragmentRegisterBinding? = null
 
     private val binding get() = _binding!!
 
-    private val args: LoginFragmentArgs by navArgs()
-
     private var emailValid = false
     private var passwordValid = false
+    private var passwordConfirmationValid = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return null
-        val loggedIn = sharedPref.getBoolean(getString(R.string.logged_in_key), false)
-        if (loggedIn) {
-            LoginFragmentDirections.actionLoginToShows()
-                .let { findNavController().navigate(it) }
-        }
+    ): View {
 
-
-        _binding = FragmentLoginBinding.inflate(inflater, container, false)
+        _binding = FragmentRegisterBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val email = args.email
-        if (email != null) {
-            initFromRegister(email)
-        }
-        initLoginButton()
         initRegisterButton()
     }
 
     private fun initRegisterButton() {
-        binding.registerButton.setOnClickListener {
-            LoginFragmentDirections.actionLoginToRegister()
-                .let { findNavController().navigate(it) }
-        }
-    }
-
-    private fun initFromRegister(email: String) {
-        binding.registerButton.visibility = GONE
-        binding.emailInput.setText(email)
-    }
-
-    private fun initLoginButton() {
         binding.emailInput.doAfterTextChanged {
             checkEmailValid()
             checkInputsValid()
         }
         binding.passwordInput.doAfterTextChanged {
             checkPasswordValid()
+            checkPasswordConfirmationValid()
+            checkInputsValid()
+        }
+        binding.passwordConfirmationInput.doAfterTextChanged {
+            checkPasswordConfirmationValid()
             checkInputsValid()
         }
 
-        binding.loginButton.setOnClickListener {
-            val sharedPref =
-                activity?.getPreferences(Context.MODE_PRIVATE) ?: return@setOnClickListener
+        binding.registerButton.setOnClickListener {
 
             val email = binding.emailInput.text.toString()
-            val rememberMe = binding.rememberMeCheckBox.isChecked
 
-            with(sharedPref.edit()) {
-                putBoolean(getString(R.string.logged_in_key), rememberMe)
-                putString(getString(R.string.user_email_key), email)
-                apply()
+            RegisterFragmentDirections.actionRegisterToLogin().apply {
+                this.email = email
             }
-
-            LoginFragmentDirections.actionLoginToShows()
                 .let { findNavController().navigate(it) }
         }
 
@@ -115,8 +83,22 @@ class LoginFragment : Fragment() {
         }
     }
 
+    private fun checkPasswordConfirmationValid() {
+        if (binding.passwordConfirmationInput.text.toString().isEmpty()){
+            return
+        }
+
+        if (binding.passwordInput.text.toString() != binding.passwordConfirmationInput.text.toString()) {
+            binding.passwordConfirmationInputLayout.error = "Passwords are not the same"
+            passwordConfirmationValid = false
+        } else {
+            binding.passwordConfirmationInputLayout.error = null
+            passwordConfirmationValid = true
+        }
+    }
+
     private fun checkInputsValid() {
-        binding.loginButton.isEnabled = passwordValid && emailValid
+        binding.registerButton.isEnabled = passwordValid && emailValid && passwordConfirmationValid
     }
 
     override fun onDestroyView() {
