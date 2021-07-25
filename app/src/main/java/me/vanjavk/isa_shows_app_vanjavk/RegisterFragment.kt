@@ -1,14 +1,16 @@
 package me.vanjavk.isa_shows_app_vanjavk
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentRegisterBinding
+import me.vanjavk.isa_shows_app_vanjavk.viewmodel.RegistrationViewModel
 
 class RegisterFragment : Fragment() {
 
@@ -16,9 +18,12 @@ class RegisterFragment : Fragment() {
 
     private val binding get() = _binding!!
 
+    private val registrationViewModel: RegistrationViewModel by viewModels()
+
     private var emailValid = false
     private var passwordValid = false
     private var passwordConfirmationValid = false
+    private var registrationInProcess = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,32 +37,48 @@ class RegisterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        registrationViewModel.getRegistrationResultLiveData()
+            .observe(this.viewLifecycleOwner) { isRegisterSuccessful ->
+                if (isRegisterSuccessful) {
+                    RegisterFragmentDirections.actionRegisterToLogin().apply {
+                        this.email = binding.emailInput.text.toString()
+                    }
+                        .let { findNavController().navigate(it) }
+
+                } else {
+                    Toast.makeText(activity, "Registration unsuccessful!", Toast.LENGTH_SHORT)
+                        .show()
+                    registrationInProcess = false
+                    checkRegisterButtonEnableable()
+                }
+            }
+
         initRegisterButton()
     }
 
     private fun initRegisterButton() {
         binding.emailInput.doAfterTextChanged {
             checkEmailValid()
-            checkInputsValid()
+            checkRegisterButtonEnableable()
         }
         binding.passwordInput.doAfterTextChanged {
             checkPasswordValid()
             checkPasswordConfirmationValid()
-            checkInputsValid()
+            checkRegisterButtonEnableable()
         }
         binding.passwordConfirmationInput.doAfterTextChanged {
             checkPasswordConfirmationValid()
-            checkInputsValid()
+            checkRegisterButtonEnableable()
         }
 
         binding.registerButton.setOnClickListener {
-
-            val email = binding.emailInput.text.toString()
-
-            RegisterFragmentDirections.actionRegisterToLogin().apply {
-                this.email = email
-            }
-                .let { findNavController().navigate(it) }
+            registrationInProcess = true
+            checkRegisterButtonEnableable()
+            registrationViewModel.register(
+                binding.emailInput.text.toString(),
+                binding.passwordInput.text.toString()
+            )
         }
 
     }
@@ -84,7 +105,7 @@ class RegisterFragment : Fragment() {
     }
 
     private fun checkPasswordConfirmationValid() {
-        if (binding.passwordConfirmationInput.text.toString().isEmpty()){
+        if (binding.passwordConfirmationInput.text.toString().isEmpty()) {
             return
         }
 
@@ -97,8 +118,9 @@ class RegisterFragment : Fragment() {
         }
     }
 
-    private fun checkInputsValid() {
-        binding.registerButton.isEnabled = passwordValid && emailValid && passwordConfirmationValid
+    private fun checkRegisterButtonEnableable() {
+        binding.registerButton.isEnabled =
+            passwordValid && emailValid && passwordConfirmationValid && !registrationInProcess
     }
 
     override fun onDestroyView() {

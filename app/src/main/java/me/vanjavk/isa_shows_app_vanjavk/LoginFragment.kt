@@ -61,6 +61,7 @@ class LoginFragment : Fragment() {
     }
 
     private fun initFromRegister(email: String) {
+        binding.loginText.text = getString(R.string.registration_successful)
         binding.registerButton.visibility = GONE
         binding.emailInput.setText(email)
     }

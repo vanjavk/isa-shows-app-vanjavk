@@ -29,4 +29,5 @@
     <string name="error_opening_file">Error! Couldn\'t open file for use.</string>
     <string name="register">Register</string>
     <string name="repeat_password">Repeat password</string>
+    <string name="registration_successful">Registration successful!</string>
 </resources>
