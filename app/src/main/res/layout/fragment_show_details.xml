@@ -49,23 +49,17 @@
             android:clipChildren="false"
             android:orientation="vertical">
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/showItemCardView"
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/showImage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="24dp"
-                app:cardCornerRadius="12dp">
-
-                <ImageView
-                    android:id="@+id/showImage"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="fitXY"
-                    tools:src="@drawable/show_memento" />
-            </androidx.cardview.widget.CardView>
+                android:scaleType="fitXY"
+                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize12dp"
+                tools:src="@drawable/show_memento" />
 
             <TextView
                 android:id="@+id/showDescription"
@@ -75,13 +69,13 @@
                 android:layout_marginBottom="32dp"
                 android:textColor="@color/black"
                 android:textSize="17sp"
-                tools:text="Evan Treborn suffers blackouts during significant events of his life. As he grows up, he finds a way to remember these lost memories and a supernatural way to alter his life by reading his journal." />
+                tools:text="@string/placeholder_description_long" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:text="Reviews"
+                android:text="@string/reviews"
                 android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold" />
@@ -93,7 +87,7 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="16dp"
                 android:textSize="17sp"
-                tools:text="3 REVIEWS, 3.63 AVERAGE" />
+                tools:text="@string/placeholder_rating_info" />
 
             <RatingBar
                 android:id="@+id/showRatingBar"
@@ -112,9 +106,7 @@
                 android:id="@+id/reviewsRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="24dp"
                 android:layout_marginTop="24dp"
-                android:clipChildren="false"
                 android:visibility="visible"
                 tools:listitem="@layout/item_review" />
 
@@ -124,7 +116,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginVertical="40dp"
-                android:text="No reviews yet."
+                android:text="@string/no_reviews_yet"
                 android:textAlignment="center"
                 android:textSize="17sp" />
 
@@ -145,7 +137,7 @@
             android:layout_gravity="center"
             android:layout_marginHorizontal="24dp"
             android:backgroundTint="@color/purple_infinum"
-            android:text="Write a review"
+            android:text="@string/write_a_review"
             android:textAllCaps="false"
             app:cornerRadius="21.5dp" />
     </FrameLayout>

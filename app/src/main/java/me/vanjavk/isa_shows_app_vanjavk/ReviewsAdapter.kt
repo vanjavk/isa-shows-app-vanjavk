@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import me.vanjavk.isa_shows_app_vanjavk.databinding.ItemReviewBinding
 import me.vanjavk.isa_shows_app_vanjavk.model.Review
@@ -46,8 +47,9 @@ class ReviewsAdapter(
             binding.reviewerName.text = item.name
 
             if (item.content.isEmpty()) {
-                binding.reviewContent.visibility = GONE
+                binding.reviewContent.isVisible = false
             } else {
+                binding.reviewContent.isVisible = true
                 binding.reviewContent.text = item.content
             }
 

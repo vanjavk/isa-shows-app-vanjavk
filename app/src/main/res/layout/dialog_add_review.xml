@@ -12,7 +12,7 @@
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="40dp"
         android:layout_marginBottom="40dp"
-        android:text="Write a review"
+        android:text="@string/write_a_review"
         android:textColor="@color/black"
         android:textSize="24sp"
         android:textStyle="bold" />
@@ -35,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="24dp"
-        android:hint="Comment"
+        android:hint="@string/comment"
         android:textColorHint="@color/purple_infinum"
         app:boxStrokeColor="@color/purple_infinum"
         app:errorEnabled="true"
@@ -58,7 +58,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="24dp"
         android:enabled="false"
-        android:text="Confirm"
+        android:text="@string/confirm"
         app:cornerRadius="40dp" />
 
 </LinearLayout>
