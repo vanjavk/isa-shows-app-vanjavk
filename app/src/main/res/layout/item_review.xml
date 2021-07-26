@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="24dp"
+    android:paddingVertical="16dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/profileIconImage"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_painting_art_svgrepo_com"
+            app:cardCornerRadius="25dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent" />
+
+
+        <TextView
+            android:id="@+id/reviewerName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/purple_infinum"
+            app:layout_constraintBottom_toBottomOf="@id/profileIconImage"
+            app:layout_constraintEnd_toStartOf="@+id/ratingStarValue"
+            app:layout_constraintStart_toEndOf="@id/profileIconImage"
+            app:layout_constraintTop_toTopOf="@id/profileIconImage"
+            tools:text="@string/placeholder_name" />
+
+        <TextView
+            android:id="@+id/ratingStarValue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="1dp"
+            android:textColor="@color/purple_infinum"
+            app:layout_constraintBottom_toBottomOf="@id/starFullImage"
+            app:layout_constraintEnd_toStartOf="@id/starFullImage"
+            app:layout_constraintTop_toTopOf="@id/starFullImage"
+            tools:text="3.7" />
+
+        <ImageView
+            android:id="@+id/starFullImage"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:src="@drawable/ic_star_full"
+            app:layout_constraintBottom_toBottomOf="@id/profileIconImage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/profileIconImage"
+            app:tint="@color/purple_infinum" />
+
+        <TextView
+            android:id="@+id/reviewContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/profileIconImage"
+            tools:text="@string/placeholder_comment" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

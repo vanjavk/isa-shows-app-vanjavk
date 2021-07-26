@@ -3,4 +3,28 @@
     <style name="Theme.Default" parent="@android:style/Theme"></style>
     <style name="Theme.NoTitle" parent="@android:style/Theme.NoTitleBar"></style>
     <style name="Theme.FullScreen" parent="@android:style/Theme.NoTitleBar.Fullscreen"></style>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColorPrimary">@color/black</item>
+
+        <item name="colorPrimary">@color/white</item>
+
+    </style>
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
+    </style>
+
+    <style name="RatingBar" parent="Theme.AppCompat">
+        <item name="colorControlNormal">@color/purple_infinum</item>
+        <item name="colorControlActivated">@color/purple_infinum</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlay.App.CornerSize50Percent" parent="">
+        <item name="cornerSize">50%</item>
+        <item name="cornerFamily">rounded</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlay.App.CornerSize12dp" parent="">
+        <item name="cornerSize">12dp</item>
+        <item name="cornerFamily">rounded</item>
+    </style>
 </resources>
