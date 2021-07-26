@@ -11,18 +11,23 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogAddReviewBinding
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowDetailsBinding
 import me.vanjavk.isa_shows_app_vanjavk.model.RatingInfo
 import me.vanjavk.isa_shows_app_vanjavk.model.Review
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowDetailsViewModel
+import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowDetailsViewModelFactory
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowsViewModel
+import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowsViewModelFactory
 
 
 class ShowDetailsFragment : Fragment() {
@@ -35,7 +40,8 @@ class ShowDetailsFragment : Fragment() {
 
     private var reviewsAdapter: ReviewsAdapter? = null
 
-    private val showDetailsViewModel: ShowDetailsViewModel by viewModels()
+    private lateinit var showDetailsViewModel: ShowDetailsViewModel
+    private lateinit var showDetailsViewModelFactory: ShowDetailsViewModelFactory
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,6 +50,22 @@ class ShowDetailsFragment : Fragment() {
     ): View {
         _binding = FragmentShowDetailsBinding.inflate(inflater, container, false)
         setHasOptionsMenu(true);
+
+        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
+        if (sharedPref == null) {
+            Toast.makeText(
+                activity,
+                getString(R.string.error_shared_pref_is_null),
+                Toast.LENGTH_SHORT
+            ).show()
+            activity?.onBackPressed()
+            return binding.root
+        }
+
+        showDetailsViewModelFactory = ShowDetailsViewModelFactory(sharedPref)
+        showDetailsViewModel = ViewModelProvider(this, showDetailsViewModelFactory)
+            .get(ShowDetailsViewModel::class.java)
+
         return binding.root
     }
 
@@ -60,7 +82,7 @@ class ShowDetailsFragment : Fragment() {
 
         val id = args.showID
 
-        showDetailsViewModel.initShow(id)
+        showDetailsViewModel.getShow(id)
 
         showDetailsViewModel.getShowLiveData().observe(viewLifecycleOwner, { show ->
             updateShow(show)
@@ -68,11 +90,15 @@ class ShowDetailsFragment : Fragment() {
         })
 
         showDetailsViewModel.getReviewLiveData().observe(viewLifecycleOwner, { review ->
-            updateReviews()
+            updateReviews(review)
+        })
+
+        showDetailsViewModel.getReviewsLiveData().observe(viewLifecycleOwner, { reviews ->
+            updateReviews(reviews)
         })
 
         showDetailsViewModel.getRatingInfoLiveData().observe(viewLifecycleOwner, { ratingInfo ->
-            updateRatingInfo(ratingInfo)
+//            updateRatingInfo(ratingInfo)
         })
 
         initWriteReviewButton()
@@ -81,26 +107,28 @@ class ShowDetailsFragment : Fragment() {
 
     private fun updateShow(show: Show) {
         binding.toolbarLayout.title = show.title
-//        binding.showImage.setImageResource(show.imageResourceId)
+        Glide.with(this).load(show.imageUrl).diskCacheStrategy(DiskCacheStrategy.NONE)
+            .skipMemoryCache(true).into(binding.showImage)
         binding.showDescription.text = show.description
+        updateRatingInfo(show.numberOfReviews, show.averageRating)
     }
 
-    private fun updateRatingInfo(ratingInfo: RatingInfo) {
-        if (ratingInfo.numberOfReviews == 0) {
+    private fun updateRatingInfo(numberOfReviews: Int, averageRating: Float?) {
+        if (numberOfReviews == 0) {
             binding.reviewsRecyclerView.visibility = View.GONE
             binding.showReviewRating.visibility = View.GONE
             binding.showRatingBar.visibility = View.GONE
             binding.noReviewsYet.visibility = View.VISIBLE
-        } else {
+        } else if (averageRating!=null) {
             binding.noReviewsYet.visibility = View.GONE
             binding.reviewsRecyclerView.visibility = View.VISIBLE
             binding.showReviewRating.visibility = View.VISIBLE
             binding.showRatingBar.visibility = View.VISIBLE
             binding.showReviewRating.text = getString(R.string.reviews_rating_info).format(
-                ratingInfo.numberOfReviews,
-                ratingInfo.averageRating
+                numberOfReviews,
+                averageRating
             )
-            binding.showRatingBar.rating = ratingInfo.averageRating
+            binding.showRatingBar.rating = averageRating
         }
     }
 
@@ -108,8 +136,9 @@ class ShowDetailsFragment : Fragment() {
         reviewsAdapter?.setItems(reviews)
     }
 
-    private fun updateReviews() {
-        reviewsAdapter?.itemCount?.let { itemCount -> reviewsAdapter?.notifyItemInserted(itemCount) }
+    private fun updateReviews(review: Review) {
+        reviewsAdapter?.addItem(review)
+//        reviewsAdapter?.itemCount?.let { itemCount -> reviewsAdapter?.notifyItemInserted(itemCount) }
     }
 
     private fun initWriteReviewButton() {
@@ -132,19 +161,11 @@ class ShowDetailsFragment : Fragment() {
         }
 
         bottomSheetBinding.confirmButton.setOnClickListener {
-            val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
-            if (sharedPref == null) {
-                Toast.makeText(activity, "Action failed. Aborting...", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            val email =
-                sharedPref.getString(getString(R.string.user_email_key), "Default_user").orEmpty()
 
             showDetailsViewModel.addReview(
-                email.getUsername(),
+                bottomSheetBinding.starRatingBar.rating.toInt(),
                 bottomSheetBinding.commentInput.text.toString(),
-                bottomSheetBinding.starRatingBar.rating.toInt()
+                args.showID.toInt()
             )
             dialog.dismiss()
         }

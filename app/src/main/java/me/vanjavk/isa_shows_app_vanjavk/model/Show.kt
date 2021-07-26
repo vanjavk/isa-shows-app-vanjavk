@@ -1,10 +1,6 @@
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-//package me.vanjavk.isa_shows_app_vanjavk.model
-//
-//import androidx.annotation.DrawableRes
-//
 @Serializable
 data class Show(
     @SerialName("id")val id: String,

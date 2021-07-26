@@ -4,6 +4,8 @@ import Show
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import me.vanjavk.isa_shows_app_vanjavk.databinding.ViewShowItemBinding
 
 
@@ -41,12 +43,10 @@ class ShowsAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Show) {
-
-//            binding.showImage.setImageResource(item.imageResourceId)
             binding.showTitle.text = item.title
-//            binding.showGenre.text = item.genresToString()
+            Glide.with(itemView.context).load(item.imageUrl).diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true).into(binding.showImage)
             binding.showDescription.text = item.description
-
             binding.root.setOnClickListener {
                 onItemClickCallback(item)
             }

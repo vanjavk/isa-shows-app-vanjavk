@@ -1,7 +1,14 @@
 package me.vanjavk.isa_shows_app_vanjavk.model
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+
+@Serializable
 data class Review(
-    val name: String,
-    val comment: String,
-    val rating: Int,
+    @SerialName("id") val id: String,
+    @SerialName("comment") var comment: String?,
+    @SerialName("rating") var rating: Int,
+    @SerialName("show_id") val showId: Int,
+    @SerialName("user") var user: User,
 )

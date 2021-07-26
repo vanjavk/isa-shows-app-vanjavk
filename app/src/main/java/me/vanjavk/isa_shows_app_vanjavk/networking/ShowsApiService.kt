@@ -1,11 +1,11 @@
 package me.vanjavk.isa_shows_app_vanjavk.networking
 
 import me.vanjavk.isa_shows_app_vanjavk.model.network.*
-import okhttp3.Request
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
+import retrofit2.http.*
+
 
 interface ShowsApiService {
 
@@ -15,4 +15,16 @@ interface ShowsApiService {
     fun login(@Body request: LoginRequest): Call<LoginResponse>
     @GET("/shows")
     fun getShows(): Call<ShowsResponse>
+    @GET("/shows/{id}")
+    fun getShow(@Path("id") id: String): Call<ShowResponse>
+    @GET("/shows/{id}/reviews")
+    fun getReviews(@Path("id") id: String): Call<ReviewsResponse>
+    @POST("/reviews")
+    fun addReview(@Body request: AddReviewRequest): Call<AddReviewResponse>
+    @Multipart
+    @PUT("/users")
+    fun changeProfilePicture(@Part("email") email: RequestBody,
+                             @Part image: MultipartBody.Part): Call<LoginResponse>
+
+
 }

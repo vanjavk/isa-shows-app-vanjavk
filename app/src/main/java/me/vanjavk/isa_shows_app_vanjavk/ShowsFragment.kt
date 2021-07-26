@@ -18,7 +18,6 @@ import androidx.appcompat.app.AppCompatActivity
 
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -29,12 +28,8 @@ import me.vanjavk.isa_shows_app_vanjavk.FileUtil.createImageFile
 import me.vanjavk.isa_shows_app_vanjavk.FileUtil.getImageFile
 import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogUserProfileBinding
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowsBinding
-import me.vanjavk.isa_shows_app_vanjavk.viewmodel.LoginViewModel
-import me.vanjavk.isa_shows_app_vanjavk.viewmodel.LoginViewModelFactory
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowsViewModel
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowsViewModelFactory
-import java.io.File
-import java.lang.Exception
 import java.util.*
 
 class ShowsFragment : Fragment() {
@@ -100,7 +95,9 @@ class ShowsFragment : Fragment() {
                     requireContext()
                 )
                 if (imageFile != null) {
-                    showsViewModel.setImage(imageFile)
+                    showsViewModel.uploadProfilePicture(imageFile)
+                    //setImageFromFile()
+                    //showsViewModel.setImage(imageFile)
                 }
             }
         }
@@ -140,8 +137,8 @@ class ShowsFragment : Fragment() {
             updateItems(shows)
         })
 
-        showsViewModel.getUserProfilePictureLiveData().observe(viewLifecycleOwner, { imageFile ->
-            setImageFromFile(binding.profileIconImage, imageFile)
+        showsViewModel.getUserLiveData().observe(viewLifecycleOwner, { user ->
+            setImageFromFile(binding.profileIconImage, user.imageUrl)
         })
 
         showsViewModel.getShowsResultLiveData()
@@ -154,20 +151,23 @@ class ShowsFragment : Fragment() {
 
         showsViewModel.getShows()
 
-        val imageFile = getImageFile(
-            requireContext()
-        )
-        if (imageFile != null) {
-            showsViewModel.setImage(imageFile)
-        }
+//        val imageFile = getImageFile(
+//            requireContext()
+//        )
+//        if (imageFile != null) {
+//            showsViewModel.setImage(imageFile)
+//        }
 
         initUserProfileButton()
     }
 
-    private fun setImageFromFile(imageView: ImageView, imageFile: File) {
-        Glide.with(this).load(imageFile).diskCacheStrategy(DiskCacheStrategy.NONE)
-            .skipMemoryCache(true).into(imageView)
-
+    private fun setImageFromFile(imageView: ImageView, imageFile: String?) {
+        if(imageFile!=null){
+            Glide.with(this).load(imageFile).diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true).into(imageView)
+        }else{
+            binding.profileIconImage.setImageResource(R.drawable.ic_painting_art)
+        }
     }
 
     private fun updateItems(shows: List<Show>) {
@@ -202,16 +202,21 @@ class ShowsFragment : Fragment() {
         val email =
             sharedPref.getString(getString(R.string.user_email_key), "Default_user").orEmpty()
 
-        showsViewModel.getUserProfilePictureLiveData().observe(viewLifecycleOwner, { imageFile ->
-            setImageFromFile(bottomSheetBinding.userProfileImage, imageFile)
-        })
 
-        val imageFile = getImageFile(
-            requireContext()
-        )
-        if (imageFile != null) {
-            setImageFromFile(bottomSheetBinding.userProfileImage, imageFile)
-        }
+
+        showsViewModel.getUserLiveData().observe(viewLifecycleOwner, { user ->
+            setImageFromFile(bottomSheetBinding.userProfileImage, user.imageUrl)
+        })
+//        showsViewModel.getUserProfilePictureLiveData().observe(viewLifecycleOwner, { imageFile ->
+//            setImageFromFile(bottomSheetBinding.userProfileImage, imageFile)
+//        })
+
+//        val imageFile = getImageFile(
+//            requireContext()
+//        )
+//        if (imageFile != null) {
+//            setImageFromFile(bottomSheetBinding.userProfileImage, imageFile)
+//        }
 
         bottomSheetBinding.userEmail.text = email
 

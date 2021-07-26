@@ -76,7 +76,7 @@ class LoginFragment : Fragment() {
                     LoginFragmentDirections.actionLoginToShows()
                         .let { findNavController().navigate(it) }
                 } else {
-                    Toast.makeText(activity, "Login unsuccessful!", Toast.LENGTH_SHORT)
+                    Toast.makeText(activity, "Email and password combination is incorrect!", Toast.LENGTH_SHORT)
                         .show()
                     loginInProcess = false
                     checkLoginButtonEnableable()
