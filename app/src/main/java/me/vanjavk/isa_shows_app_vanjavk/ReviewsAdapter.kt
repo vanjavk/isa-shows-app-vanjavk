@@ -40,11 +40,11 @@ class ReviewsAdapter(
             binding.ratingStarValue.text = item.rating.toString()
             binding.reviewerName.text = item.name
 
-            if (item.content.isEmpty()) {
+            if (item.comment.isEmpty()) {
                 binding.reviewContent.isVisible = false
             } else {
                 binding.reviewContent.isVisible = true
-                binding.reviewContent.text = item.content
+                binding.reviewContent.text = item.comment
             }
 
         }
