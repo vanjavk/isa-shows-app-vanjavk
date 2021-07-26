@@ -11,7 +11,7 @@
         android:id="@+id/topLeftIllustration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/topleftillustration"
+        android:src="@drawable/ic_top_left_illustration"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -19,7 +19,7 @@
         android:id="@+id/topRightIllustration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/toprightillustration"
+        android:src="@drawable/ic_top_right_illustration"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="56dp"
         android:layout_marginTop="40dp"
-        android:src="@drawable/triangle"
+        android:src="@drawable/ic_triangle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/topLeftIllustration" />
 
