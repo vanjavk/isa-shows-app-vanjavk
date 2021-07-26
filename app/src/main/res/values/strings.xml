@@ -1,11 +1,17 @@
 <resources>
     <string name="app_name">isa-shows-app-vanjavk</string>
     <string name="remember_me">Remember me</string>
+    <string name="placeholder_description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</string>
+    <string name="placeholder_title">Butterfly effect</string>
+    <string name="placeholder_genre">Drama Sci-fi Thriller</string>
+    <string name="placeholder_description_long">Evan Treborn suffers blackouts during significant events of his life. As he grows up, he finds a way to remember these lost memories and a supernatural way to alter his life by reading his journal.</string>
+    <string name="placeholder_rating_info">3 REVIEWS, 3.63 AVERAGE</string>
     <string name="password">Password</string>
     <string name="email">Email</string>
     <string name="login">Login</string>
     <string name="in_order_to_continue_please_log_in">In order to continue please log in.</string>
     <string name="shows">Shows</string>
+    <string name="shows_empty">Your shows are not showing. Get it?</string>
     <string name='no_permission' formatted='false'>Please check your permissions in Settings.</string>
     <string name='settings' formatted='false'>Settings</string>
     <string name="logout">Logout</string>
