@@ -3,9 +3,11 @@ package me.vanjavk.isa_shows_app_vanjavk.viewmodel
 import Show
 import android.content.SharedPreferences
 import android.util.Log
+import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import me.vanjavk.isa_shows_app_vanjavk.USER_IMAGE_URL_KEY
 import me.vanjavk.isa_shows_app_vanjavk.model.User
 import me.vanjavk.isa_shows_app_vanjavk.model.network.LoginResponse
 import me.vanjavk.isa_shows_app_vanjavk.model.network.ShowsResponse
@@ -73,8 +75,17 @@ class ShowsViewModel(var sharedPref: SharedPreferences) : ViewModel() {
                 call: Call<LoginResponse>,
                 response: Response<LoginResponse>
             ) {
-                userLiveData.value = response.body()?.user
-                showsResultLiveData.value = true
+                val user = response.body()?.user
+                if (user!=null){
+                    userLiveData.value = user
+                    sharedPref.edit {
+                        putString(USER_IMAGE_URL_KEY, user.imageUrl)
+                        apply()
+                    }
+                    showsResultLiveData.value = true
+                }else{
+                    showsResultLiveData.value = false
+                }
             }
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                 Log.d("TAG", t.message.toString())

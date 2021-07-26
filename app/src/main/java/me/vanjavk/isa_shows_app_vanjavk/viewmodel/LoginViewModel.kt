@@ -1,11 +1,10 @@
 package me.vanjavk.isa_shows_app_vanjavk.viewmodel
 
 import android.content.SharedPreferences
-import android.provider.Settings.Global.getString
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import me.vanjavk.isa_shows_app_vanjavk.R
+import me.vanjavk.isa_shows_app_vanjavk.*
 import me.vanjavk.isa_shows_app_vanjavk.model.network.LoginRequest
 import me.vanjavk.isa_shows_app_vanjavk.model.network.LoginResponse
 import me.vanjavk.isa_shows_app_vanjavk.networking.ApiModule
@@ -35,13 +34,13 @@ class LoginViewModel(var sharedPref: SharedPreferences) : ViewModel() {
                 if (accessToken != null && client != null && uid != null && user!=null) {
                     loginResultLiveData.value = response.isSuccessful
                     with(sharedPref.edit()) {
-                        putString("USER_EMAIL_KEY", email)
-                        putString("USER_IMAGE_URL_KEY", user.imageUrl)
-                        putBoolean("LOGGED_IN_KEY", rememberMe)
+                        putString(USER_EMAIL_KEY, email)
+                        putString(USER_IMAGE_URL_KEY, user.imageUrl)
+                        putBoolean(REMEMBER_ME_KEY, rememberMe)
                         if (rememberMe){
-                            putString("USER_AUTH_ACCESS_TOKEN_TYPE_KEY", accessToken)
-                            putString("USER_AUTH_CLIENT_TYPE_KEY", client)
-                            putString("USER_AUTH_UID_TYPE_KEY", uid)
+                            putString(USER_AUTH_ACCESS_TOKEN_TYPE_KEY, accessToken)
+                            putString(USER_AUTH_CLIENT_TYPE_KEY, client)
+                            putString(USER_AUTH_UID_TYPE_KEY, uid)
                         }
                         apply()
                     }

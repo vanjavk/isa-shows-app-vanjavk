@@ -39,7 +39,12 @@ class ShowsFragment : Fragment() {
 
     private val binding get() = _binding!!
 
+    private var _bottomSheetBinding: DialogUserProfileBinding? = null
+
+    private val bottomSheetBinding get() = _bottomSheetBinding!!
+
     private var showsAdapter: ShowsAdapter? = null
+
 
     private lateinit var showsViewModel: ShowsViewModel
     private lateinit var showsViewModelFactory: ShowsViewModelFactory
@@ -109,6 +114,7 @@ class ShowsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentShowsBinding.inflate(inflater, container, false)
+        _bottomSheetBinding = DialogUserProfileBinding.inflate(inflater, container, false)
 
         val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
         if (sharedPref == null) {
@@ -131,6 +137,7 @@ class ShowsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
         initShowsRecycler()
 
         showsViewModel.getShowsLiveData().observe(viewLifecycleOwner, { shows ->
@@ -138,7 +145,7 @@ class ShowsFragment : Fragment() {
         })
 
         showsViewModel.getUserLiveData().observe(viewLifecycleOwner, { user ->
-            setImageFromFile(binding.profileIconImage, user.imageUrl)
+            updateProfileIcons(user.imageUrl)
         })
 
         showsViewModel.getShowsResultLiveData()
@@ -151,23 +158,34 @@ class ShowsFragment : Fragment() {
 
         showsViewModel.getShows()
 
-
-//        val imageFile = getImageFile(
-//            requireContext()
-//        )
-//        if (imageFile != null) {
-//            showsViewModel.setImage(imageFile)
-//        }
+        //ovo treba zamijenit
+        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
+        if (sharedPref == null) {
+            Toast.makeText(
+                activity,
+                getString(R.string.error_shared_pref_is_null),
+                Toast.LENGTH_SHORT
+            ).show()
+            activity?.onBackPressed()
+            return
+        }
+        updateProfileIcons(sharedPref.getString(USER_IMAGE_URL_KEY,""))
 
         initUserProfileButton()
     }
 
+    private fun updateProfileIcons(imageUrl: String?) {
+        setImageFromFile(binding.profileIconImage, imageUrl)
+        setImageFromFile(bottomSheetBinding.userProfileImage, imageUrl)
+    }
+
+
     private fun setImageFromFile(imageView: ImageView, imageFile: String?) {
-        if(imageFile!=null){
+        if(imageFile.isNullOrEmpty()){
+            binding.profileIconImage.setImageResource(R.drawable.ic_painting_art)
+        }else{
             Glide.with(this).load(imageFile).diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true).into(imageView)
-        }else{
-            binding.profileIconImage.setImageResource(R.drawable.ic_painting_art)
         }
     }
 
@@ -199,17 +217,10 @@ class ShowsFragment : Fragment() {
 
         val dialog = BottomSheetDialog(activity)
 
-        val bottomSheetBinding = DialogUserProfileBinding.inflate(layoutInflater)
-
         dialog.setContentView(bottomSheetBinding.root)
         val email =
-            sharedPref.getString(getString(R.string.user_email_key), "Default_user").orEmpty()
+            sharedPref.getString(USER_EMAIL_KEY, "Default_user").orEmpty()
 
-
-
-        showsViewModel.getUserLiveData().observe(viewLifecycleOwner, { user ->
-            setImageFromFile(bottomSheetBinding.userProfileImage, user.imageUrl)
-        })
 //        showsViewModel.getUserProfilePictureLiveData().observe(viewLifecycleOwner, { imageFile ->
 //            setImageFromFile(bottomSheetBinding.userProfileImage, imageFile)
 //        })
@@ -238,7 +249,7 @@ class ShowsFragment : Fragment() {
     private fun logout() {
         with(showsViewModel.getSharedPreferences().edit()) {
             putBoolean(
-                getString(me.vanjavk.isa_shows_app_vanjavk.R.string.logged_in_key),
+                REMEMBER_ME_KEY,
                 false
             )
             apply()
