@@ -131,7 +131,6 @@ class ShowsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         initShowsRecycler()
 
         showsViewModel.getShowsLiveData().observe(viewLifecycleOwner, { shows ->
@@ -151,6 +150,7 @@ class ShowsFragment : Fragment() {
             })
 
         showsViewModel.getShows()
+
 
 //        val imageFile = getImageFile(
 //            requireContext()
@@ -177,6 +177,8 @@ class ShowsFragment : Fragment() {
 
     private fun initUserProfileButton() {
         binding.profileIconImage.setOnClickListener {
+
+            //getmail
             userProfileBottomSheet()
         }
     }

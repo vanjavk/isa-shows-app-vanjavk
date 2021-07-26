@@ -57,7 +57,7 @@ class ShowsViewModel(var sharedPref: SharedPreferences) : ViewModel() {
 
             override fun onFailure(call: Call<ShowsResponse>, t: Throwable) {
                 Log.d("TAG", t.message.toString())
-                showsResultLiveData.value = true
+                showsResultLiveData.value = false
             }
 
         })

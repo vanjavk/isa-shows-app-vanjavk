@@ -31,10 +31,12 @@ class LoginViewModel(var sharedPref: SharedPreferences) : ViewModel() {
                 val accessToken = response.headers()["access-token"]
                 val client = response.headers()["client"]
                 val uid = response.headers()["uid"]
-                if (accessToken != null && client != null && uid != null) {
+                val user = response.body()?.user
+                if (accessToken != null && client != null && uid != null && user!=null) {
                     loginResultLiveData.value = response.isSuccessful
                     with(sharedPref.edit()) {
                         putString("USER_EMAIL_KEY", email)
+                        putString("USER_IMAGE_URL_KEY", user.imageUrl)
                         putBoolean("LOGGED_IN_KEY", rememberMe)
                         if (rememberMe){
                             putString("USER_AUTH_ACCESS_TOKEN_TYPE_KEY", accessToken)

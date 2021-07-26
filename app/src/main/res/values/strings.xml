@@ -33,4 +33,6 @@
     <string name="passwords_do_not_match">Passwords do not match</string>
     <string name="error_shared_pref_is_null">Action failed. Aborting...</string>
     <string name="TEST">ADSADSAS</string>
+    <string name="invalid_email">Invalid email!</string>
+    <string name="password_too_short">Password too short</string>
 </resources>

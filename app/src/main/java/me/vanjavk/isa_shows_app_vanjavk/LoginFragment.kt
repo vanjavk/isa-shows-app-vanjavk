@@ -122,7 +122,7 @@ class LoginFragment : Fragment() {
 
     private fun checkEmailValid() {
         if (binding.emailInput.text.toString().isValidEmail()) {
-            binding.emailInputLayout.error = "Invalid email!"
+            binding.emailInputLayout.error = getString(R.string.invalid_email)
             emailValid = false
         } else {
             binding.emailInputLayout.error = null
@@ -132,7 +132,7 @@ class LoginFragment : Fragment() {
 
     private fun checkPasswordValid() {
         if (binding.passwordInput.text.toString().length < MIN_PASSWORD_LENGTH) {
-            binding.passwordInputLayout.error = "Password too short"
+            binding.passwordInputLayout.error = getString(R.string.password_too_short)
             passwordValid = false
         } else {
             binding.passwordInputLayout.error = null
