@@ -26,6 +26,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import me.vanjavk.isa_shows_app_vanjavk.FileUtil.createImageFile
 import me.vanjavk.isa_shows_app_vanjavk.FileUtil.getImageFile
+import me.vanjavk.isa_shows_app_vanjavk.adapter.ShowsAdapter
 import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogUserProfileBinding
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowsBinding
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowsViewModel

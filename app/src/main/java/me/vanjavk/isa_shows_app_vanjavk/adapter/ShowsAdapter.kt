@@ -1,4 +1,4 @@
-package me.vanjavk.isa_shows_app_vanjavk
+package me.vanjavk.isa_shows_app_vanjavk.adapter
 
 import Show
 import android.view.LayoutInflater

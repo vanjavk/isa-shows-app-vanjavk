@@ -1,4 +1,4 @@
-package me.vanjavk.isa_shows_app_vanjavk
+package me.vanjavk.isa_shows_app_vanjavk.adapter
 
 import android.view.LayoutInflater
 import android.view.View.GONE
@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import me.vanjavk.isa_shows_app_vanjavk.R
 import me.vanjavk.isa_shows_app_vanjavk.databinding.ItemReviewBinding
+import me.vanjavk.isa_shows_app_vanjavk.getUsername
 import me.vanjavk.isa_shows_app_vanjavk.model.Review
 
 class ReviewsAdapter(
@@ -52,7 +54,7 @@ class ReviewsAdapter(
                 binding.profileIconImage.setImageResource(R.drawable.ic_painting_art)
             }
             if (item.comment.isNullOrEmpty()) {
-                binding.reviewContent.visibility = GONE
+                 binding.reviewContent.visibility = GONE
             } else {
                 binding.reviewContent.visibility = VISIBLE
                 binding.reviewContent.text = item.comment

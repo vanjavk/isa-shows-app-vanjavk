@@ -27,12 +27,19 @@ class ShowsViewModel(var sharedPref: SharedPreferences) : ViewModel() {
 
     private val showsResultLiveData: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
+    private val userLiveData: MutableLiveData<User> by lazy { MutableLiveData<User>() }
+
+    private val showsLiveData: MutableLiveData<List<Show>> by lazy {
+        MutableLiveData<List<Show>>()
+    }
+
+    fun getShowsLiveData(): LiveData<List<Show>> {
+        return showsLiveData
+    }
+
     fun getShowsResultLiveData(): LiveData<Boolean> {
         return showsResultLiveData
     }
-
-    private val userLiveData: MutableLiveData<User> by lazy { MutableLiveData<User>() }
-
     fun getUserLiveData(): LiveData<User> {
         return userLiveData
     }
@@ -81,28 +88,5 @@ class ShowsViewModel(var sharedPref: SharedPreferences) : ViewModel() {
         return sharedPref
     }
 
-    private val showsLiveData: MutableLiveData<List<Show>> by lazy {
-        MutableLiveData<List<Show>>()
-    }
-
-    fun getShowsLiveData(): LiveData<List<Show>> {
-        return showsLiveData
-    }
-
-    private val userProfilePictureLiveData: MutableLiveData<File> by lazy {
-        MutableLiveData<File>()
-    }
-
-    fun getUserProfilePictureLiveData(): LiveData<File> {
-        return userProfilePictureLiveData
-    }
-
-    fun initShows() {
-//        showsLiveData.value = shows
-    }
-
-    fun setImage(file: File) {
-        userProfilePictureLiveData.value = file
-    }
 
 }

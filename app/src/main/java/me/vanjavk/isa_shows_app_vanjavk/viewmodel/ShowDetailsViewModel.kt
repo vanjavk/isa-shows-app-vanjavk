@@ -53,7 +53,7 @@ class ShowDetailsViewModel(var sharedPref: SharedPreferences) : ViewModel() {
 
             override fun onFailure(call: Call<ShowResponse>, t: Throwable) {
                 Log.d("TAG", t.message.toString())
-                showDetailsResultLiveData.value = true
+                showDetailsResultLiveData.value = false
             }
 
         })
@@ -72,7 +72,7 @@ class ShowDetailsViewModel(var sharedPref: SharedPreferences) : ViewModel() {
 
             override fun onFailure(call: Call<ReviewsResponse>, t: Throwable) {
                 Log.d("TAG", t.message.toString())
-                showDetailsResultLiveData.value = true
+                showDetailsResultLiveData.value = false
             }
 
         })
@@ -92,12 +92,6 @@ class ShowDetailsViewModel(var sharedPref: SharedPreferences) : ViewModel() {
 
     fun getRatingInfoLiveData(): LiveData<RatingInfo> {
         return ratingInfoLiveData
-    }
-
-    private fun calculateReviews() {
-        val numberOfReviews = 0//show.reviews.count()
-        val averageRating = 0f//show.reviews.sumOf { it.rating } / numberOfReviews.toFloat()
-        ratingInfoLiveData.value = RatingInfo(numberOfReviews, averageRating)
     }
 
     fun addReview( rating: Int, comment: String?, show_id: Int) {

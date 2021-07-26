@@ -26,8 +26,6 @@ class LoginFragment : Fragment() {
 
     private val args: LoginFragmentArgs by navArgs()
 
-//    private val loginViewModel: LoginViewModel by viewModels()
-
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var loginViewModelFactory: LoginViewModelFactory
 
@@ -56,7 +54,6 @@ class LoginFragment : Fragment() {
         loginViewModelFactory = LoginViewModelFactory(sharedPref)
         loginViewModel = ViewModelProvider(this, loginViewModelFactory)
             .get(LoginViewModel::class.java)
-
 
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
