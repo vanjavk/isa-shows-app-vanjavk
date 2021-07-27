@@ -3,9 +3,10 @@ package me.vanjavk.isa_shows_app_vanjavk
 import Show
 import android.Manifest
 import android.content.Context
-import android.content.Intent
+import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
@@ -29,6 +30,7 @@ import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogUserProfileBinding
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowsBinding
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowsViewModel
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ViewModelFactory
+import java.io.File
 import java.util.*
 
 
@@ -45,31 +47,6 @@ class ShowsFragment : Fragment() {
 
     private lateinit var showsViewModel: ShowsViewModel
     private lateinit var showsViewModelFactory: ViewModelFactory
-
-    private val permissionForFiles = preparePermissionsContract(onPermissionsGranted = {
-        val uri = createImageFile(requireContext())?.let {
-            FileProvider.getUriForFile(
-                requireContext(), "me.vanjavk.isa-shows-app-vanjavk.fileprovider",
-                it
-            )
-        }
-        if (uri == null) {
-            Toast.makeText(activity, getString(R.string.error_opening_file), Toast.LENGTH_SHORT)
-                .show()
-            return@preparePermissionsContract
-        }
-
-        openFile(uri)
-    })
-
-    private fun openFile(pickerInitialUri: Uri) {
-        val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
-            type = "image/*";
-
-            putExtra(MediaStore.EXTRA_OUTPUT, pickerInitialUri)
-        }
-        startActivityForResult(intent, 2)
-    }
 
     private val permissionForCamera = preparePermissionsContract(onPermissionsGranted = {
         val uri = createImageFile(requireContext())?.let {
@@ -91,6 +68,32 @@ class ShowsFragment : Fragment() {
         getCameraImage.launch(uri)
     })
 
+    private val permissionForFiles = preparePermissionsContract(onPermissionsGranted = {
+//        val uri = createImageFile(requireContext())?.let {
+//            FileProvider.getUriForFile(
+//                requireContext(), requireContext().packageName.toString() + ".fileprovider",
+//                it
+//            )
+//        }
+//        if (uri == null) {
+//            Toast.makeText(activity, getString(R.string.error_opening_file), Toast.LENGTH_SHORT)
+//                .show()
+//            return@preparePermissionsContract
+//        }
+
+        selectImageFromGallery.launch("image/*")
+        // openFile(uri)
+    })
+//
+//    private fun openFile(pickerInitialUri: Uri) {
+//        val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
+//            type = "image/*";
+//
+//            putExtra(MediaStore.EXTRA_OUTPUT, pickerInitialUri)
+//        }
+//        startActivityForResult(intent, 1000)
+//    }
+
     private val getCameraImage =
         registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
             if (success) {
@@ -99,11 +102,30 @@ class ShowsFragment : Fragment() {
                 )
                 if (imageFile != null) {
                     showsViewModel.uploadProfilePicture(imageFile)
-                    //setImageFromFile()
-                    //showsViewModel.setImage(imageFile)
                 }
             }
         }
+
+    private val selectImageFromGallery =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri ->
+            uri.let {
+//                println(uri.path)
+//                File(Uri()).copyTo(
+//                    File(
+//                        requireContext().getExternalFilesDir(
+//                            Environment.DIRECTORY_PICTURES
+//                        ), "avatar.jpg"
+//                    )
+//                )
+//
+//                getImageFile(requireContext())?.let { imageFile ->
+//                    showsViewModel.uploadProfilePicture(
+//                        imageFile
+//                    )
+//                }
+            }
+        }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -235,12 +257,14 @@ class ShowsFragment : Fragment() {
                 ) { _, which ->
                     when (which) {
                         0 -> permissionForCamera.launch(arrayOf(Manifest.permission.CAMERA))
-                        1 -> Toast.makeText(
-                            activity,
-                            "Ovo ne radi, s obzirom da je pod extra, predao sam zadacu bez toga.",
-                            Toast.LENGTH_SHORT
-                        )
-                            .show()//permissionForFiles.launch(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE))
+                        1 ->
+//                            Toast.makeText(
+//                            activity,
+//                            "Ovo ne radi, s obzirom da je pod extra, predao sam zadacu bez toga.",
+//                            Toast.LENGTH_SHORT
+//                        )
+//                            .show()
+                            permissionForFiles.launch(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE))
                     }
                 }
                 setNegativeButton(
