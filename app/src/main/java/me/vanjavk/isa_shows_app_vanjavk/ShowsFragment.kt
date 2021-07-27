@@ -28,7 +28,7 @@ import me.vanjavk.isa_shows_app_vanjavk.adapter.ShowsAdapter
 import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogUserProfileBinding
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowsBinding
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowsViewModel
-import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowsViewModelFactory
+import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ViewModelFactory
 import java.util.*
 
 
@@ -44,7 +44,7 @@ class ShowsFragment : Fragment() {
     private var showsAdapter: ShowsAdapter? = null
 
     private lateinit var showsViewModel: ShowsViewModel
-    private lateinit var showsViewModelFactory: ShowsViewModelFactory
+    private lateinit var showsViewModelFactory: ViewModelFactory
 
     private val permissionForFiles = preparePermissionsContract(onPermissionsGranted = {
         val uri = createImageFile(requireContext())?.let {
@@ -127,7 +127,7 @@ class ShowsFragment : Fragment() {
             return binding.root
         }
 
-        showsViewModelFactory = ShowsViewModelFactory(sharedPref)
+        showsViewModelFactory = ViewModelFactory(sharedPref)
         showsViewModel = ViewModelProvider(this, showsViewModelFactory)
             .get(ShowsViewModel::class.java)
 
@@ -163,8 +163,8 @@ class ShowsFragment : Fragment() {
             })
 
         showsViewModel.getChangeProfilePictureResultLiveDataLiveData()
-            .observe(viewLifecycleOwner, { isGetShowsSuccessful ->
-                if (!isGetShowsSuccessful) {
+            .observe(viewLifecycleOwner, { isChangeProfilePictureSuccessful ->
+                if (!isChangeProfilePictureSuccessful) {
                     Toast.makeText(
                         activity,
                         "Changing profile picture was unsuccessful!",

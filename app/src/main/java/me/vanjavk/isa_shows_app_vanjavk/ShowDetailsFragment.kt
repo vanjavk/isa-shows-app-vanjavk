@@ -16,14 +16,13 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import me.vanjavk.isa_shows_app_vanjavk.adapter.ReviewsAdapter
 import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogAddReviewBinding
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowDetailsBinding
 import me.vanjavk.isa_shows_app_vanjavk.model.Review
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowDetailsViewModel
-import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowDetailsViewModelFactory
+import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ViewModelFactory
 
 
 class ShowDetailsFragment : Fragment() {
@@ -37,7 +36,7 @@ class ShowDetailsFragment : Fragment() {
     private var reviewsAdapter: ReviewsAdapter? = null
 
     private lateinit var showDetailsViewModel: ShowDetailsViewModel
-    private lateinit var showDetailsViewModelFactory: ShowDetailsViewModelFactory
+    private lateinit var showDetailsViewModelFactory: ViewModelFactory
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,7 +57,7 @@ class ShowDetailsFragment : Fragment() {
             return binding.root
         }
 
-        showDetailsViewModelFactory = ShowDetailsViewModelFactory(sharedPref)
+        showDetailsViewModelFactory = ViewModelFactory(sharedPref)
         showDetailsViewModel = ViewModelProvider(this, showDetailsViewModelFactory)
             .get(ShowDetailsViewModel::class.java)
 

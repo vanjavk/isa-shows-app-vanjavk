@@ -14,7 +14,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentLoginBinding
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.LoginViewModel
-import me.vanjavk.isa_shows_app_vanjavk.viewmodel.LoginViewModelFactory
+import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ViewModelFactory
 
 class LoginFragment : Fragment() {
 
@@ -25,7 +25,7 @@ class LoginFragment : Fragment() {
     private val args: LoginFragmentArgs by navArgs()
 
     private lateinit var loginViewModel: LoginViewModel
-    private lateinit var loginViewModelFactory: LoginViewModelFactory
+    private lateinit var loginViewModelFactory: ViewModelFactory
 
     private var emailValid = false
     private var passwordValid = false
@@ -49,7 +49,7 @@ class LoginFragment : Fragment() {
                 .let { findNavController().navigate(it) }
         }
 
-        loginViewModelFactory = LoginViewModelFactory(sharedPref)
+        loginViewModelFactory = ViewModelFactory(sharedPref)
         loginViewModel = ViewModelProvider(this, loginViewModelFactory)
             .get(LoginViewModel::class.java)
 
