@@ -81,7 +81,6 @@ class ShowDetailsFragment : Fragment() {
 
         showDetailsViewModel.getShowLiveData().observe(viewLifecycleOwner, { show ->
             updateShow(show)
-//            updateReviews(show.reviews)
         })
 
         showDetailsViewModel.getReviewLiveData().observe(viewLifecycleOwner, { review ->
@@ -92,17 +91,15 @@ class ShowDetailsFragment : Fragment() {
             updateReviews(reviews)
         })
 
-        showDetailsViewModel.getRatingInfoLiveData().observe(viewLifecycleOwner, { ratingInfo ->
-//            updateRatingInfo(ratingInfo)
-        })
-
         initWriteReviewButton()
         initReviewsRecycler()
     }
 
     private fun updateShow(show: Show) {
         binding.toolbarLayout.title = show.title
-        Glide.with(this).load(show.imageUrl).into(binding.showImage)
+        if (binding.showImage.drawable == null) {
+            Glide.with(this).load(show.imageUrl).into(binding.showImage)
+        }
         binding.showDescription.text = show.description
         updateRatingInfo(show.numberOfReviews, show.averageRating)
     }
@@ -113,7 +110,7 @@ class ShowDetailsFragment : Fragment() {
             binding.showReviewRating.visibility = View.GONE
             binding.showRatingBar.visibility = View.GONE
             binding.noReviewsYet.visibility = View.VISIBLE
-        } else if (averageRating!=null) {
+        } else if (averageRating != null) {
             binding.noReviewsYet.visibility = View.GONE
             binding.reviewsRecyclerView.visibility = View.VISIBLE
             binding.showReviewRating.visibility = View.VISIBLE
@@ -132,7 +129,6 @@ class ShowDetailsFragment : Fragment() {
 
     private fun updateReviews(review: Review) {
         reviewsAdapter?.addItem(review)
-//        reviewsAdapter?.itemCount?.let { itemCount -> reviewsAdapter?.notifyItemInserted(itemCount) }
     }
 
     private fun initWriteReviewButton() {

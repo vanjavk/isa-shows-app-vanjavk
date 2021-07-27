@@ -16,7 +16,8 @@ class ShowsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShowViewHolder {
 
-        val binding = ViewShowItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ViewShowItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
         return ShowViewHolder(binding)
     }
@@ -44,7 +45,9 @@ class ShowsAdapter(
 
         fun bind(item: Show) {
             binding.showTitle.text = item.title
-            Glide.with(itemView.context).load(item.imageUrl).into(binding.showImage)
+            if (binding.showImage.drawable == null) {
+                Glide.with(itemView.context).load(item.imageUrl).into(binding.showImage)
+            }
             binding.showDescription.text = item.description
             binding.root.setOnClickListener {
                 onItemClickCallback(item)

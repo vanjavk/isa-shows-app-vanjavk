@@ -6,7 +6,6 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import me.vanjavk.isa_shows_app_vanjavk.model.RatingInfo
 import me.vanjavk.isa_shows_app_vanjavk.model.Review
 import me.vanjavk.isa_shows_app_vanjavk.model.network.*
 import me.vanjavk.isa_shows_app_vanjavk.networking.ApiModule
@@ -35,9 +34,6 @@ class ShowDetailsViewModel(var sharedPref: SharedPreferences) : ViewModel() {
         MutableLiveData<List<Review>>()
     }
 
-    private val ratingInfoLiveData: MutableLiveData<RatingInfo> by lazy {
-        MutableLiveData<RatingInfo>()
-    }
 
     fun getShow(id: String) {
         ApiModule.retrofit.getShow(id).enqueue(object :
@@ -90,10 +86,6 @@ class ShowDetailsViewModel(var sharedPref: SharedPreferences) : ViewModel() {
         return reviewsLiveData
     }
 
-    fun getRatingInfoLiveData(): LiveData<RatingInfo> {
-        return ratingInfoLiveData
-    }
-
     fun addReview( rating: Int, comment: String?, show_id: Int) {
         ApiModule.retrofit.addReview(AddReviewRequest(rating, comment, show_id)).enqueue(object :
             Callback<AddReviewResponse> {
@@ -102,12 +94,12 @@ class ShowDetailsViewModel(var sharedPref: SharedPreferences) : ViewModel() {
                 response: Response<AddReviewResponse>
             ) {
                 reviewLiveData.value = response.body()?.review
-                showDetailsResultLiveData.value = true
+                getShow(show_id.toString())
             }
 
             override fun onFailure(call: Call<AddReviewResponse>, t: Throwable) {
                 Log.d("TAG", t.message.toString())
-                showDetailsResultLiveData.value = true
+
             }
 
         })

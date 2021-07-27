@@ -93,6 +93,7 @@ class LoginFragment : Fragment() {
         binding.loginText.text = getString(R.string.registration_successful)
         binding.registerButton.visibility = GONE
         binding.emailInput.setText(email)
+        checkEmailValid()
     }
 
     private fun initLoginButton() {
