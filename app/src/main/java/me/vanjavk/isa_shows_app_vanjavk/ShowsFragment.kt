@@ -31,6 +31,7 @@ import me.vanjavk.isa_shows_app_vanjavk.FileUtil.getImageFile
 import me.vanjavk.isa_shows_app_vanjavk.adapter.ShowsAdapter
 import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogUserProfileBinding
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowsBinding
+import me.vanjavk.isa_shows_app_vanjavk.model.ShowEntity
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowsViewModel
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ViewModelFactory
 import java.io.File
@@ -49,7 +50,7 @@ class ShowsFragment : Fragment() {
 
     private var showsAdapter: ShowsAdapter? = null
 
-    private val showsViewModel: ShowsViewModel  by viewModels {
+    private val showsViewModel: ShowsViewModel by viewModels {
         ViewModelFactory(
             requireActivity().getPreferences(Context.MODE_PRIVATE),
             (requireActivity().application as ShowsApp).showsDatabase
@@ -148,7 +149,16 @@ class ShowsFragment : Fragment() {
         initShowsRecycler()
 
         showsViewModel.getShowsLiveData().observe(viewLifecycleOwner, { shows ->
-            updateItems(shows)
+            updateItems(shows.map {
+                Show(
+                    it.id,
+                    it.averageRating,
+                    it.description,
+                    it.imageUrl,
+                    it.numberOfReviews,
+                    it.title
+                )
+            })
         })
 
         showsViewModel.getUserLiveData().observe(viewLifecycleOwner, { user ->
@@ -159,14 +169,22 @@ class ShowsFragment : Fragment() {
         showsViewModel.getShowsResultLiveData()
             .observe(viewLifecycleOwner, { isGetShowsSuccessful ->
                 if (!isGetShowsSuccessful) {
-                    Toast.makeText(activity, getString(R.string.error_failure_response), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        activity,
+                        getString(R.string.error_failure_response),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             })
 
         showsViewModel.getCurrentUserResultLiveData()
             .observe(viewLifecycleOwner, { isGetCurrentUserSuccessful ->
                 if (!isGetCurrentUserSuccessful) {
-                    Toast.makeText(activity, getString(R.string.error_failure_response), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        activity,
+                        getString(R.string.error_failure_response),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             })
 

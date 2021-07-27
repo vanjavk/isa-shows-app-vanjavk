@@ -44,8 +44,8 @@ class ShowsViewModel(
         MutableLiveData<List<Show>>()
     }
 
-    fun getShowsLiveData(): LiveData<List<Show>> {
-        return showsLiveData
+    fun getShowsLiveData(): LiveData<List<ShowEntity>> {
+        return database.showDao().getAllShows()
     }
 
     fun getShowsResultLiveData(): LiveData<Boolean> {
