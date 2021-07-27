@@ -10,8 +10,4 @@ class ShowsApp : Application() {
         ShowsDatabase.getDatabase(this)
     }
 
-    override fun onCreate() {
-        super.onCreate()
-
-    }
 }

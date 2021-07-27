@@ -10,6 +10,7 @@ import android.widget.RatingBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -35,8 +36,12 @@ class ShowDetailsFragment : Fragment() {
 
     private var reviewsAdapter: ReviewsAdapter? = null
 
-    private lateinit var showDetailsViewModel: ShowDetailsViewModel
-    private lateinit var showDetailsViewModelFactory: ViewModelFactory
+    private val showDetailsViewModel: ShowDetailsViewModel by viewModels {
+        ViewModelFactory(
+            requireActivity().getPreferences(Context.MODE_PRIVATE),
+            (requireActivity().application as ShowsApp).showsDatabase
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,11 +61,6 @@ class ShowDetailsFragment : Fragment() {
             activity?.onBackPressed()
             return binding.root
         }
-
-        showDetailsViewModelFactory = ViewModelFactory(sharedPref)
-        showDetailsViewModel = ViewModelProvider(this, showDetailsViewModelFactory)
-            .get(ShowDetailsViewModel::class.java)
-
         return binding.root
     }
 

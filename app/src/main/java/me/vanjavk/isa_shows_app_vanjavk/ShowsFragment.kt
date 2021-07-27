@@ -19,6 +19,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -48,8 +49,12 @@ class ShowsFragment : Fragment() {
 
     private var showsAdapter: ShowsAdapter? = null
 
-    private lateinit var showsViewModel: ShowsViewModel
-    private lateinit var showsViewModelFactory: ViewModelFactory
+    private val showsViewModel: ShowsViewModel  by viewModels {
+        ViewModelFactory(
+            requireActivity().getPreferences(Context.MODE_PRIVATE),
+            (requireActivity().application as ShowsApp).showsDatabase
+        )
+    }
 
     private val permissionForCamera = preparePermissionsContract(onPermissionsGranted = {
         val uri = createImageFile(requireContext())?.let {
@@ -133,10 +138,6 @@ class ShowsFragment : Fragment() {
             activity?.onBackPressed()
             return binding.root
         }
-
-        showsViewModelFactory = ViewModelFactory(sharedPref)
-        showsViewModel = ViewModelProvider(this, showsViewModelFactory)
-            .get(ShowsViewModel::class.java)
 
         return binding.root
     }

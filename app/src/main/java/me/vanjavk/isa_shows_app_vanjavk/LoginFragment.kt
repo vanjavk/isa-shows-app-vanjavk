@@ -7,8 +7,10 @@ import android.view.View
 import android.view.View.GONE
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -24,8 +26,12 @@ class LoginFragment : Fragment() {
 
     private val args: LoginFragmentArgs by navArgs()
 
-    private lateinit var loginViewModel: LoginViewModel
-    private lateinit var loginViewModelFactory: ViewModelFactory
+    private val loginViewModel: LoginViewModel by viewModels {
+        ViewModelFactory(
+            requireActivity().getPreferences(Context.MODE_PRIVATE),
+            (requireActivity().application as ShowsApp).showsDatabase
+        )
+    }
 
     private var emailValid = false
     private var passwordValid = false
@@ -37,21 +43,13 @@ class LoginFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
-        if (sharedPref == null) {
-            Toast.makeText(activity, getString(R.string.error_shared_pref_is_null), Toast.LENGTH_SHORT).show()
-            return null
-        }
+        val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
 
         val loggedIn = sharedPref.getBoolean(REMEMBER_ME_KEY, false)
         if (loggedIn) {
             LoginFragmentDirections.actionLoginToShows()
                 .let { findNavController().navigate(it) }
         }
-
-        loginViewModelFactory = ViewModelFactory(sharedPref)
-        loginViewModel = ViewModelProvider(this, loginViewModelFactory)
-            .get(LoginViewModel::class.java)
 
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
@@ -71,7 +69,11 @@ class LoginFragment : Fragment() {
                     LoginFragmentDirections.actionLoginToShows()
                         .let { findNavController().navigate(it) }
                 } else {
-                    Toast.makeText(activity, "Email and password combination is incorrect!", Toast.LENGTH_SHORT)
+                    Toast.makeText(
+                        activity,
+                        "Email and password combination is incorrect!",
+                        Toast.LENGTH_SHORT
+                    )
                         .show()
                     loginInProcess = false
                     checkLoginButtonEnableable()
