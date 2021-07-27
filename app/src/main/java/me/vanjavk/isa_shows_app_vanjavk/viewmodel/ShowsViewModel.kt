@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import me.vanjavk.isa_shows_app_vanjavk.*
 import me.vanjavk.isa_shows_app_vanjavk.database.ShowsDatabase
+import me.vanjavk.isa_shows_app_vanjavk.model.ShowEntity
 import me.vanjavk.isa_shows_app_vanjavk.model.User
 import me.vanjavk.isa_shows_app_vanjavk.model.network.UserResponse
 import me.vanjavk.isa_shows_app_vanjavk.model.network.ShowsResponse
@@ -23,6 +24,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
+import java.util.concurrent.Executors
 
 
 class ShowsViewModel(
@@ -69,12 +71,31 @@ class ShowsViewModel(
                 call: Call<ShowsResponse>,
                 response: Response<ShowsResponse>
             ) {
-                showsLiveData.value = response.body()?.shows
-                showsResultLiveData.value = true
+                val shows = response.body()?.shows
+                if (shows != null) {
+                    Executors.newSingleThreadExecutor().execute {
+                        database.showDao().insertAllShows(
+                            shows.map {
+                                ShowEntity(
+                                    it.id,
+                                    it.averageRating,
+                                    it.description,
+                                    it.imageUrl,
+                                    it.numberOfReviews,
+                                    it.title
+                                )
+                            }
+                        )
+                    }
+                    showsLiveData.value = shows
+                    showsResultLiveData.value = true
+                } else {
+                    showsResultLiveData.value = false
+                }
             }
 
             override fun onFailure(call: Call<ShowsResponse>, t: Throwable) {
-                Log.d("TAG", t.message.toString())
+                Log.d("GETSHOWSFAILURE", t.message.toString())
                 showsResultLiveData.value = false
             }
 
@@ -106,7 +127,7 @@ class ShowsViewModel(
             }
 
             override fun onFailure(call: Call<UserResponse>, t: Throwable) {
-                Log.d("TAG", t.message.toString())
+                Log.d("CHANGEPROFILEFAILURE", t.message.toString())
                 changeProfilePictureResultLiveData.value = false
             }
 
@@ -125,7 +146,7 @@ class ShowsViewModel(
             }
 
             override fun onFailure(call: Call<UserResponse>, t: Throwable) {
-                Log.d("TAG", t.message.toString())
+                Log.d("GETUSERFAILURE", t.message.toString())
                 currentUserResultLiveData.value = false
             }
         })

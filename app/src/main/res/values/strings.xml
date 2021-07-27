@@ -40,4 +40,5 @@
     <string name="invalid_email">Invalid email!</string>
     <string name="password_too_short">Password too short</string>
     <string name="loading">Loading...</string>
+    <string name="error_failure_response">Failed to get correct response from server. Check your internet connection!</string>
 </resources>
