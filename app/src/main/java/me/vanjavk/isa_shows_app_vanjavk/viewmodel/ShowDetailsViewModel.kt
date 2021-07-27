@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import me.vanjavk.isa_shows_app_vanjavk.database.ShowsDatabase
 import me.vanjavk.isa_shows_app_vanjavk.model.Review
+import me.vanjavk.isa_shows_app_vanjavk.model.ShowEntity
 import me.vanjavk.isa_shows_app_vanjavk.model.network.*
 import me.vanjavk.isa_shows_app_vanjavk.networking.ApiModule
 import retrofit2.Call
@@ -27,10 +28,6 @@ class ShowDetailsViewModel(
         return showDetailsResultLiveData
     }
 
-    private val showLiveData: MutableLiveData<Show> by lazy {
-        MutableLiveData<Show>()
-    }
-
     private val reviewLiveData: MutableLiveData<Review> by lazy {
         MutableLiveData<Review>()
     }
@@ -40,6 +37,10 @@ class ShowDetailsViewModel(
     }
 
 
+    fun getShowLiveData(id: String): LiveData<ShowEntity> {
+        return database.showDao().getShow(id)
+    }
+
     fun getShow(id: String) {
         ApiModule.retrofit.getShow(id).enqueue(object :
             Callback<ShowResponse> {
@@ -47,13 +48,31 @@ class ShowDetailsViewModel(
                 call: Call<ShowResponse>,
                 response: Response<ShowResponse>
             ) {
-                showLiveData.value = response.body()?.show
+                val show = response.body()?.show
+                if (show != null) {
+                    Executors.newSingleThreadExecutor().execute {
+                        database.showDao().addShow(show.let {
+                            ShowEntity(
+                                it.id,
+                                it.averageRating,
+                                it.description,
+                                it.imageUrl,
+                                it.numberOfReviews,
+                                it.title
+                            )
+                        })
+                    }
+                    showDetailsResultLiveData.value = true
+                } else {
+                    //val showEntity = database.showDao().getShow(id)
+                    showDetailsResultLiveData.value = false
+                }
                 getReviews(id)
-                showDetailsResultLiveData.value = true
             }
 
             override fun onFailure(call: Call<ShowResponse>, t: Throwable) {
                 Log.d("TAG", t.message.toString())
+
                 showDetailsResultLiveData.value = false
             }
 
@@ -77,10 +96,6 @@ class ShowDetailsViewModel(
             }
 
         })
-    }
-
-    fun getShowLiveData(): LiveData<Show> {
-        return showLiveData
     }
 
     fun getReviewLiveData(): LiveData<Review> {

@@ -22,6 +22,7 @@ import me.vanjavk.isa_shows_app_vanjavk.adapter.ReviewsAdapter
 import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogAddReviewBinding
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowDetailsBinding
 import me.vanjavk.isa_shows_app_vanjavk.model.Review
+import me.vanjavk.isa_shows_app_vanjavk.model.ShowEntity
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowDetailsViewModel
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ViewModelFactory
 
@@ -80,8 +81,16 @@ class ShowDetailsFragment : Fragment() {
 
         showDetailsViewModel.getShow(id)
 
-        showDetailsViewModel.getShowLiveData().observe(viewLifecycleOwner, { show ->
-            updateShow(show)
+        showDetailsViewModel.getShowLiveData(id).observe(viewLifecycleOwner, { show ->
+            updateShow(show.let{
+                Show(
+                    it.id,
+                    it.averageRating,
+                    it.description,
+                    it.imageUrl,
+                    it.numberOfReviews,
+                    it.title)
+            })
         })
 
         showDetailsViewModel.getReviewLiveData().observe(viewLifecycleOwner, { review ->
