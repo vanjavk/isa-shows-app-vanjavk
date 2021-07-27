@@ -16,6 +16,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 
 import androidx.core.content.FileProvider
+import androidx.core.net.toFile
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -44,30 +45,14 @@ class ShowsFragment : Fragment() {
     private val showsViewModel: ShowsViewModel by viewModels()
 
     private val permissionForFiles = preparePermissionsContract(onPermissionsGranted = {
-        val uri = createImageFile(requireContext())?.let {
-            FileProvider.getUriForFile(
-                requireContext(), "me.vanjavk.isa-shows-app-vanjavk.fileprovider",
-                it
-            )
-        }
-        if (uri == null) {
-            Toast.makeText(activity, getString(R.string.error_opening_file), Toast.LENGTH_SHORT)
-                .show()
-            return@preparePermissionsContract
-        }
-
-        openFile(uri)
+        selectImageFromGallery.launch("image/*")
     })
-
-
-    private fun openFile(pickerInitialUri: Uri) {
-        val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
-            type = "image/*";
-
-            putExtra(MediaStore.EXTRA_OUTPUT, pickerInitialUri)
+    private val selectImageFromGallery =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri ->
+            uri.let {
+                binding.profileIconImage.setImageURI(uri) //skorooooo
+            }
         }
-        startActivityForResult(intent, 2)
-    }
 
     private val permissionForCamera = preparePermissionsContract(onPermissionsGranted = {
         val uri = createImageFile(requireContext())?.let {
@@ -215,12 +200,7 @@ class ShowsFragment : Fragment() {
                 ) { _, which ->
                     when (which) {
                         0 -> permissionForCamera.launch(arrayOf(Manifest.permission.CAMERA))
-                        1 -> Toast.makeText(
-                            activity,
-                            "Ovo ne radi, s obzirom da je pod extra, predao sam zadacu bez toga.",
-                            Toast.LENGTH_SHORT
-                        )
-                            .show()//permissionForFiles.launch(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE))
+                        1 -> permissionForFiles.launch(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE))
                     }
                 }
                 setNegativeButton(
