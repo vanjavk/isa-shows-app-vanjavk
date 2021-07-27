@@ -12,7 +12,7 @@ interface ShowsApiService {
     @POST("/users")
     fun register(@Body request: RegisterRequest): Call<RegisterResponse>
     @POST("/users/sign_in")
-    fun login(@Body request: LoginRequest): Call<LoginResponse>
+    fun login(@Body request: LoginRequest): Call<UserResponse>
     @GET("/shows")
     fun getShows(): Call<ShowsResponse>
     @GET("/shows/{id}")
@@ -24,7 +24,9 @@ interface ShowsApiService {
     @Multipart
     @PUT("/users")
     fun changeProfilePicture(@Part("email") email: RequestBody,
-                             @Part image: MultipartBody.Part): Call<LoginResponse>
+                             @Part image: MultipartBody.Part): Call<UserResponse>
+    @GET("/users/me")
+    fun getCurrentUser(): Call<UserResponse>
 
 
 }

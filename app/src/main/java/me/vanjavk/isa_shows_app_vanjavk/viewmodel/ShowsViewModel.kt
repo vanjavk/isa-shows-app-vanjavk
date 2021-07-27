@@ -7,12 +7,11 @@ import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import me.vanjavk.isa_shows_app_vanjavk.USER_IMAGE_URL_KEY
+import me.vanjavk.isa_shows_app_vanjavk.*
 import me.vanjavk.isa_shows_app_vanjavk.model.User
-import me.vanjavk.isa_shows_app_vanjavk.model.network.LoginResponse
+import me.vanjavk.isa_shows_app_vanjavk.model.network.UserResponse
 import me.vanjavk.isa_shows_app_vanjavk.model.network.ShowsResponse
 import me.vanjavk.isa_shows_app_vanjavk.networking.ApiModule
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.MultipartBody.Part.Companion.createFormData
@@ -29,7 +28,11 @@ class ShowsViewModel(var sharedPref: SharedPreferences) : ViewModel() {
 
     private val showsResultLiveData: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
+    private val changeProfilePictureResultLiveData: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
     private val userLiveData: MutableLiveData<User> by lazy { MutableLiveData<User>() }
+
+    private val currentUserResultLiveData: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     private val showsLiveData: MutableLiveData<List<Show>> by lazy {
         MutableLiveData<List<Show>>()
@@ -42,8 +45,17 @@ class ShowsViewModel(var sharedPref: SharedPreferences) : ViewModel() {
     fun getShowsResultLiveData(): LiveData<Boolean> {
         return showsResultLiveData
     }
+
+    fun getChangeProfilePictureResultLiveDataLiveData(): LiveData<Boolean> {
+        return changeProfilePictureResultLiveData
+    }
+
     fun getUserLiveData(): LiveData<User> {
         return userLiveData
+    }
+
+    fun getCurrentUserResultLiveData(): LiveData<Boolean> {
+        return currentUserResultLiveData
     }
 
     fun getShows() {
@@ -68,35 +80,64 @@ class ShowsViewModel(var sharedPref: SharedPreferences) : ViewModel() {
     fun uploadProfilePicture(file: File) {
         val requestFile: RequestBody = file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
         val body: MultipartBody.Part = createFormData("image", file.name, requestFile)
-        val email: RequestBody = sharedPref.getString("USER_AUTH_UID_TYPE_KEY","").orEmpty().toRequestBody("multipart/form-data".toMediaTypeOrNull())
-        ApiModule.retrofit.changeProfilePicture(email,body).enqueue(object :
-            Callback<LoginResponse> {
+        val email: RequestBody = sharedPref.getString("USER_AUTH_UID_TYPE_KEY", "").orEmpty()
+            .toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        ApiModule.retrofit.changeProfilePicture(email, body).enqueue(object :
+            Callback<UserResponse> {
             override fun onResponse(
-                call: Call<LoginResponse>,
-                response: Response<LoginResponse>
+                call: Call<UserResponse>,
+                response: Response<UserResponse>
             ) {
                 val user = response.body()?.user
-                if (user!=null){
+                if (user != null) {
                     userLiveData.value = user
                     sharedPref.edit {
                         putString(USER_IMAGE_URL_KEY, user.imageUrl)
                         apply()
                     }
-                    showsResultLiveData.value = true
-                }else{
-                    showsResultLiveData.value = false
+                    changeProfilePictureResultLiveData.value = true
+                } else {
+                    changeProfilePictureResultLiveData.value = false
                 }
             }
-            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+
+            override fun onFailure(call: Call<UserResponse>, t: Throwable) {
                 Log.d("TAG", t.message.toString())
-                showsResultLiveData.value = true
+                changeProfilePictureResultLiveData.value = false
             }
 
         })
     }
 
-    fun getSharedPreferences(): SharedPreferences {
-        return sharedPref
+    fun getUser() {
+        ApiModule.retrofit.getCurrentUser().enqueue(object :
+            Callback<UserResponse> {
+            override fun onResponse(
+                call: Call<UserResponse>,
+                response: Response<UserResponse>
+            ) {
+                userLiveData.value = response.body()?.user
+                currentUserResultLiveData.value = true
+            }
+
+            override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+                Log.d("TAG", t.message.toString())
+                currentUserResultLiveData.value = false
+            }
+        })
+    }
+
+    fun logout() {
+        with(sharedPref.edit()) {
+            putBoolean(
+                REMEMBER_ME_KEY,
+                false
+            )
+            remove(USER_AUTH_ACCESS_TOKEN_TYPE_KEY)
+            remove(USER_AUTH_CLIENT_TYPE_KEY)
+            remove(USER_AUTH_UID_TYPE_KEY)
+            apply()
+        }
     }
 
 

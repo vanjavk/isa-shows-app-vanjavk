@@ -14,7 +14,6 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -75,7 +74,7 @@ class ShowsFragment : Fragment() {
     private val permissionForCamera = preparePermissionsContract(onPermissionsGranted = {
         val uri = createImageFile(requireContext())?.let {
             FileProvider.getUriForFile(
-                requireContext(), requireContext().packageName.toString() +".fileprovider",
+                requireContext(), requireContext().packageName.toString() + ".fileprovider",
                 it
             )
         }
@@ -138,7 +137,6 @@ class ShowsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         initShowsRecycler()
 
         showsViewModel.getShowsLiveData().observe(viewLifecycleOwner, { shows ->
@@ -147,32 +145,39 @@ class ShowsFragment : Fragment() {
 
         showsViewModel.getUserLiveData().observe(viewLifecycleOwner, { user ->
             updateProfileIcons(user.imageUrl)
+            bottomSheetBinding.userEmail.text = user.email
         })
 
         showsViewModel.getShowsResultLiveData()
             .observe(viewLifecycleOwner, { isGetShowsSuccessful ->
                 if (!isGetShowsSuccessful) {
                     logout()
-//                    Toast.makeText(activity, "NEUSPJESNO", Toast.LENGTH_SHORT).show()
+                }
+            })
+
+        showsViewModel.getCurrentUserResultLiveData()
+            .observe(viewLifecycleOwner, { isGetCurrentUserSuccessful ->
+                if (!isGetCurrentUserSuccessful) {
+                    logout()
+                }
+            })
+
+        showsViewModel.getChangeProfilePictureResultLiveDataLiveData()
+            .observe(viewLifecycleOwner, { isGetShowsSuccessful ->
+                if (!isGetShowsSuccessful) {
+                    Toast.makeText(
+                        activity,
+                        "Changing profile picture was unsuccessful!",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             })
 
         showsViewModel.getShows()
-
-        //ovo treba zamijenit
-        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
-        if (sharedPref == null) {
-            Toast.makeText(
-                activity,
-                getString(R.string.error_shared_pref_is_null),
-                Toast.LENGTH_SHORT
-            ).show()
-            activity?.onBackPressed()
-            return
-        }
-        updateProfileIcons(sharedPref.getString(USER_IMAGE_URL_KEY,""))
+        showsViewModel.getUser()
 
         initUserProfileButton()
+        initUserProfileBottomSheet()
     }
 
     private fun updateProfileIcons(imageUrl: String?) {
@@ -182,9 +187,9 @@ class ShowsFragment : Fragment() {
 
 
     private fun setImageFromFile(imageView: ImageView, imageFile: String?) {
-        if(imageFile.isNullOrEmpty()){
+        if (imageFile.isNullOrBlank()) {
             binding.profileIconImage.setImageResource(R.drawable.ic_painting_art)
-        }else{
+        } else {
             Glide.with(this).load(imageFile).diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true).into(imageView)
         }
@@ -196,46 +201,11 @@ class ShowsFragment : Fragment() {
 
     private fun initUserProfileButton() {
         binding.profileIconImage.setOnClickListener {
-
-            //getmail
-            userProfileBottomSheet()
+            dialog.show()
         }
     }
 
-    private fun userProfileBottomSheet() {
-
-
-        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
-        if (sharedPref == null) {
-            Toast.makeText(
-                activity,
-                getString(R.string.error_shared_pref_is_null),
-                Toast.LENGTH_SHORT
-            ).show()
-            return
-        }
-
-
-//        if (bottomSheetBinding.root.parent != null) {
-//            (bottomSheetBinding.root.parent as ViewGroup).removeView(bottomSheetBinding.root) // <- fix
-//        }
-
-        val email =
-            sharedPref.getString(USER_EMAIL_KEY, "Default_user").orEmpty()
-
-//        showsViewModel.getUserProfilePictureLiveData().observe(viewLifecycleOwner, { imageFile ->
-//            setImageFromFile(bottomSheetBinding.userProfileImage, imageFile)
-//        })
-
-//        val imageFile = getImageFile(
-//            requireContext()
-//        )
-//        if (imageFile != null) {
-//            setImageFromFile(bottomSheetBinding.userProfileImage, imageFile)
-//        }
-
-        bottomSheetBinding.userEmail.text = email
-
+    private fun initUserProfileBottomSheet() {
         bottomSheetBinding.changeProfilePictureButton.setOnClickListener {
             handleChangeProfilePicture()
         }
@@ -244,18 +214,10 @@ class ShowsFragment : Fragment() {
             logout()
             dialog.dismiss()
         }
-
-        dialog.show()
     }
 
     private fun logout() {
-        with(showsViewModel.getSharedPreferences().edit()) {
-            putBoolean(
-                REMEMBER_ME_KEY,
-                false
-            )
-            apply()
-        }
+        showsViewModel.logout()
         ShowsFragmentDirections.actionLogout()
             .let { findNavController().navigate(it) }
     }

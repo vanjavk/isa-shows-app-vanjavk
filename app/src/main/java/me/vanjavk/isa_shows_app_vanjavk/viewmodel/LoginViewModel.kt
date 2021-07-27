@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import me.vanjavk.isa_shows_app_vanjavk.*
 import me.vanjavk.isa_shows_app_vanjavk.model.network.LoginRequest
-import me.vanjavk.isa_shows_app_vanjavk.model.network.LoginResponse
+import me.vanjavk.isa_shows_app_vanjavk.model.network.UserResponse
 import me.vanjavk.isa_shows_app_vanjavk.networking.ApiModule
 import retrofit2.Call
 import retrofit2.Callback
@@ -22,10 +22,10 @@ class LoginViewModel(var sharedPref: SharedPreferences) : ViewModel() {
 
     fun login(email: String, password: String, rememberMe: Boolean) {
         ApiModule.retrofit.login(LoginRequest(email, password)).enqueue(object :
-            Callback<LoginResponse> {
+            Callback<UserResponse> {
             override fun onResponse(
-                call: Call<LoginResponse>,
-                response: Response<LoginResponse>
+                call: Call<UserResponse>,
+                response: Response<UserResponse>
             ) {
                 val accessToken = response.headers()["access-token"]
                 val client = response.headers()["client"]
@@ -49,7 +49,7 @@ class LoginViewModel(var sharedPref: SharedPreferences) : ViewModel() {
                 }
             }
 
-            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+            override fun onFailure(call: Call<UserResponse>, t: Throwable) {
                 loginResultLiveData.value = false
             }
 

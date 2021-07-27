@@ -5,6 +5,6 @@ import kotlinx.serialization.Serializable
 import me.vanjavk.isa_shows_app_vanjavk.model.User
 
 @Serializable
-data class LoginResponse(
+data class UserResponse(
     @SerialName("user") val user: User
 )
