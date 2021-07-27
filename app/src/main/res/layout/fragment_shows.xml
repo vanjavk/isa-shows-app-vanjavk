@@ -13,9 +13,8 @@
         android:layout_gravity="right"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"
         android:src="@drawable/ic_painting_art"
-        />
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -34,6 +33,7 @@
         android:layout_marginTop="40dp"
         android:clipChildren="false"
         android:clipToPadding="false"
+        android:paddingTop="8dp"
         android:visibility="visible"
         tools:listitem="@layout/view_show_item" />
 
