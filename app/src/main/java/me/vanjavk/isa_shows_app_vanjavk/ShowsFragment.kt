@@ -2,12 +2,14 @@ package me.vanjavk.isa_shows_app_vanjavk
 
 import Show
 import android.Manifest
+import android.R.attr.data
 import android.content.Context
-import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.provider.DocumentsContract
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,6 +33,7 @@ import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowsBinding
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowsViewModel
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ViewModelFactory
 import java.io.File
+import java.io.InputStream
 import java.util.*
 
 
@@ -69,30 +72,8 @@ class ShowsFragment : Fragment() {
     })
 
     private val permissionForFiles = preparePermissionsContract(onPermissionsGranted = {
-//        val uri = createImageFile(requireContext())?.let {
-//            FileProvider.getUriForFile(
-//                requireContext(), requireContext().packageName.toString() + ".fileprovider",
-//                it
-//            )
-//        }
-//        if (uri == null) {
-//            Toast.makeText(activity, getString(R.string.error_opening_file), Toast.LENGTH_SHORT)
-//                .show()
-//            return@preparePermissionsContract
-//        }
-
         selectImageFromGallery.launch("image/*")
-        // openFile(uri)
     })
-//
-//    private fun openFile(pickerInitialUri: Uri) {
-//        val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
-//            type = "image/*";
-//
-//            putExtra(MediaStore.EXTRA_OUTPUT, pickerInitialUri)
-//        }
-//        startActivityForResult(intent, 1000)
-//    }
 
     private val getCameraImage =
         registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
@@ -109,23 +90,27 @@ class ShowsFragment : Fragment() {
     private val selectImageFromGallery =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri ->
             uri.let {
-//                println(uri.path)
-//                File(Uri()).copyTo(
-//                    File(
-//                        requireContext().getExternalFilesDir(
-//                            Environment.DIRECTORY_PICTURES
-//                        ), "avatar.jpg"
-//                    )
-//                )
-//
-//                getImageFile(requireContext())?.let { imageFile ->
-//                    showsViewModel.uploadProfilePicture(
-//                        imageFile
-//                    )
-//                }
+
+                if (uri.getFileFromUri(requireContext())?.copyTo(
+                        File(
+                            requireContext().getExternalFilesDir(
+                                Environment.DIRECTORY_PICTURES
+                            ), "avatar.jpg"
+                        ), true
+                    ) != null
+                ) {
+                    getImageFile(requireContext())?.let { imageFile ->
+                        showsViewModel.uploadProfilePicture(
+                            imageFile
+                        )
+                    }
+                } else {
+                    Toast.makeText(activity, "Cannot get image from gallery.", Toast.LENGTH_SHORT)
+                        .show()
+                }
+
             }
         }
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
