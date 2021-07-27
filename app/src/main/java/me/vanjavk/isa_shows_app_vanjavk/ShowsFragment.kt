@@ -15,7 +15,6 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -33,15 +32,14 @@ import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowsViewModel
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowsViewModelFactory
 import java.util.*
 
+
 class ShowsFragment : Fragment() {
 
     private var _binding: FragmentShowsBinding? = null
 
     private val binding get() = _binding!!
 
-    private var _bottomSheetBinding: DialogUserProfileBinding? = null
-
-    private val bottomSheetBinding get() = _bottomSheetBinding!!
+    private lateinit var bottomSheetBinding: DialogUserProfileBinding
 
     private var showsAdapter: ShowsAdapter? = null
 
@@ -114,7 +112,7 @@ class ShowsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentShowsBinding.inflate(inflater, container, false)
-        _bottomSheetBinding = DialogUserProfileBinding.inflate(inflater, container, false)
+        bottomSheetBinding = DialogUserProfileBinding.inflate(layoutInflater)
 
         val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
         if (sharedPref == null) {
@@ -216,8 +214,11 @@ class ShowsFragment : Fragment() {
         }
 
         val dialog = BottomSheetDialog(activity)
-
+        if (bottomSheetBinding.root.parent != null) {
+            (bottomSheetBinding.root.parent as ViewGroup).removeView(bottomSheetBinding.root) // <- fix
+        }
         dialog.setContentView(bottomSheetBinding.root)
+
         val email =
             sharedPref.getString(USER_EMAIL_KEY, "Default_user").orEmpty()
 
