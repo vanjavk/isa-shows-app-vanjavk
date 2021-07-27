@@ -71,6 +71,7 @@ class ShowDetailsFragment : Fragment() {
         activity.setSupportActionBar(binding.toolbar)
         activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
         activity.supportActionBar?.setDisplayShowHomeEnabled(true)
+        binding.toolbarLayout.title = getString(R.string.loading)
         binding.toolbar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
