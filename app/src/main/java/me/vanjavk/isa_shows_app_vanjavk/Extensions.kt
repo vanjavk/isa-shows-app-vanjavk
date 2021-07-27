@@ -1,6 +1,8 @@
 package me.vanjavk.isa_shows_app_vanjavk
 
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.net.Uri
 import android.provider.DocumentsContract
 import android.provider.MediaStore
@@ -15,6 +17,18 @@ fun CharSequence?.isValidEmail() = !(!isNullOrEmpty() && Patterns.EMAIL_ADDRESS.
 
 fun CharSequence.getUsername() = this.substring(0, this.indexOf('@')).orEmpty()
 
+fun Context.isOnline() : Boolean {
+    val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val network = connectivityManager.activeNetwork
+    if (network != null) {
+        val networkCapabilities = connectivityManager.getNetworkCapabilities(network)
+        if (networkCapabilities != null) {
+            return networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+                    networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+        }
+    }
+    return false
+}
 
 fun Uri.getFileFromUri(context: Context): File? {
     if (this.path == null) {
