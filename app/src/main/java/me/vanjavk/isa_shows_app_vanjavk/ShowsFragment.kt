@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
@@ -50,7 +51,23 @@ class ShowsFragment : Fragment() {
     private val selectImageFromGallery =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri ->
             uri.let {
-                binding.profileIconImage.setImageURI(uri) //skorooooo
+                if (uri.getFileFromUri(requireContext())?.copyTo(
+                        File(
+                            requireContext().getExternalFilesDir(
+                                Environment.DIRECTORY_PICTURES
+                            ), "avatar.jpg"
+                        ), true
+                    ) != null
+                ) {
+                    getImageFile(requireContext())?.let { imageFile ->
+                        showsViewModel.setImage(
+                            imageFile
+                        )
+                    }
+                } else {
+                    Toast.makeText(activity, "Cannot get image from gallery.", Toast.LENGTH_SHORT)
+                        .show()
+                }
             }
         }
 
