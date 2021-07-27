@@ -40,9 +40,9 @@ class ShowsFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var bottomSheetBinding: DialogUserProfileBinding
+    private lateinit var dialog: BottomSheetDialog
 
     private var showsAdapter: ShowsAdapter? = null
-
 
     private lateinit var showsViewModel: ShowsViewModel
     private lateinit var showsViewModelFactory: ShowsViewModelFactory
@@ -113,6 +113,9 @@ class ShowsFragment : Fragment() {
     ): View {
         _binding = FragmentShowsBinding.inflate(inflater, container, false)
         bottomSheetBinding = DialogUserProfileBinding.inflate(layoutInflater)
+
+        dialog = BottomSheetDialog(requireContext())
+        dialog.setContentView(bottomSheetBinding.root)
 
         val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
         if (sharedPref == null) {
@@ -201,9 +204,8 @@ class ShowsFragment : Fragment() {
 
     private fun userProfileBottomSheet() {
 
-        val activity = activity as AppCompatActivity
 
-        val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
+        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
         if (sharedPref == null) {
             Toast.makeText(
                 activity,
@@ -213,11 +215,10 @@ class ShowsFragment : Fragment() {
             return
         }
 
-        val dialog = BottomSheetDialog(activity)
-        if (bottomSheetBinding.root.parent != null) {
-            (bottomSheetBinding.root.parent as ViewGroup).removeView(bottomSheetBinding.root) // <- fix
-        }
-        dialog.setContentView(bottomSheetBinding.root)
+
+//        if (bottomSheetBinding.root.parent != null) {
+//            (bottomSheetBinding.root.parent as ViewGroup).removeView(bottomSheetBinding.root) // <- fix
+//        }
 
         val email =
             sharedPref.getString(USER_EMAIL_KEY, "Default_user").orEmpty()
