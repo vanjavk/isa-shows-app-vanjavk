@@ -1,9 +1,9 @@
 package me.vanjavk.isa_shows_app_vanjavk.database
-import me.vanjavk.isa_shows_app_vanjavk.model.ShowEntity
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import me.vanjavk.isa_shows_app_vanjavk.model.ShowEntity
 import me.vanjavk.isa_shows_app_vanjavk.model.UserEntity
 
 @Database(
@@ -35,6 +35,8 @@ abstract class ShowsDatabase : RoomDatabase() {
             }
         }
     }
+
+    fun ShowsDatabase() {}
 
     abstract fun showDao(): ShowDao
 }

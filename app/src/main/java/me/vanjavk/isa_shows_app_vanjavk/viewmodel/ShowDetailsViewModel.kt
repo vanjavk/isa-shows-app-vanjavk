@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import me.vanjavk.isa_shows_app_vanjavk.database.ShowsDatabase
 import me.vanjavk.isa_shows_app_vanjavk.model.Review
 import me.vanjavk.isa_shows_app_vanjavk.model.network.*
 import me.vanjavk.isa_shows_app_vanjavk.networking.ApiModule
@@ -14,7 +15,10 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class ShowDetailsViewModel(var sharedPref: SharedPreferences) : ViewModel() {
+class ShowDetailsViewModel(
+    private val sharedPref: SharedPreferences,
+    private val database: ShowsDatabase
+) : ViewModel() {
 
     private val showDetailsResultLiveData: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
@@ -86,7 +90,7 @@ class ShowDetailsViewModel(var sharedPref: SharedPreferences) : ViewModel() {
         return reviewsLiveData
     }
 
-    fun addReview( rating: Int, comment: String?, show_id: Int) {
+    fun addReview(rating: Int, comment: String?, show_id: Int) {
         ApiModule.retrofit.addReview(AddReviewRequest(rating, comment, show_id)).enqueue(object :
             Callback<AddReviewResponse> {
             override fun onResponse(

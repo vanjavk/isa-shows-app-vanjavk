@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import me.vanjavk.isa_shows_app_vanjavk.*
+import me.vanjavk.isa_shows_app_vanjavk.database.ShowsDatabase
 import me.vanjavk.isa_shows_app_vanjavk.model.User
 import me.vanjavk.isa_shows_app_vanjavk.model.network.UserResponse
 import me.vanjavk.isa_shows_app_vanjavk.model.network.ShowsResponse
@@ -24,7 +25,10 @@ import retrofit2.Response
 import java.io.File
 
 
-class ShowsViewModel(var sharedPref: SharedPreferences) : ViewModel() {
+class ShowsViewModel(
+    private val sharedPref: SharedPreferences,
+    private val database: ShowsDatabase
+) : ViewModel() {
 
     private val showsResultLiveData: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
