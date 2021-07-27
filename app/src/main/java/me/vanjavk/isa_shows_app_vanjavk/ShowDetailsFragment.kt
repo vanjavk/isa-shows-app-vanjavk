@@ -27,18 +27,17 @@ class ShowDetailsFragment : Fragment() {
 
     private val binding get() = _binding!!
 
-    val args: ShowDetailsFragmentArgs by navArgs()
+    private val args: ShowDetailsFragmentArgs by navArgs()
 
     private var reviewsAdapter: ReviewsAdapter? = null
 
     private lateinit var show: Show
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentShowDetailsBinding.inflate(inflater, container, false)
         setHasOptionsMenu(true);
         return binding.root
@@ -51,9 +50,19 @@ class ShowDetailsFragment : Fragment() {
         activity.setSupportActionBar(binding.toolbar)
         activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
         activity.supportActionBar?.setDisplayShowHomeEnabled(true)
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController().navigateUp()
+        }
 
         val id = args.showID
-        show = shows.find { it.ID == id }!!
+        val tempShow = shows.find { it.ID == id }
+        if (tempShow == null) {
+            Toast.makeText(activity, "Show with specified ID could not be found.", Toast.LENGTH_SHORT)
+                .show()
+            activity.onBackPressed()
+        } else {
+            show = tempShow
+        }
 
         binding.toolbarLayout.title = show.title
 
@@ -127,7 +136,7 @@ class ShowDetailsFragment : Fragment() {
             binding.showRatingBar.visibility = View.GONE
             binding.noReviewsYet.visibility = View.VISIBLE
         } else {
-            val averageRating = show.reviews.sumOf { it.stars } / show.reviews.count().toFloat()
+            val averageRating = show.reviews.map { it.stars }.average().toFloat()
             binding.reviewsRecyclerView.visibility = View.VISIBLE
             binding.showReviewRating.text =
                 "${show.reviews.count()} REVIEWS, ${"%.2f".format(averageRating)} AVERAGE"
@@ -135,17 +144,6 @@ class ShowDetailsFragment : Fragment() {
             binding.showRatingBar.rating = averageRating
             binding.showRatingBar.visibility = View.VISIBLE
             binding.noReviewsYet.visibility = View.GONE
-        }
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.home -> {
-                ShowDetailsFragmentDirections.actionBackToShows(args.email)
-                    .let { findNavController().navigate(it) }
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
         }
     }
 

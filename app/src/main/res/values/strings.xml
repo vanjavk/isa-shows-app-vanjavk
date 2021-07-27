@@ -9,14 +9,16 @@
     <string name="reviews">Reviews</string>
     <string name="placeholder_rating_info">3 REVIEWS, 3.63 AVERAGE</string>
     <string name="no_reviews_yet">No reviews yet.</string>
-    <string name="in_order_to_continue_please_log_in">In order to continue please log in.</string>
-    <string name="email">Email</string>
-    <string name="password">Password</string>
-    <string name="login">Login</string>
-    <string name="shows">Shows</string>
     <string name="show_hide">SHOW/HIDE</string>
     <string name="shows_empty">Your shows are not showing. Get it?</string>
     <string name="write_a_review">Write a review</string>
     <string name="comment">Comment</string>
     <string name="confirm">Confirm</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="in_order_to_continue_please_log_in">In order to continue please log in.</string>
+    <string name="login">Login</string>
+    <string name="shows">Shows</string>
+    <string name="password_too_short">Password too short</string>
+    <string name="invalid_email">Invalid email!</string>
 </resources>

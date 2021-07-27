@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/purple_infinum_yark"
+    android:background="@color/purple_infinum_dark"
     tools:context=".LoginFragment">
 
     <ImageView
@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:src="@drawable/topleftillustration"
+        android:src="@drawable/ic_top_left_illustration"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -21,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:src="@drawable/toprightillustration"
+        android:src="@drawable/ic_top_right_illustration"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="56dp"
         android:layout_marginTop="96dp"
-        android:src="@drawable/triangle"
+        android:src="@drawable/ic_triangle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/topLeftIllustration" />
 
@@ -40,7 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
-        android:text="Shows"
+        android:text="@string/shows"
         android:textColor="@color/white"
         android:textSize="30sp"
         android:textStyle="bold"
@@ -53,7 +53,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:text="Login"
+        android:text="@string/login"
         android:textColor="@color/white"
         android:textSize="30sp"
         android:textStyle="bold"
@@ -65,7 +65,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
-        android:text="In order to continue please log in."
+        android:text="@string/in_order_to_continue_please_log_in"
         android:textColor="@color/white"
         android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@id/emailInputLayout"
@@ -79,7 +79,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="24dp"
         android:layout_marginRight="24dp"
-        android:hint="Email"
+        android:hint="@string/email"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
 
@@ -107,7 +107,7 @@
         android:layout_marginLeft="24dp"
         android:layout_marginRight="24dp"
         android:layout_marginBottom="24dp"
-        android:hint="Password"
+        android:hint="@string/password"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
         app:boxStrokeColor="@color/white"
@@ -139,9 +139,9 @@
         android:backgroundTint="@color/color_state_material_button"
         android:enabled="false"
         android:fontFamily="sans-serif-condensed-medium"
-        android:text="Login"
+        android:text="@string/login"
         android:textAllCaps="false"
-        android:textColor="@color/purple_infinum_yark"
+        android:textColor="@color/purple_infinum_dark"
         android:textStyle="bold"
         app:cornerRadius="50dp"
         app:layout_constraintBottom_toBottomOf="parent"

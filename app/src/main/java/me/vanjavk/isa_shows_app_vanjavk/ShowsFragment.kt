@@ -19,7 +19,7 @@ class ShowsFragment : Fragment() {
 
     private val binding get() = _binding!!
 
-    val args: ShowsFragmentArgs by navArgs()
+    private val args: ShowsFragmentArgs by navArgs()
 
     private var showsAdapter: ShowsAdapter? = null
 
@@ -28,7 +28,7 @@ class ShowsFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentShowsBinding.inflate(inflater, container, false)
         return binding.root
     }
