@@ -103,8 +103,7 @@ class ShowDetailsFragment : Fragment() {
 
     private fun updateShow(show: Show) {
         binding.toolbarLayout.title = show.title
-        Glide.with(this).load(show.imageUrl).diskCacheStrategy(DiskCacheStrategy.NONE)
-            .skipMemoryCache(true).into(binding.showImage)
+        Glide.with(this).load(show.imageUrl).into(binding.showImage)
         binding.showDescription.text = show.description
         updateRatingInfo(show.numberOfReviews, show.averageRating)
     }
