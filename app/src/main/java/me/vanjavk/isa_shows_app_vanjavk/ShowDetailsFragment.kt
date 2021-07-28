@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.RatingBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -86,16 +87,12 @@ class ShowDetailsFragment : Fragment() {
     }
 
     private fun updateRatingInfo(ratingInfo: RatingInfo) {
-        if (ratingInfo.numberOfReviews == 0) {
-            binding.reviewsRecyclerView.visibility = View.GONE
-            binding.showReviewRating.visibility = View.GONE
-            binding.showRatingBar.visibility = View.GONE
-            binding.noReviewsYet.visibility = View.VISIBLE
-        } else {
-            binding.noReviewsYet.visibility = View.GONE
-            binding.reviewsRecyclerView.visibility = View.VISIBLE
-            binding.showReviewRating.visibility = View.VISIBLE
-            binding.showRatingBar.visibility = View.VISIBLE
+        binding.reviewsRecyclerView.isVisible = ratingInfo.numberOfReviews!=0
+        binding.showReviewRating.isVisible = ratingInfo.numberOfReviews!=0
+        binding.showRatingBar.isVisible = ratingInfo.numberOfReviews!=0
+        binding.noReviewsYet.isVisible = ratingInfo.numberOfReviews==0
+
+        if (ratingInfo.numberOfReviews != 0) {
             binding.showReviewRating.text = getString(R.string.reviews_rating_info).format(
                 ratingInfo.numberOfReviews,
                 ratingInfo.averageRating
