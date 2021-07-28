@@ -42,17 +42,11 @@ class ReviewsAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Review) {
-
             binding.ratingStarValue.text = item.stars.toString()
             binding.reviewerName.text = item.name
 
-            if (item.content.isEmpty()) {
-                binding.reviewContent.isVisible = false
-            } else {
-                binding.reviewContent.isVisible = true
-                binding.reviewContent.text = item.content
-            }
-
+            binding.reviewContent.isVisible = item.content.isNotEmpty()
+            binding.reviewContent.text = item.content
         }
     }
 }
