@@ -52,11 +52,5 @@
             android:name="showID"
             app:argType="string" />
 
-        <action
-            android:id="@+id/action_back_to_shows"
-            app:destination="@id/showsFragment"
-            app:popUpTo="@id/showsFragment"
-            app:popUpToInclusive="true" />
-
     </fragment>
 </navigation>
