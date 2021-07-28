@@ -11,7 +11,6 @@ import me.vanjavk.isa_shows_app_vanjavk.model.UserEntity
     entities = [
         UserEntity::class,
         ReviewEntity::class,
-        UserEntity::class,
         ShowEntity::class
     ],
     version = 2

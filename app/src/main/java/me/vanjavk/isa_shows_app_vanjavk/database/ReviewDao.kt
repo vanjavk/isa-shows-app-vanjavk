@@ -16,12 +16,12 @@ interface ReviewDao {
     fun getReview(reviewId: String) : LiveData<ReviewEntity>
 
     @Transaction
-    @Query("SELECT * FROM review")
+    @Query("SELECT * FROM review ORDER BY review.id DESC")
     fun getReviewsAndUsers(): LiveData<List<ReviewWithUser>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAllReviews(shows: List<ReviewEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun addShow(review: ReviewEntity)
+    fun addReview(review: ReviewEntity)
 }

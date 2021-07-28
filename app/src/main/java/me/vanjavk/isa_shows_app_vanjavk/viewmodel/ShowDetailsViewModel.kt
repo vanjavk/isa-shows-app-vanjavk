@@ -129,6 +129,17 @@ class ShowDetailsViewModel(
     }
 
     fun addReview(rating: Int, comment: String?, show_id: Int) {
+//        Executors.newSingleThreadExecutor().execute {
+//            database.reviewDao().addReview(
+//                ReviewEntity(
+//                    it.id,
+//                    it.comment,
+//                    it.rating,
+//                    it.showId,
+//                    it.user.id
+//                )
+//            )
+//        }
         ApiModule.retrofit.addReview(AddReviewRequest(rating, comment, show_id)).enqueue(object :
             Callback<AddReviewResponse> {
             override fun onResponse(

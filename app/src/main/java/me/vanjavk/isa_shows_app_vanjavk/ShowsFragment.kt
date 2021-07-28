@@ -94,9 +94,11 @@ class ShowsFragment : Fragment() {
         }
 
     private val selectImageFromGallery =
-        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri ->
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             uri.let {
-
+                if (uri==null){
+                    return@let
+                }
                 if (uri.getFileFromUri(requireContext())?.copyTo(
                         File(
                             requireContext().getExternalFilesDir(

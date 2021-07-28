@@ -23,6 +23,7 @@ import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogAddReviewBinding
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowDetailsBinding
 import me.vanjavk.isa_shows_app_vanjavk.model.Review
 import me.vanjavk.isa_shows_app_vanjavk.model.ShowEntity
+import me.vanjavk.isa_shows_app_vanjavk.model.User
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowDetailsViewModel
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ViewModelFactory
 
@@ -98,7 +99,17 @@ class ShowDetailsFragment : Fragment() {
         })
 
         showDetailsViewModel.getReviewsLiveData().observe(viewLifecycleOwner, { reviews ->
-            updateReviews(reviews)
+            updateReviews(reviews.map { Review(
+                it.review.id,
+                it.review.comment,
+                it.review.rating,
+                it.review.showId,
+                User(
+                    it.user.id,
+                    it.user.email,
+                    it.user.imageUrl
+                )
+            ) })
         })
 
         initWriteReviewButton()
