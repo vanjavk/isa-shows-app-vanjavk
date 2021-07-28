@@ -6,9 +6,10 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "review")
 data class ReviewEntity(
-    @PrimaryKey @ColumnInfo(name = "id") val id: String,
-    @ColumnInfo(name = "comment") var comment: String?,
-    @ColumnInfo(name = "rating") var rating: Int,
+    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") val id: Long? ,
+    @ColumnInfo(name = "comment") val comment: String?,
+    @ColumnInfo(name = "rating") val rating: Int,
     @ColumnInfo(name = "show_id") val showId: Int,
-    @ColumnInfo(name = "user_id") var userId: String,
+    @ColumnInfo(name = "user_id") val userId: String,
+    @ColumnInfo(name = "sync") val sync: Boolean = true
 )

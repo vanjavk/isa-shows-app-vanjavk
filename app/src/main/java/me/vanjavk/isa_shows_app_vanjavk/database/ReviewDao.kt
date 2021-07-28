@@ -19,6 +19,10 @@ interface ReviewDao {
     @Query("SELECT * FROM review ORDER BY review.id DESC")
     fun getReviewsAndUsers(): LiveData<List<ReviewWithUser>>
 
+    @Transaction
+    @Query("SELECT * FROM review WHERE review.sync IS 0 ORDER BY review.id DESC")
+    fun getOfflineReviews(): LiveData<List<ReviewWithUser>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAllReviews(shows: List<ReviewEntity>)
 

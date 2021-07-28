@@ -100,7 +100,7 @@ class ShowDetailsFragment : Fragment() {
 
         showDetailsViewModel.getReviewsLiveData().observe(viewLifecycleOwner, { reviews ->
             updateReviews(reviews.map { Review(
-                it.review.id,
+                it.review.id.toString(),
                 it.review.comment,
                 it.review.rating,
                 it.review.showId,

@@ -38,6 +38,7 @@ class LoginViewModel(
                 if (accessToken != null && client != null && uid != null && user != null) {
                     loginResultLiveData.value = response.isSuccessful
                     with(sharedPref.edit()) {
+                        putString(USER_ID_KEY, user.id)
                         putString(USER_EMAIL_KEY, email)
                         putString(USER_IMAGE_URL_KEY, user.imageUrl)
                         putBoolean(REMEMBER_ME_KEY, rememberMe)

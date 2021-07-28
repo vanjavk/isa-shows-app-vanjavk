@@ -1,11 +1,11 @@
 package me.vanjavk.isa_shows_app_vanjavk.viewmodel
 
-import Show
 import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import me.vanjavk.isa_shows_app_vanjavk.USER_ID_KEY
 import me.vanjavk.isa_shows_app_vanjavk.database.ShowsDatabase
 import me.vanjavk.isa_shows_app_vanjavk.model.*
 import me.vanjavk.isa_shows_app_vanjavk.model.network.*
@@ -94,7 +94,7 @@ class ShowDetailsViewModel(
                         database.reviewDao().insertAllReviews(
                             reviews.map {
                                 ReviewEntity(
-                                    it.id,
+                                    it.id.toLong(),
                                     it.comment,
                                     it.rating,
                                     it.showId,
@@ -128,35 +128,43 @@ class ShowDetailsViewModel(
         return database.reviewDao().getReviewsAndUsers()
     }
 
-    fun addReview(rating: Int, comment: String?, show_id: Int) {
-//        Executors.newSingleThreadExecutor().execute {
-//            database.reviewDao().addReview(
-//                ReviewEntity(
-//                    it.id,
-//                    it.comment,
-//                    it.rating,
-//                    it.showId,
-//                    it.user.id
-//                )
-//            )
-//        }
-        ApiModule.retrofit.addReview(AddReviewRequest(rating, comment, show_id)).enqueue(object :
+    fun addReview(rating: Int, comment: String?, showId: Int) {
+        var sync = false
+        var id: Long? = null
+        ApiModule.retrofit.addReview(AddReviewRequest(rating, comment, showId)).enqueue(object :
             Callback<AddReviewResponse> {
             override fun onResponse(
                 call: Call<AddReviewResponse>,
                 response: Response<AddReviewResponse>
             ) {
-                reviewLiveData.value = response.body()?.review
-                getShow(show_id.toString())
+                val review = response.body()?.review
+                if (review != null) {
+                    sync = true
+                    id = review.id.toLong()
+                    getShow(showId.toString())
+                }
             }
 
             override fun onFailure(call: Call<AddReviewResponse>, t: Throwable) {
+                sync = false
                 Log.d("TAG", t.message.toString())
 
             }
 
         })
-
+        val userId = sharedPref.getString(USER_ID_KEY, "").orEmpty()
+        Executors.newSingleThreadExecutor().execute {
+            database.reviewDao().addReview(
+                ReviewEntity(
+                    id,
+                    comment,
+                    rating,
+                    showId,
+                    userId,
+                    sync
+                )
+            )
+        }
     }
 
 

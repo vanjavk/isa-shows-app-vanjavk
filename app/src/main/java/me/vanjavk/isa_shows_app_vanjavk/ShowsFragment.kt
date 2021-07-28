@@ -99,6 +99,7 @@ class ShowsFragment : Fragment() {
                 if (uri==null){
                     return@let
                 }
+                //Prvo trebam kopirati odabranu sliku u aplikacijski folder kako bi se ona mogla pomocu fileutilsa smanjiti, no kako bi dobio File za copy moram koristiti ekstenzijsku funkciju Uri.getFileFromUri() kako bih dobio ispravan file koji mogu kopirati.
                 if (uri.getFileFromUri(requireContext())?.copyTo(
                         File(
                             requireContext().getExternalFilesDir(

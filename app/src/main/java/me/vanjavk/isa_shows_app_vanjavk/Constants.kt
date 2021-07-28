@@ -1,6 +1,7 @@
 package me.vanjavk.isa_shows_app_vanjavk
 
 
+const val USER_ID_KEY = "USER_ID_KEY"
 const val REMEMBER_ME_KEY = "REMEMBER_ME_KEY"
 const val USER_EMAIL_KEY = "USER_EMAIL_KEY"
 const val USER_IMAGE_URL_KEY = "USER_IMAGE_URL_KEY"

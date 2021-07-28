@@ -117,6 +117,7 @@ class ShowsViewModel(
                     userLiveData.value = user
                     sharedPref.edit {
                         putString(USER_IMAGE_URL_KEY, user.imageUrl)
+                        putString(USER_ID_KEY, user.id)
                         apply()
                     }
                     changeProfilePictureResultLiveData.value = true
@@ -140,8 +141,15 @@ class ShowsViewModel(
                 call: Call<UserResponse>,
                 response: Response<UserResponse>
             ) {
-                userLiveData.value = response.body()?.user
-                currentUserResultLiveData.value = true
+                val user = response.body()?.user
+                if (user != null) {
+                    with(sharedPref.edit()) {
+                        putString(USER_ID_KEY, user.id)
+                        apply()
+                    }
+                    userLiveData.value = user
+                    currentUserResultLiveData.value = true
+                }
             }
 
             override fun onFailure(call: Call<UserResponse>, t: Throwable) {
@@ -157,6 +165,7 @@ class ShowsViewModel(
                 REMEMBER_ME_KEY,
                 false
             )
+            remove(USER_ID_KEY)
             remove(USER_AUTH_ACCESS_TOKEN_TYPE_KEY)
             remove(USER_AUTH_CLIENT_TYPE_KEY)
             remove(USER_AUTH_UID_TYPE_KEY)
