@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.RatingBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -57,7 +58,11 @@ class ShowDetailsFragment : Fragment() {
         val id = args.showID
         val tempShow = shows.find { it.ID == id }
         if (tempShow == null) {
-            Toast.makeText(activity, "Show with specified ID could not be found.", Toast.LENGTH_SHORT)
+            Toast.makeText(
+                activity,
+                "Show with specified ID could not be found.",
+                Toast.LENGTH_SHORT
+            )
                 .show()
             activity.onBackPressed()
         } else {
@@ -130,20 +135,15 @@ class ShowDetailsFragment : Fragment() {
 
 
     private fun refreshReviews() {
-        if (show.reviews.isEmpty()) {
-            binding.reviewsRecyclerView.visibility = View.GONE
-            binding.showReviewRating.visibility = View.GONE
-            binding.showRatingBar.visibility = View.GONE
-            binding.noReviewsYet.visibility = View.VISIBLE
-        } else {
+        binding.reviewsRecyclerView.isVisible = show.reviews.isNotEmpty()
+        binding.showReviewRating.isVisible = show.reviews.isNotEmpty()
+        binding.showRatingBar.isVisible = show.reviews.isNotEmpty()
+        binding.noReviewsYet.isVisible = show.reviews.isEmpty()
+        if (show.reviews.isNotEmpty()) {
             val averageRating = show.reviews.map { it.stars }.average().toFloat()
-            binding.reviewsRecyclerView.visibility = View.VISIBLE
             binding.showReviewRating.text =
                 "${show.reviews.count()} REVIEWS, ${"%.2f".format(averageRating)} AVERAGE"
-            binding.showReviewRating.visibility = View.VISIBLE
             binding.showRatingBar.rating = averageRating
-            binding.showRatingBar.visibility = View.VISIBLE
-            binding.noReviewsYet.visibility = View.GONE
         }
     }
 
