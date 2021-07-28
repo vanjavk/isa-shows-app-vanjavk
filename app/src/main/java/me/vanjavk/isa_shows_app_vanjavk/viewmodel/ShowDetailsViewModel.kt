@@ -124,8 +124,8 @@ class ShowDetailsViewModel(
         return reviewLiveData
     }
 
-    fun getReviewsLiveData(): LiveData<List<ReviewWithUser>> {
-        return database.reviewDao().getReviewsAndUsers()
+    fun getReviewsLiveData(showId: String): LiveData<List<ReviewWithUser>> {
+        return database.reviewDao().getReviewsAndUsers(showId)
     }
 
     fun addReview(rating: Int, comment: String?, showId: Int) {
@@ -152,7 +152,7 @@ class ShowDetailsViewModel(
             }
 
         })
-        val userId = sharedPref.getString(USER_ID_KEY, "").orEmpty()
+
         Executors.newSingleThreadExecutor().execute {
             database.reviewDao().addReview(
                 ReviewEntity(
@@ -160,7 +160,7 @@ class ShowDetailsViewModel(
                     comment,
                     rating,
                     showId,
-                    userId,
+                    sharedPref.getString(USER_ID_KEY, "").orEmpty(),
                     sync
                 )
             )

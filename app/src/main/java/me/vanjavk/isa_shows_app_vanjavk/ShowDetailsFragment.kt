@@ -78,11 +78,11 @@ class ShowDetailsFragment : Fragment() {
             findNavController().navigateUp()
         }
 
-        val id = args.showID
+        val showId = args.showID
 
-        showDetailsViewModel.getShow(id)
+        showDetailsViewModel.getShow(showId)
 
-        showDetailsViewModel.getShowLiveData(id).observe(viewLifecycleOwner, { show ->
+        showDetailsViewModel.getShowLiveData(showId).observe(viewLifecycleOwner, { show ->
             updateShow(show.let{
                 Show(
                     it.id,
@@ -98,7 +98,7 @@ class ShowDetailsFragment : Fragment() {
             updateReviews(review)
         })
 
-        showDetailsViewModel.getReviewsLiveData().observe(viewLifecycleOwner, { reviews ->
+        showDetailsViewModel.getReviewsLiveData(showId).observe(viewLifecycleOwner, { reviews ->
             updateReviews(reviews.map { Review(
                 it.review.id.toString(),
                 it.review.comment,

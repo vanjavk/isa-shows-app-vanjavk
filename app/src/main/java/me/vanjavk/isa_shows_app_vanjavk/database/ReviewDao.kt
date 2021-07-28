@@ -16,8 +16,8 @@ interface ReviewDao {
     fun getReview(reviewId: String) : LiveData<ReviewEntity>
 
     @Transaction
-    @Query("SELECT * FROM review ORDER BY review.id DESC")
-    fun getReviewsAndUsers(): LiveData<List<ReviewWithUser>>
+    @Query("SELECT * FROM review WHERE show_id IS :showId ORDER BY review.id DESC")
+    fun getReviewsAndUsers(showId: String): LiveData<List<ReviewWithUser>>
 
     @Transaction
     @Query("SELECT * FROM review WHERE review.sync IS 0 ORDER BY review.id DESC")
