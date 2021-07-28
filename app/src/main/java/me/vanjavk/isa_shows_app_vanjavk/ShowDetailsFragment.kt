@@ -1,55 +1,70 @@
 package me.vanjavk.isa_shows_app_vanjavk
 
 import android.R
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.MenuItem
-import android.view.View.GONE
-import android.view.View.VISIBLE
+import android.view.View
+import android.view.ViewGroup
 import android.widget.RatingBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import me.vanjavk.isa_shows_app_vanjavk.databinding.ActivityShowDetailsBinding
 import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogAddReviewBinding
+import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowDetailsBinding
 import me.vanjavk.isa_shows_app_vanjavk.model.Review
 import me.vanjavk.isa_shows_app_vanjavk.model.Show
 
-class ShowsDetailsActivity : AppCompatActivity() {
 
-    companion object {
-        fun buildIntent(activity: Activity, ID: String, email: String): Intent {
-            val intent = Intent(activity, ShowsDetailsActivity::class.java)
-            intent.putExtra(EXTRA_ID, ID)
-            intent.putExtra(EXTRA_EMAIL, email)
-            return intent
-        }
-    }
+class ShowDetailsFragment : Fragment() {
 
-    private lateinit var binding: ActivityShowDetailsBinding
+    private var _binding: FragmentShowDetailsBinding? = null
+
+    private val binding get() = _binding!!
+
+    private val args: ShowDetailsFragmentArgs by navArgs()
 
     private var reviewsAdapter: ReviewsAdapter? = null
 
     private lateinit var show: Show
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentShowDetailsBinding.inflate(inflater, container, false)
+        setHasOptionsMenu(true);
+        return binding.root
+    }
 
-        binding = ActivityShowDetailsBinding.inflate(layoutInflater)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val activity = activity as AppCompatActivity
 
-        setSupportActionBar(binding.toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
+        activity.setSupportActionBar(binding.toolbar)
+        activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        activity.supportActionBar?.setDisplayShowHomeEnabled(true)
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController().navigateUp()
+        }
 
-        val id = intent.extras?.get(EXTRA_ID)
+        val id = args.showID
         val tempShow = shows.find { it.ID == id }
         if (tempShow == null) {
-            Toast.makeText(this, "Show with specified ID could not be found.", Toast.LENGTH_SHORT)
+            Toast.makeText(
+                activity,
+                "Show with specified ID could not be found.",
+                Toast.LENGTH_SHORT
+            )
                 .show()
-            this.onBackPressed()
+            activity.onBackPressed()
         } else {
             show = tempShow
         }
@@ -58,8 +73,6 @@ class ShowsDetailsActivity : AppCompatActivity() {
 
         binding.showImage.setImageResource(show.imageResourceId)
         binding.showDescription.text = show.description
-
-        setContentView(binding.root)
 
         initWriteReviewButton()
         initReviewsRecycler()
@@ -73,7 +86,9 @@ class ShowsDetailsActivity : AppCompatActivity() {
 
     private fun showAddReviewBottomSheet() {
 
-        val dialog = BottomSheetDialog(this)
+        val activity = activity as AppCompatActivity
+
+        val dialog = BottomSheetDialog(activity)
 
         val bottomSheetBinding = DialogAddReviewBinding.inflate(layoutInflater)
         dialog.setContentView(bottomSheetBinding.root)
@@ -82,10 +97,9 @@ class ShowsDetailsActivity : AppCompatActivity() {
             bottomSheetBinding.confirmButton.isEnabled = true
         }
 
-        val email = intent.extras?.get(EXTRA_EMAIL).toString()
         bottomSheetBinding.confirmButton.setOnClickListener {
             val review = Review(
-                email,
+                args.email.getUsername(),
                 bottomSheetBinding.commentInput.text.toString(),
                 bottomSheetBinding.starRatingBar.rating.toInt()
             )
@@ -105,11 +119,11 @@ class ShowsDetailsActivity : AppCompatActivity() {
 
         reviewsAdapter = ReviewsAdapter(emptyList())
 
-        binding.reviewsRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.reviewsRecyclerView.layoutManager = LinearLayoutManager(activity)
         binding.reviewsRecyclerView.adapter = reviewsAdapter
         binding.reviewsRecyclerView.addItemDecoration(
             DividerItemDecoration(
-                this,
+                activity,
                 DividerItemDecoration.VERTICAL
             )
         )
@@ -121,30 +135,21 @@ class ShowsDetailsActivity : AppCompatActivity() {
 
 
     private fun refreshReviews() {
-        if (show.reviews.isEmpty()) {
-            binding.reviewsRecyclerView.visibility = GONE
-            binding.showReviewRating.visibility = GONE
-            binding.showRatingBar.visibility = GONE
-            binding.noReviewsYet.visibility = VISIBLE
-        } else {
+        binding.reviewsRecyclerView.isVisible = show.reviews.isNotEmpty()
+        binding.showReviewRating.isVisible = show.reviews.isNotEmpty()
+        binding.showRatingBar.isVisible = show.reviews.isNotEmpty()
+        binding.noReviewsYet.isVisible = show.reviews.isEmpty()
+        if (show.reviews.isNotEmpty()) {
             val averageRating = show.reviews.map { it.stars }.average().toFloat()
-            binding.reviewsRecyclerView.visibility = VISIBLE
             binding.showReviewRating.text =
                 "${show.reviews.count()} REVIEWS, ${"%.2f".format(averageRating)} AVERAGE"
-            binding.showReviewRating.visibility = VISIBLE
             binding.showRatingBar.rating = averageRating
-            binding.showRatingBar.visibility = VISIBLE
-            binding.noReviewsYet.visibility = GONE
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.home -> {
-                finish()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
+

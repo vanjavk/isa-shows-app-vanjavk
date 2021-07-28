@@ -8,3 +8,4 @@ const val EXTRA_EMAIL = "EXTRA_EMAIL"
 
 fun CharSequence?.isValidEmail() = !(!isNullOrEmpty() && Patterns.EMAIL_ADDRESS.matcher(this).matches())
 
+fun CharSequence.getUsername() = this.substring(0, this.indexOf('@')).orEmpty()

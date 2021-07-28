@@ -1,22 +1,34 @@
 package me.vanjavk.isa_shows_app_vanjavk
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.widget.doAfterTextChanged
-import me.vanjavk.isa_shows_app_vanjavk.databinding.ActivityLoginBinding
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentLoginBinding
 
-class LoginActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityLoginBinding
+class LoginFragment : Fragment() {
+
+    private var _binding: FragmentLoginBinding? = null
+
+    private val binding get() = _binding!!
 
     private var emailValid = false
     private var passwordValid = false
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentLoginBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        binding = ActivityLoginBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         initLoginButton()
     }
 
@@ -31,14 +43,15 @@ class LoginActivity : AppCompatActivity() {
         }
 
         binding.loginButton.setOnClickListener {
-            val intent = ShowsActivity.buildIntent(this, binding.emailInput.text.toString())
-            startActivity(intent)
+            LoginFragmentDirections.actionLoginToShows(binding.emailInput.text.toString())
+                .let { findNavController().navigate(it) }
+
         }
     }
 
     private fun checkEmailValid() {
         if (binding.emailInput.text.toString().isValidEmail()) {
-            binding.emailInputLayout.error = "Invalid email!"
+            binding.emailInputLayout.error = getString(R.string.invalid_email)
             emailValid = false
         } else {
             binding.emailInputLayout.error = null
@@ -48,7 +61,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun checkPasswordValid() {
         if (binding.passwordInput.text.toString().length < MIN_PASSWORD_LENGTH) {
-            binding.passwordInputLayout.error = "Password too short"
+            binding.passwordInputLayout.error = getString(R.string.password_too_short)
             passwordValid = false
         } else {
             binding.passwordInputLayout.error = null
@@ -58,5 +71,10 @@ class LoginActivity : AppCompatActivity() {
 
     private fun checkInputsValid() {
         binding.loginButton.isEnabled = passwordValid && emailValid
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
