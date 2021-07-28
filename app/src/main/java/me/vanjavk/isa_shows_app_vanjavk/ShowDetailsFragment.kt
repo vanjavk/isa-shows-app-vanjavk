@@ -11,7 +11,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -22,7 +21,6 @@ import me.vanjavk.isa_shows_app_vanjavk.adapter.ReviewsAdapter
 import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogAddReviewBinding
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowDetailsBinding
 import me.vanjavk.isa_shows_app_vanjavk.model.Review
-import me.vanjavk.isa_shows_app_vanjavk.model.ShowEntity
 import me.vanjavk.isa_shows_app_vanjavk.model.User
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowDetailsViewModel
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ViewModelFactory

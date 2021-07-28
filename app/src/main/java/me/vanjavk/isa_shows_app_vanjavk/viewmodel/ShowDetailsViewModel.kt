@@ -75,6 +75,7 @@ class ShowDetailsViewModel(
     }
 
     fun getReviews(id: String) {
+        uploadOfflineReviews()
         ApiModule.retrofit.getReviews(id).enqueue(object :
             Callback<ReviewsResponse> {
             override fun onResponse(
@@ -129,8 +130,6 @@ class ShowDetailsViewModel(
     }
 
     fun addReview(rating: Int, comment: String?, showId: Int) {
-        var sync = false
-        var id: Long? = null
         ApiModule.retrofit.addReview(AddReviewRequest(rating, comment, showId)).enqueue(object :
             Callback<AddReviewResponse> {
             override fun onResponse(
@@ -139,33 +138,47 @@ class ShowDetailsViewModel(
             ) {
                 val review = response.body()?.review
                 if (review != null) {
-                    sync = true
-                    id = review.id.toLong()
                     getShow(showId.toString())
+                    Executors.newSingleThreadExecutor().execute {
+                        database.reviewDao().addReview(
+                            ReviewEntity(
+                                review.id.toLong(),
+                                comment,
+                                rating,
+                                showId,
+                                sharedPref.getString(USER_ID_KEY, "").orEmpty()
+                            )
+                        )
+                    }
                 }
             }
-
             override fun onFailure(call: Call<AddReviewResponse>, t: Throwable) {
-                sync = false
+                Executors.newSingleThreadExecutor().execute {
+                    database.reviewDao().addReview(
+                        ReviewEntity(
+                            null,
+                            comment,
+                            rating,
+                            showId,
+                            sharedPref.getString(USER_ID_KEY, "").orEmpty(),
+                            false
+                        )
+                    )
+                }
                 Log.d("TAG", t.message.toString())
-
             }
-
         })
-
-        Executors.newSingleThreadExecutor().execute {
-            database.reviewDao().addReview(
-                ReviewEntity(
-                    id,
-                    comment,
-                    rating,
-                    showId,
-                    sharedPref.getString(USER_ID_KEY, "").orEmpty(),
-                    sync
-                )
-            )
-        }
     }
 
+    private fun uploadOfflineReviews() {
 
+
+        Executors.newSingleThreadExecutor().execute {
+            val reviewsToUpload = database.reviewDao().getOfflineReviews()
+            reviewsToUpload.forEach {
+                addReview(it.rating, it.comment, it.showId)
+                database.reviewDao().removeReview(it.showId)
+            }
+        }
+    }
 }

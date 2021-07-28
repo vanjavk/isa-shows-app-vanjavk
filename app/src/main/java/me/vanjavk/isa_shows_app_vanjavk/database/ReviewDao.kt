@@ -21,11 +21,14 @@ interface ReviewDao {
 
     @Transaction
     @Query("SELECT * FROM review WHERE review.sync IS 0 ORDER BY review.id DESC")
-    fun getOfflineReviews(): LiveData<List<ReviewWithUser>>
+    fun getOfflineReviews():List<ReviewEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAllReviews(shows: List<ReviewEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addReview(review: ReviewEntity)
+
+    @Query("DELETE FROM review WHERE review.id IS :reviewId")
+    fun removeReview(reviewId: Int)
 }
