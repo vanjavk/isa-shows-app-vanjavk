@@ -10,7 +10,7 @@ import androidx.room.Query
 @Dao
 interface ShowDao {
 
-    @Query("SELECT * FROM show")
+    @Query("SELECT * FROM show ORDER BY show.id DESC")
     fun getAllShows() : LiveData<List<ShowEntity>>
 
     @Query("SELECT * FROM show WHERE id IS :showId")

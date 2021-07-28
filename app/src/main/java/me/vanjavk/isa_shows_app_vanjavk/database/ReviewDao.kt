@@ -30,5 +30,5 @@ interface ReviewDao {
     fun addReview(review: ReviewEntity)
 
     @Query("DELETE FROM review WHERE review.id IS :reviewId")
-    fun removeReview(reviewId: Int)
+    fun removeReview(reviewId: Long)
 }
