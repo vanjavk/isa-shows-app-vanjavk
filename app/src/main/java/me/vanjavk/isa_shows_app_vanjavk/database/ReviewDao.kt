@@ -17,7 +17,7 @@ interface ReviewDao {
 
     @Transaction
     @Query("SELECT * FROM review")
-    fun getUsersWithPlaylists(): List<ReviewWithUser>
+    fun getReviewsAndUsers(): LiveData<List<ReviewWithUser>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAllReviews(shows: List<ReviewEntity>)

@@ -87,7 +87,6 @@ class ShowsViewModel(
                             }
                         )
                     }
-                    showsLiveData.value = shows
                     showsResultLiveData.value = true
                 } else {
                     showsResultLiveData.value = false

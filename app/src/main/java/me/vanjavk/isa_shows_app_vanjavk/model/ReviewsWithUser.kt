@@ -3,11 +3,19 @@ package me.vanjavk.isa_shows_app_vanjavk.model
 import androidx.room.Embedded
 import androidx.room.Relation
 
+//data class ReviewWithUser(
+//    @Embedded val review: ReviewEntity,
+//    @Relation(
+//        parentColumn = "user_id",
+//        entityColumn = "id"
+//    )
+//    val user: UserEntity
+//)
 data class ReviewWithUser(
-    @Embedded val review: Review,
+    @Embedded(prefix = "xyz_") val user: UserEntity,
     @Relation(
         parentColumn = "id",
-        entityColumn = "id"
+        entityColumn = "user_id"
     )
-    val user: User
+    val review: ReviewEntity
 )

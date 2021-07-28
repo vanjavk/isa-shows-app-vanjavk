@@ -7,9 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import me.vanjavk.isa_shows_app_vanjavk.database.ShowsDatabase
-import me.vanjavk.isa_shows_app_vanjavk.model.Review
-import me.vanjavk.isa_shows_app_vanjavk.model.ReviewEntity
-import me.vanjavk.isa_shows_app_vanjavk.model.ShowEntity
+import me.vanjavk.isa_shows_app_vanjavk.model.*
 import me.vanjavk.isa_shows_app_vanjavk.model.network.*
 import me.vanjavk.isa_shows_app_vanjavk.networking.ApiModule
 import retrofit2.Call
@@ -24,10 +22,6 @@ class ShowDetailsViewModel(
 ) : ViewModel() {
 
     private val showDetailsResultLiveData: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
-
-    fun getShowDetailsResultLiveData(): LiveData<Boolean> {
-        return showDetailsResultLiveData
-    }
 
     private val reviewLiveData: MutableLiveData<Review> by lazy {
         MutableLiveData<Review>()
@@ -88,8 +82,15 @@ class ShowDetailsViewModel(
                 response: Response<ReviewsResponse>
             ) {
                 val reviews = response.body()?.reviews
-                if (reviews!=null){
+                if (reviews != null) {
                     Executors.newSingleThreadExecutor().execute {
+                        database.userDao().addUsers(reviews.map {
+                            UserEntity(
+                                it.user.id,
+                                it.user.email,
+                                it.user.imageUrl
+                            )
+                        })
                         database.reviewDao().insertAllReviews(
                             reviews.map {
                                 ReviewEntity(
@@ -97,7 +98,7 @@ class ShowDetailsViewModel(
                                     it.comment,
                                     it.rating,
                                     it.showId,
-                                    it.user
+                                    it.user.id
                                 )
                             }
                         )
@@ -115,12 +116,16 @@ class ShowDetailsViewModel(
         })
     }
 
+    fun getShowDetailsResultLiveData(): LiveData<Boolean> {
+        return showDetailsResultLiveData
+    }
+
     fun getReviewLiveData(): LiveData<Review> {
         return reviewLiveData
     }
 
-    fun getReviewsLiveData(): LiveData<List<Review>> {
-        return reviewsLiveData
+    fun getReviewsLiveData(): LiveData<List<ReviewWithUser>> {
+        return database.reviewDao().getReviewsAndUsers()
     }
 
     fun addReview(rating: Int, comment: String?, show_id: Int) {
