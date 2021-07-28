@@ -45,7 +45,7 @@ class ShowsAdapter(
 
         fun bind(item: Show) {
             binding.showTitle.text = item.title
-            Glide.with(itemView.context).load(item.imageUrl).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).into(binding.showImage)
+            Glide.with(itemView.context).load(item.imageUrl).diskCacheStrategy(DiskCacheStrategy.ALL).into(binding.showImage)
             binding.showDescription.text = item.description
             binding.root.setOnClickListener {
                 onItemClickCallback(item)

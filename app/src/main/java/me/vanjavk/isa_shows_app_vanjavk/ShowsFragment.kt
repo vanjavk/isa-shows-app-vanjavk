@@ -169,22 +169,22 @@ class ShowsFragment : Fragment() {
         showsViewModel.getShowsResultLiveData()
             .observe(viewLifecycleOwner, { isGetShowsSuccessful ->
                 if (!isGetShowsSuccessful) {
-                    Toast.makeText(
-                        activity,
-                        getString(R.string.error_failure_response),
-                        Toast.LENGTH_SHORT
-                    ).show()
+//                    Toast.makeText(
+//                        activity,
+//                        getString(R.string.error_failure_response),
+//                        Toast.LENGTH_SHORT
+//                    ).show()
                 }
             })
 
         showsViewModel.getCurrentUserResultLiveData()
             .observe(viewLifecycleOwner, { isGetCurrentUserSuccessful ->
                 if (!isGetCurrentUserSuccessful) {
-                    Toast.makeText(
-                        activity,
-                        getString(R.string.error_failure_response),
-                        Toast.LENGTH_SHORT
-                    ).show()
+//                    Toast.makeText(
+//                        activity,
+//                        getString(R.string.error_failure_response),
+//                        Toast.LENGTH_SHORT
+//                    ).show()
                 }
             })
 

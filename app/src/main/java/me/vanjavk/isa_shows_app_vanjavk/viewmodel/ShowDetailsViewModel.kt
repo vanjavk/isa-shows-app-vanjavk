@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import me.vanjavk.isa_shows_app_vanjavk.database.ShowsDatabase
 import me.vanjavk.isa_shows_app_vanjavk.model.Review
+import me.vanjavk.isa_shows_app_vanjavk.model.ReviewEntity
 import me.vanjavk.isa_shows_app_vanjavk.model.ShowEntity
 import me.vanjavk.isa_shows_app_vanjavk.model.network.*
 import me.vanjavk.isa_shows_app_vanjavk.networking.ApiModule
@@ -86,8 +87,24 @@ class ShowDetailsViewModel(
                 call: Call<ReviewsResponse>,
                 response: Response<ReviewsResponse>
             ) {
-                reviewsLiveData.value = response.body()?.reviews
-                showDetailsResultLiveData.value = true
+                val reviews = response.body()?.reviews
+                if (reviews!=null){
+                    Executors.newSingleThreadExecutor().execute {
+                        database.reviewDao().insertAllReviews(
+                            reviews.map {
+                                ReviewEntity(
+                                    it.id,
+                                    it.comment,
+                                    it.rating,
+                                    it.showId,
+                                    it.user
+                                )
+                            }
+                        )
+                    }
+                    showDetailsResultLiveData.value = true
+                }
+                showDetailsResultLiveData.value = false
             }
 
             override fun onFailure(call: Call<ReviewsResponse>, t: Throwable) {
