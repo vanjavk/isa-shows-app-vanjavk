@@ -44,9 +44,12 @@ class ShowsAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Show) {
-            binding.showTitle.text = item.title
-            Glide.with(itemView.context).load(item.imageUrl).diskCacheStrategy(DiskCacheStrategy.ALL).into(binding.showImage)
-            binding.showDescription.text = item.description
+//            binding.showTitle.text = item.title
+            binding.showItemCardView.setTitle(item.title)
+            Glide.with(itemView.context).load(item.imageUrl).into(binding.showItemCardView.getImageView())
+//            binding.showDescription.text = item.description
+            binding.showItemCardView.setDescription(item.description)
+
             binding.root.setOnClickListener {
                 onItemClickCallback(item)
             }
