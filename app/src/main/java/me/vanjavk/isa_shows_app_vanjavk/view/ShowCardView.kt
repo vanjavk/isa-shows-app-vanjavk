@@ -21,13 +21,7 @@ class ShowCardView @JvmOverloads constructor(
     private var binding: ShowCardviewBinding
 
     init {
-//        inflate(context, R.layout.view_superhero_item, this)
         binding = ShowCardviewBinding.inflate(LayoutInflater.from(context), this)
-//
-//        val bottomPadding = context.resources.getDimensionPixelSize(R.dimen.card_padding_bottom)
-//        setPadding(0, 0, 0, bottomPadding)
-//        layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
-//        radius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4f, context.resources.displayMetrics)
     }
 
     fun setTitle(title: String) {
@@ -36,10 +30,6 @@ class ShowCardView @JvmOverloads constructor(
 
     fun setDescription(description: String) {
         binding.showDescription.text = description
-    }
-
-    fun setImage(@DrawableRes imageResource: Int) {
-        binding.showImage.setImageResource(imageResource)
     }
 
     fun getImageView(): ImageView {
