@@ -18,6 +18,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -152,6 +153,7 @@ class ShowsFragment : Fragment() {
         initShowsRecycler()
 
         showsViewModel.getShowsLiveData().observe(viewLifecycleOwner, { shows ->
+            binding.showsRecyclerView.isVisible = !shows.isNullOrEmpty()
             updateItems(shows.map {
                 Show(
                     it.id,
@@ -162,6 +164,7 @@ class ShowsFragment : Fragment() {
                     it.title
                 )
             })
+
         })
 
         showsViewModel.getUserLiveData().observe(viewLifecycleOwner, { user ->

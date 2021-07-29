@@ -1,5 +1,6 @@
 package me.vanjavk.isa_shows_app_vanjavk.adapter
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -48,17 +49,16 @@ class ReviewsAdapter(
         fun bind(item: Review) {
             binding.ratingStarValue.text = item.rating.toString()
             binding.reviewerName.text = item.user.email.getUsername()
+
+            binding.frameLayout.setBackgroundColor( if (item.sync) Color.parseColor("#ffffff") else Color.parseColor("#808080"))
             if (item.user.imageUrl!=null){
                 Glide.with(itemView.context).load(item.user.imageUrl).diskCacheStrategy(DiskCacheStrategy.NONE)
                     .skipMemoryCache(true).into(binding.profileIconImage)
             }else{
                 binding.profileIconImage.setImageResource(R.drawable.ic_painting_art)
             }
-            if (item.comment.isNullOrEmpty()) {
-                 binding.reviewContent.visibility = GONE
-                binding.reviewContent.isVisible = false
-            } else {
-                binding.reviewContent.visibility = VISIBLE
+            binding.reviewContent.isVisible = !item.comment.isNullOrEmpty()
+            if (!item.comment.isNullOrEmpty()) {
                 binding.reviewContent.text = item.comment
             }
 

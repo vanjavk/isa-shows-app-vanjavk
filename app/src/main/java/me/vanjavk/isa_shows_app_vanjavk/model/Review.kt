@@ -11,4 +11,5 @@ data class Review(
     @SerialName("rating") var rating: Int,
     @SerialName("show_id") val showId: Int,
     @SerialName("user") var user: User,
+    var sync: Boolean = true,
 )

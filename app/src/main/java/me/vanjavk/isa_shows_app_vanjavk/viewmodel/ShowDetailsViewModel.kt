@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import me.vanjavk.isa_shows_app_vanjavk.USER_ID_KEY
-import me.vanjavk.isa_shows_app_vanjavk.checkInternetConnectivity
 import me.vanjavk.isa_shows_app_vanjavk.database.ShowsDatabase
 import me.vanjavk.isa_shows_app_vanjavk.model.*
 import me.vanjavk.isa_shows_app_vanjavk.model.network.*
@@ -15,7 +14,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.concurrent.Executors
-import kotlin.coroutines.coroutineContext
 
 
 class ShowDetailsViewModel(
@@ -76,14 +74,14 @@ class ShowDetailsViewModel(
         })
     }
 
-    fun getReviews(id: String) {
-        ApiModule.retrofit.getReviews(id).enqueue(object :
+    fun getReviews(showId: String) {
+        ApiModule.retrofit.getReviews(showId).enqueue(object :
             Callback<ReviewsResponse> {
             override fun onResponse(
                 call: Call<ReviewsResponse>,
                 response: Response<ReviewsResponse>
             ) {
-                uploadOfflineReviews()
+                uploadOfflineReviews(showId)
                 val reviews = response.body()?.reviews
                 if (reviews != null) {
                     Executors.newSingleThreadExecutor().execute {
@@ -172,14 +170,16 @@ class ShowDetailsViewModel(
         })
     }
 
-    private fun uploadOfflineReviews() {
+    private fun uploadOfflineReviews(showId: String) {
 
 
         Executors.newSingleThreadExecutor().execute {
-            val reviewsToUpload = database.reviewDao().getOfflineReviews()
+            val reviewsToUpload = database.reviewDao().getOfflineReviews(
+                showId
+            )
             reviewsToUpload.forEach {
-                addReview(it.rating, it.comment, it.showId)
                 it.id?.let { id -> database.reviewDao().removeReview(id) }
+                addReview(it.rating, it.comment, it.showId)
             }
         }
     }

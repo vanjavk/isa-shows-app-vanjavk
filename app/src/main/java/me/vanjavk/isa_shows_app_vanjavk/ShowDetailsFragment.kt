@@ -106,7 +106,8 @@ class ShowDetailsFragment : Fragment() {
                     it.user.id,
                     it.user.email,
                     it.user.imageUrl
-                )
+                ),
+                it.review.sync
             ) })
         })
 
