@@ -78,7 +78,7 @@ class ShowsFragment : Fragment() {
     private val permissionForCamera = preparePermissionsContract(onPermissionsGranted = {
         val uri = createImageFile(requireContext())?.let {
             FileProvider.getUriForFile(
-                requireContext(), "me.vanjavk.isa-shows-app-vanjavk.fileprovider",
+                requireContext(), requireContext().packageName.toString() + ".fileprovider",
                 it
             )
         }
