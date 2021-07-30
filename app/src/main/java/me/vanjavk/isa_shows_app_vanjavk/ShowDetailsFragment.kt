@@ -1,9 +1,8 @@
 package me.vanjavk.isa_shows_app_vanjavk
 
-import android.R
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RatingBar
@@ -11,15 +10,20 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogAddReviewBinding
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowDetailsBinding
+import me.vanjavk.isa_shows_app_vanjavk.model.RatingInfo
 import me.vanjavk.isa_shows_app_vanjavk.model.Review
 import me.vanjavk.isa_shows_app_vanjavk.model.Show
+import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowDetailsViewModel
+import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowsViewModel
 
 
 class ShowDetailsFragment : Fragment() {
@@ -32,7 +36,7 @@ class ShowDetailsFragment : Fragment() {
 
     private var reviewsAdapter: ReviewsAdapter? = null
 
-    private lateinit var show: Show
+    private val showDetailsViewModel: ShowDetailsViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,26 +60,53 @@ class ShowDetailsFragment : Fragment() {
         }
 
         val id = args.showID
-        val tempShow = shows.find { it.ID == id }
-        if (tempShow == null) {
-            Toast.makeText(
-                activity,
-                "Show with specified ID could not be found.",
-                Toast.LENGTH_SHORT
-            )
-                .show()
-            activity.onBackPressed()
-        } else {
-            show = tempShow
-        }
 
-        binding.toolbarLayout.title = show.title
+        showDetailsViewModel.initShow(id)
 
-        binding.showImage.setImageResource(show.imageResourceId)
-        binding.showDescription.text = show.description
+        showDetailsViewModel.getShowLiveData().observe(viewLifecycleOwner, { show ->
+            updateShow(show)
+            updateReviews(show.reviews)
+        })
+
+        showDetailsViewModel.getReviewLiveData().observe(viewLifecycleOwner, { review ->
+            updateReviews()
+        })
+
+        showDetailsViewModel.getRatingInfoLiveData().observe(viewLifecycleOwner, { ratingInfo ->
+            updateRatingInfo(ratingInfo)
+        })
 
         initWriteReviewButton()
         initReviewsRecycler()
+    }
+
+    private fun updateShow(show: Show) {
+        binding.toolbarLayout.title = show.title
+        binding.showImage.setImageResource(show.imageResourceId)
+        binding.showDescription.text = show.description
+    }
+
+    private fun updateRatingInfo(ratingInfo: RatingInfo) {
+        binding.reviewsRecyclerView.isVisible = ratingInfo.numberOfReviews!=0
+        binding.showReviewRating.isVisible = ratingInfo.numberOfReviews!=0
+        binding.showRatingBar.isVisible = ratingInfo.numberOfReviews!=0
+        binding.noReviewsYet.isVisible = ratingInfo.numberOfReviews==0
+
+        if (ratingInfo.numberOfReviews != 0) {
+            binding.showReviewRating.text = getString(R.string.reviews_rating_info).format(
+                ratingInfo.numberOfReviews,
+                ratingInfo.averageRating
+            )
+            binding.showRatingBar.rating = ratingInfo.averageRating
+        }
+    }
+
+    private fun updateReviews(reviews: List<Review>) {
+        reviewsAdapter?.setItems(reviews)
+    }
+
+    private fun updateReviews() {
+        reviewsAdapter?.itemCount?.let { itemCount -> reviewsAdapter?.notifyItemInserted(itemCount) }
     }
 
     private fun initWriteReviewButton() {
@@ -98,25 +129,26 @@ class ShowDetailsFragment : Fragment() {
         }
 
         bottomSheetBinding.confirmButton.setOnClickListener {
-            val review = Review(
-                args.email.getUsername(),
+            val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
+            if (sharedPref == null) {
+                Toast.makeText(activity, "Action failed. Aborting...", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val email =
+                sharedPref.getString(getString(R.string.user_email_key), "Default_user").orEmpty()
+
+            showDetailsViewModel.addReview(
+                email.getUsername(),
                 bottomSheetBinding.commentInput.text.toString(),
                 bottomSheetBinding.starRatingBar.rating.toInt()
             )
-            addReviewToList(review)
             dialog.dismiss()
         }
         dialog.show()
     }
 
-    private fun addReviewToList(review: Review) {
-        reviewsAdapter?.addItem(review)
-        show.reviews.add(review)
-        refreshReviews()
-    }
-
     private fun initReviewsRecycler() {
-
         reviewsAdapter = ReviewsAdapter(emptyList())
 
         binding.reviewsRecyclerView.layoutManager = LinearLayoutManager(activity)
@@ -127,24 +159,6 @@ class ShowDetailsFragment : Fragment() {
                 DividerItemDecoration.VERTICAL
             )
         )
-
-        refreshReviews()
-
-        reviewsAdapter?.setItems(show.reviews)
-    }
-
-
-    private fun refreshReviews() {
-        binding.reviewsRecyclerView.isVisible = show.reviews.isNotEmpty()
-        binding.showReviewRating.isVisible = show.reviews.isNotEmpty()
-        binding.showRatingBar.isVisible = show.reviews.isNotEmpty()
-        binding.noReviewsYet.isVisible = show.reviews.isEmpty()
-        if (show.reviews.isNotEmpty()) {
-            val averageRating = show.reviews.map { it.stars }.average().toFloat()
-            binding.showReviewRating.text =
-                "${show.reviews.count()} REVIEWS, ${"%.2f".format(averageRating)} AVERAGE"
-            binding.showRatingBar.rating = averageRating
-        }
     }
 
     override fun onDestroyView() {

@@ -1,0 +1,68 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:clipChildren="false">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/userProfileImage"
+        android:layout_width="104dp"
+        android:layout_height="104dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="32dp"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"
+        android:src="@drawable/ic_painting_art"
+        app:strokeColor="@color/purple_infinum"
+        app:strokeWidth="2dp"
+        android:padding="8dp"
+
+        />
+
+    <TextView
+        android:id="@+id/userEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="24dp"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        tools:text="imenko.prezimenovic@hotmail.com" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/change_profile_picture_button"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="16dp"
+        android:letterSpacing="0.03"
+        android:text="@string/change_profile_photo"
+        android:textAllCaps="false"
+        android:textColor="@color/purple_infinum"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        app:cornerRadius="40dp"
+        app:strokeColor="@color/purple_infinum"
+        app:strokeWidth="2dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/logoutButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/purple_infinum"
+        android:letterSpacing="0.03"
+        android:text="@string/logout"
+        android:textAllCaps="false"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        app:cornerRadius="40dp" />
+
+</LinearLayout>

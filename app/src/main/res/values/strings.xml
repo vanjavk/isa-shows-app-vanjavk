@@ -9,16 +9,29 @@
     <string name="reviews">Reviews</string>
     <string name="placeholder_rating_info">3 REVIEWS, 3.63 AVERAGE</string>
     <string name="no_reviews_yet">No reviews yet.</string>
+    <string name="in_order_to_continue_please_log_in">In order to continue please log in.</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="shows">Shows</string>
     <string name="show_hide">SHOW/HIDE</string>
     <string name="shows_empty">Your shows are not showing. Get it?</string>
     <string name="write_a_review">Write a review</string>
     <string name="comment">Comment</string>
     <string name="confirm">Confirm</string>
-    <string name="password">Password</string>
-    <string name="email">Email</string>
-    <string name="in_order_to_continue_please_log_in">In order to continue please log in.</string>
-    <string name="login">Login</string>
-    <string name="shows">Shows</string>
-    <string name="password_too_short">Password too short</string>
-    <string name="invalid_email">Invalid email!</string>
+    <string name="remember_me">Remember me</string>
+    <string name="logged_in_key">LOGGED_IN_KEY</string>
+    <string name="user_email_key">USER_EMAIL_KEY</string>
+    <string name='no_permission' formatted='false'>Please check your permissions in Settings.</string>
+    <string name='settings' formatted='false'>Settings</string>
+    <string name="logout">Logout</string>
+    <string name="change_profile_photo">Change profile photo</string>
+    <string name="error_show_id_not_found">Error! Couldn\'t find show with that ID.</string>
+    <string name="reviews_rating_info">%d REVIEWS, %.2f RATING</string>
+    <string name="continue_string">Continue</string>
+    <string name="cancel">Cancel</string>
+    <string name="choose_picture_source">Choose picture source:</string>
+    <string name="camera_take_a_photo">Camera: Take a photo</string>
+    <string name="gallery_choose_a_photo">Gallery: Choose a photo</string>
+    <string name="error_opening_file">Error! Couldn\'t open file for use.</string>
 </resources>

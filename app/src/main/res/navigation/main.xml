@@ -23,10 +23,6 @@
         android:name="me.vanjavk.isa_shows_app_vanjavk.ShowsFragment"
         tools:layout="@layout/fragment_shows">
 
-        <argument
-            android:name="email"
-            app:argType="string" />
-
         <action
             android:id="@+id/action_logout"
             app:destination="@id/loginFragment"
@@ -45,12 +41,9 @@
         tools:layout="@layout/fragment_show_details">
 
         <argument
-            android:name="email"
-            app:argType="string" />
-
-        <argument
             android:name="showID"
             app:argType="string" />
 
     </fragment>
+
 </navigation>
