@@ -6,7 +6,6 @@ import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.util.Log
 import android.util.Patterns
-import androidx.core.content.ContentProviderCompat.requireContext
 import java.io.File
 
 const val MIN_PASSWORD_LENGTH = 6

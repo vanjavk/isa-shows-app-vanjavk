@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.RatingBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -106,21 +107,17 @@ class ShowDetailsFragment : Fragment() {
     }
 
     private fun updateRatingInfo(numberOfReviews: Int, averageRating: Float?) {
-        if (numberOfReviews == 0) {
-            binding.reviewsRecyclerView.visibility = View.GONE
-            binding.showReviewRating.visibility = View.GONE
-            binding.showRatingBar.visibility = View.GONE
-            binding.noReviewsYet.visibility = View.VISIBLE
-        } else if (averageRating != null) {
-            binding.noReviewsYet.visibility = View.GONE
-            binding.reviewsRecyclerView.visibility = View.VISIBLE
-            binding.showReviewRating.visibility = View.VISIBLE
-            binding.showRatingBar.visibility = View.VISIBLE
+        val noReviews = numberOfReviews == 0
+        binding.reviewsRecyclerView.isVisible = !noReviews
+        binding.showReviewRating.isVisible = !noReviews
+        binding.showRatingBar.isVisible = !noReviews
+        binding.noReviewsYet.isVisible = noReviews
+        if (!noReviews) {
             binding.showReviewRating.text = getString(R.string.reviews_rating_info).format(
                 numberOfReviews,
                 averageRating
             )
-            binding.showRatingBar.rating = averageRating
+            binding.showRatingBar.rating = averageRating ?: 0f
         }
     }
 

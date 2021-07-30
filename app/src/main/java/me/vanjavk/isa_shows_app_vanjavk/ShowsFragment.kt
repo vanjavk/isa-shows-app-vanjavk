@@ -88,9 +88,12 @@ class ShowsFragment : Fragment() {
         }
 
     private val selectImageFromGallery =
-        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri ->
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             uri.let {
-
+                if (uri==null){
+                    return@let
+                }
+                //Prvo trebam kopirati odabranu sliku u aplikacijski folder kako bi se ona mogla pomocu fileutilsa smanjiti, no kako bi dobio File za copy moram koristiti ekstenzijsku funkciju Uri.getFileFromUri() kako bih dobio ispravan file koji mogu kopirati.
                 if (uri.getFileFromUri(requireContext())?.copyTo(
                         File(
                             requireContext().getExternalFilesDir(
@@ -242,14 +245,7 @@ class ShowsFragment : Fragment() {
                 ) { _, which ->
                     when (which) {
                         0 -> permissionForCamera.launch(arrayOf(Manifest.permission.CAMERA))
-                        1 ->
-//                            Toast.makeText(
-//                            activity,
-//                            "Ovo ne radi, s obzirom da je pod extra, predao sam zadacu bez toga.",
-//                            Toast.LENGTH_SHORT
-//                        )
-//                            .show()
-                            permissionForFiles.launch(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE))
+                        1 -> permissionForFiles.launch(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE))
                     }
                 }
                 setNegativeButton(
