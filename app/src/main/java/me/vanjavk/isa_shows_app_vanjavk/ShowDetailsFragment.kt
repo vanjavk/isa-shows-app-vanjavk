@@ -1,5 +1,6 @@
 package me.vanjavk.isa_shows_app_vanjavk
 
+import Show
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,20 +11,19 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import me.vanjavk.isa_shows_app_vanjavk.adapter.ReviewsAdapter
 import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogAddReviewBinding
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowDetailsBinding
-import me.vanjavk.isa_shows_app_vanjavk.model.RatingInfo
 import me.vanjavk.isa_shows_app_vanjavk.model.Review
-import me.vanjavk.isa_shows_app_vanjavk.model.Show
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowDetailsViewModel
-import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowsViewModel
+import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ViewModelFactory
 
 
 class ShowDetailsFragment : Fragment() {
@@ -36,7 +36,8 @@ class ShowDetailsFragment : Fragment() {
 
     private var reviewsAdapter: ReviewsAdapter? = null
 
-    private val showDetailsViewModel: ShowDetailsViewModel by viewModels()
+    private lateinit var showDetailsViewModel: ShowDetailsViewModel
+    private lateinit var showDetailsViewModelFactory: ViewModelFactory
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,6 +46,22 @@ class ShowDetailsFragment : Fragment() {
     ): View {
         _binding = FragmentShowDetailsBinding.inflate(inflater, container, false)
         setHasOptionsMenu(true);
+
+        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
+        if (sharedPref == null) {
+            Toast.makeText(
+                activity,
+                getString(R.string.error_shared_pref_is_null),
+                Toast.LENGTH_SHORT
+            ).show()
+            activity?.onBackPressed()
+            return binding.root
+        }
+
+        showDetailsViewModelFactory = ViewModelFactory(sharedPref)
+        showDetailsViewModel = ViewModelProvider(this, showDetailsViewModelFactory)
+            .get(ShowDetailsViewModel::class.java)
+
         return binding.root
     }
 
@@ -55,25 +72,25 @@ class ShowDetailsFragment : Fragment() {
         activity.setSupportActionBar(binding.toolbar)
         activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
         activity.supportActionBar?.setDisplayShowHomeEnabled(true)
+        binding.toolbarLayout.title = getString(R.string.loading)
         binding.toolbar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
 
         val id = args.showID
 
-        showDetailsViewModel.initShow(id)
+        showDetailsViewModel.getShow(id)
 
         showDetailsViewModel.getShowLiveData().observe(viewLifecycleOwner, { show ->
             updateShow(show)
-            updateReviews(show.reviews)
         })
 
         showDetailsViewModel.getReviewLiveData().observe(viewLifecycleOwner, { review ->
-            updateReviews()
+            updateReviews(review)
         })
 
-        showDetailsViewModel.getRatingInfoLiveData().observe(viewLifecycleOwner, { ratingInfo ->
-            updateRatingInfo(ratingInfo)
+        showDetailsViewModel.getReviewsLiveData().observe(viewLifecycleOwner, { reviews ->
+            updateReviews(reviews)
         })
 
         initWriteReviewButton()
@@ -82,22 +99,25 @@ class ShowDetailsFragment : Fragment() {
 
     private fun updateShow(show: Show) {
         binding.toolbarLayout.title = show.title
-        binding.showImage.setImageResource(show.imageResourceId)
+        if (binding.showImage.drawable == null) {
+            Glide.with(this).load(show.imageUrl).into(binding.showImage)
+        }
         binding.showDescription.text = show.description
+        updateRatingInfo(show.numberOfReviews, show.averageRating)
     }
 
-    private fun updateRatingInfo(ratingInfo: RatingInfo) {
-        binding.reviewsRecyclerView.isVisible = ratingInfo.numberOfReviews!=0
-        binding.showReviewRating.isVisible = ratingInfo.numberOfReviews!=0
-        binding.showRatingBar.isVisible = ratingInfo.numberOfReviews!=0
-        binding.noReviewsYet.isVisible = ratingInfo.numberOfReviews==0
-
-        if (ratingInfo.numberOfReviews != 0) {
+    private fun updateRatingInfo(numberOfReviews: Int, averageRating: Float?) {
+        val noReviews = numberOfReviews == 0
+        binding.reviewsRecyclerView.isVisible = !noReviews
+        binding.showReviewRating.isVisible = !noReviews
+        binding.showRatingBar.isVisible = !noReviews
+        binding.noReviewsYet.isVisible = noReviews
+        if (!noReviews) {
             binding.showReviewRating.text = getString(R.string.reviews_rating_info).format(
-                ratingInfo.numberOfReviews,
-                ratingInfo.averageRating
+                numberOfReviews,
+                averageRating
             )
-            binding.showRatingBar.rating = ratingInfo.averageRating
+            binding.showRatingBar.rating = averageRating ?: 0f
         }
     }
 
@@ -105,8 +125,8 @@ class ShowDetailsFragment : Fragment() {
         reviewsAdapter?.setItems(reviews)
     }
 
-    private fun updateReviews() {
-        reviewsAdapter?.itemCount?.let { itemCount -> reviewsAdapter?.notifyItemInserted(itemCount) }
+    private fun updateReviews(review: Review) {
+        reviewsAdapter?.addItem(review)
     }
 
     private fun initWriteReviewButton() {
@@ -129,19 +149,11 @@ class ShowDetailsFragment : Fragment() {
         }
 
         bottomSheetBinding.confirmButton.setOnClickListener {
-            val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
-            if (sharedPref == null) {
-                Toast.makeText(activity, "Action failed. Aborting...", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            val email =
-                sharedPref.getString(getString(R.string.user_email_key), "Default_user").orEmpty()
 
             showDetailsViewModel.addReview(
-                email.getUsername(),
+                bottomSheetBinding.starRatingBar.rating.toInt(),
                 bottomSheetBinding.commentInput.text.toString(),
-                bottomSheetBinding.starRatingBar.rating.toInt()
+                args.showID.toInt()
             )
             dialog.dismiss()
         }

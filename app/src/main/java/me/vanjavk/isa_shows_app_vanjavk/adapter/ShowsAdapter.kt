@@ -1,10 +1,12 @@
-package me.vanjavk.isa_shows_app_vanjavk
+package me.vanjavk.isa_shows_app_vanjavk.adapter
 
+import Show
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import me.vanjavk.isa_shows_app_vanjavk.databinding.ViewShowItemBinding
-import me.vanjavk.isa_shows_app_vanjavk.model.Show
 
 
 class ShowsAdapter(
@@ -14,7 +16,8 @@ class ShowsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShowViewHolder {
 
-        val binding = ViewShowItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ViewShowItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
         return ShowViewHolder(binding)
     }
@@ -41,12 +44,11 @@ class ShowsAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Show) {
-
-            binding.showImage.setImageResource(item.imageResourceId)
             binding.showTitle.text = item.title
-            binding.showGenre.text = item.genresToString()
+            if (binding.showImage.drawable == null) {
+                Glide.with(itemView.context).load(item.imageUrl).into(binding.showImage)
+            }
             binding.showDescription.text = item.description
-
             binding.root.setOnClickListener {
                 onItemClickCallback(item)
             }

@@ -1,32 +1,29 @@
 <resources>
-    <string name="app_name">isa-shows-app-vanjavk</string>
+    <string name="app_name">Shows-VanjaButurac</string>
+    <string name="remember_me">Remember me</string>
     <string name="placeholder_description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</string>
     <string name="placeholder_title">Butterfly effect</string>
     <string name="placeholder_genre">Drama Sci-fi Thriller</string>
-    <string name="placeholder_name">Imenko.Prezimenovic</string>
-    <string name="placeholder_comment">It was good. I laughed a lot, it matches my sense of humor perfectly. Loved it!</string>
     <string name="placeholder_description_long">Evan Treborn suffers blackouts during significant events of his life. As he grows up, he finds a way to remember these lost memories and a supernatural way to alter his life by reading his journal.</string>
-    <string name="reviews">Reviews</string>
     <string name="placeholder_rating_info">3 REVIEWS, 3.63 AVERAGE</string>
-    <string name="no_reviews_yet">No reviews yet.</string>
-    <string name="in_order_to_continue_please_log_in">In order to continue please log in.</string>
-    <string name="email">Email</string>
     <string name="password">Password</string>
+    <string name="email">Email</string>
     <string name="login">Login</string>
+    <string name="in_order_to_continue_please_log_in">In order to continue please log in.</string>
     <string name="shows">Shows</string>
-    <string name="show_hide">SHOW/HIDE</string>
     <string name="shows_empty">Your shows are not showing. Get it?</string>
-    <string name="write_a_review">Write a review</string>
-    <string name="comment">Comment</string>
-    <string name="confirm">Confirm</string>
-    <string name="remember_me">Remember me</string>
-    <string name="logged_in_key">LOGGED_IN_KEY</string>
-    <string name="user_email_key">USER_EMAIL_KEY</string>
     <string name='no_permission' formatted='false'>Please check your permissions in Settings.</string>
     <string name='settings' formatted='false'>Settings</string>
     <string name="logout">Logout</string>
     <string name="change_profile_photo">Change profile photo</string>
     <string name="error_show_id_not_found">Error! Couldn\'t find show with that ID.</string>
+    <string name="comment">Comment</string>
+    <string name="confirm">Confirm</string>
+    <string name="write_a_review">Write a review</string>
+    <string name="no_reviews_yet">No reviews yet.</string>
+    <string name="reviews">Reviews</string>
+    <string name="placeholder_comment">It was good. I laughed a lot, it matches my sense of humor perfectly. Loved it!</string>
+    <string name="placeholder_name">Imenko.Prezimenovic</string>
     <string name="reviews_rating_info">%d REVIEWS, %.2f RATING</string>
     <string name="continue_string">Continue</string>
     <string name="cancel">Cancel</string>
@@ -34,4 +31,13 @@
     <string name="camera_take_a_photo">Camera: Take a photo</string>
     <string name="gallery_choose_a_photo">Gallery: Choose a photo</string>
     <string name="error_opening_file">Error! Couldn\'t open file for use.</string>
+    <string name="register">Register</string>
+    <string name="repeat_password">Repeat password</string>
+    <string name="registration_successful">Registration successful!</string>
+    <string name="passwords_do_not_match">Passwords do not match</string>
+    <string name="error_shared_pref_is_null">Action failed. Aborting...</string>
+    <string name="TEST">ADSADSAS</string>
+    <string name="invalid_email">Invalid email!</string>
+    <string name="password_too_short">Password too short</string>
+    <string name="loading">Loading...</string>
 </resources>

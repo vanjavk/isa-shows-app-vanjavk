@@ -1,12 +1,15 @@
 package me.vanjavk.isa_shows_app_vanjavk
 
+import Show
 import android.Manifest
+import android.R.attr.data
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.provider.DocumentsContract
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,12 +17,9 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
-
 import androidx.core.content.FileProvider
-import androidx.core.net.toFile
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -27,13 +27,15 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import me.vanjavk.isa_shows_app_vanjavk.FileUtil.createImageFile
 import me.vanjavk.isa_shows_app_vanjavk.FileUtil.getImageFile
+import me.vanjavk.isa_shows_app_vanjavk.adapter.ShowsAdapter
 import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogUserProfileBinding
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowsBinding
-import me.vanjavk.isa_shows_app_vanjavk.model.Show
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowsViewModel
+import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ViewModelFactory
 import java.io.File
-import java.lang.Exception
+import java.io.InputStream
 import java.util.*
+
 
 class ShowsFragment : Fragment() {
 
@@ -41,39 +43,13 @@ class ShowsFragment : Fragment() {
 
     private val binding get() = _binding!!
 
+    private lateinit var bottomSheetBinding: DialogUserProfileBinding
+    private lateinit var dialog: BottomSheetDialog
+
     private var showsAdapter: ShowsAdapter? = null
 
-    private val showsViewModel: ShowsViewModel by viewModels()
-
-    private val permissionForFiles = preparePermissionsContract(onPermissionsGranted = {
-        selectImageFromGallery.launch("image/*")
-    })
-    private val selectImageFromGallery =
-        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            uri.let {
-                if (uri==null){
-                    return@let
-                }
-                //Prvo trebam kopirati odabranu sliku u aplikacijski folder kako bi se ona mogla pomocu fileutilsa smanjiti, no kako bi dobio File za copy moram koristiti ekstenzijsku funkciju Uri.getFileFromUri() kako bih dobio ispravan file koji mogu kopirati.
-                if (uri.getFileFromUri(requireContext())?.copyTo(
-                        File(
-                            requireContext().getExternalFilesDir(
-                                Environment.DIRECTORY_PICTURES
-                            ), "avatar.jpg"
-                        ), true
-                    ) != null
-                ) {
-                    getImageFile(requireContext())?.let { imageFile ->
-                        showsViewModel.setImage(
-                            imageFile
-                        )
-                    }
-                } else {
-                    Toast.makeText(activity, "Cannot get image from gallery.", Toast.LENGTH_SHORT)
-                        .show()
-                }
-            }
-        }
+    private lateinit var showsViewModel: ShowsViewModel
+    private lateinit var showsViewModelFactory: ViewModelFactory
 
     private val permissionForCamera = preparePermissionsContract(onPermissionsGranted = {
         val uri = createImageFile(requireContext())?.let {
@@ -95,6 +71,10 @@ class ShowsFragment : Fragment() {
         getCameraImage.launch(uri)
     })
 
+    private val permissionForFiles = preparePermissionsContract(onPermissionsGranted = {
+        selectImageFromGallery.launch("image/*")
+    })
+
     private val getCameraImage =
         registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
             if (success) {
@@ -102,8 +82,36 @@ class ShowsFragment : Fragment() {
                     requireContext()
                 )
                 if (imageFile != null) {
-                    showsViewModel.setImage(imageFile)
+                    showsViewModel.uploadProfilePicture(imageFile)
                 }
+            }
+        }
+
+    private val selectImageFromGallery =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            uri.let {
+                if (uri==null){
+                    return@let
+                }
+                //Prvo trebam kopirati odabranu sliku u aplikacijski folder kako bi se ona mogla pomocu fileutilsa smanjiti, no kako bi dobio File za copy moram koristiti ekstenzijsku funkciju Uri.getFileFromUri() kako bih dobio ispravan file koji mogu kopirati.
+                if (uri.getFileFromUri(requireContext())?.copyTo(
+                        File(
+                            requireContext().getExternalFilesDir(
+                                Environment.DIRECTORY_PICTURES
+                            ), "avatar.jpg"
+                        ), true
+                    ) != null
+                ) {
+                    getImageFile(requireContext())?.let { imageFile ->
+                        showsViewModel.uploadProfilePicture(
+                            imageFile
+                        )
+                    }
+                } else {
+                    Toast.makeText(activity, "Cannot get image from gallery.", Toast.LENGTH_SHORT)
+                        .show()
+                }
+
             }
         }
 
@@ -113,13 +121,31 @@ class ShowsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentShowsBinding.inflate(inflater, container, false)
+        bottomSheetBinding = DialogUserProfileBinding.inflate(layoutInflater)
+
+        dialog = BottomSheetDialog(requireContext())
+        dialog.setContentView(bottomSheetBinding.root)
+
+        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
+        if (sharedPref == null) {
+            Toast.makeText(
+                activity,
+                getString(R.string.error_shared_pref_is_null),
+                Toast.LENGTH_SHORT
+            ).show()
+            activity?.onBackPressed()
+            return binding.root
+        }
+
+        showsViewModelFactory = ViewModelFactory(sharedPref)
+        showsViewModel = ViewModelProvider(this, showsViewModelFactory)
+            .get(ShowsViewModel::class.java)
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        showsViewModel.initShows()
 
         initShowsRecycler()
 
@@ -127,24 +153,56 @@ class ShowsFragment : Fragment() {
             updateItems(shows)
         })
 
-        showsViewModel.getUserProfilePictureLiveData().observe(viewLifecycleOwner, { imageFile ->
-            setImageFromFile(binding.profileIconImage, imageFile)
+        showsViewModel.getUserLiveData().observe(viewLifecycleOwner, { user ->
+            updateProfileIcons(user.imageUrl)
+            bottomSheetBinding.userEmail.text = user.email
         })
 
-        val imageFile = getImageFile(
-            requireContext()
-        )
-        if (imageFile != null) {
-            showsViewModel.setImage(imageFile)
-        }
+        showsViewModel.getShowsResultLiveData()
+            .observe(viewLifecycleOwner, { isGetShowsSuccessful ->
+                if (!isGetShowsSuccessful) {
+                    logout()
+                }
+            })
+
+        showsViewModel.getCurrentUserResultLiveData()
+            .observe(viewLifecycleOwner, { isGetCurrentUserSuccessful ->
+                if (!isGetCurrentUserSuccessful) {
+                    logout()
+                }
+            })
+
+        showsViewModel.getChangeProfilePictureResultLiveDataLiveData()
+            .observe(viewLifecycleOwner, { isChangeProfilePictureSuccessful ->
+                if (!isChangeProfilePictureSuccessful) {
+                    Toast.makeText(
+                        activity,
+                        "Changing profile picture was unsuccessful!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            })
+
+        showsViewModel.getShows()
+        showsViewModel.getUser()
 
         initUserProfileButton()
+        initUserProfileBottomSheet()
     }
 
-    private fun setImageFromFile(imageView: ImageView, imageFile: File) {
-        Glide.with(this).load(imageFile).diskCacheStrategy(DiskCacheStrategy.NONE)
-            .skipMemoryCache(true).into(imageView)
+    private fun updateProfileIcons(imageUrl: String?) {
+        setImageFromFile(binding.profileIconImage, imageUrl)
+        setImageFromFile(bottomSheetBinding.userProfileImage, imageUrl)
+    }
 
+
+    private fun setImageFromFile(imageView: ImageView, imageFile: String?) {
+        if (imageFile.isNullOrBlank()) {
+            binding.profileIconImage.setImageResource(R.drawable.ic_painting_art)
+        } else {
+            Glide.with(this).load(imageFile).diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true).into(imageView)
+        }
     }
 
     private fun updateItems(shows: List<Show>) {
@@ -153,59 +211,25 @@ class ShowsFragment : Fragment() {
 
     private fun initUserProfileButton() {
         binding.profileIconImage.setOnClickListener {
-            userProfileBottomSheet()
+            dialog.show()
         }
     }
 
-    private fun userProfileBottomSheet() {
-
-        val activity = activity as AppCompatActivity
-
-        val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
-        if (sharedPref == null) {
-            Toast.makeText(activity, "Action failed. Aborting...", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        val dialog = BottomSheetDialog(activity)
-
-        val bottomSheetBinding = DialogUserProfileBinding.inflate(layoutInflater)
-
-        dialog.setContentView(bottomSheetBinding.root)
-        val email =
-            sharedPref.getString(getString(R.string.user_email_key), "Default_user").orEmpty()
-
-        showsViewModel.getUserProfilePictureLiveData().observe(viewLifecycleOwner, { imageFile ->
-            setImageFromFile(bottomSheetBinding.userProfileImage, imageFile)
-        })
-
-        val imageFile = getImageFile(
-            requireContext()
-        )
-        if (imageFile != null) {
-            setImageFromFile(bottomSheetBinding.userProfileImage, imageFile)
-        }
-
-        bottomSheetBinding.userEmail.text = email
-
+    private fun initUserProfileBottomSheet() {
         bottomSheetBinding.changeProfilePictureButton.setOnClickListener {
             handleChangeProfilePicture()
         }
 
         bottomSheetBinding.logoutButton.setOnClickListener {
-            with(sharedPref.edit()) {
-                putBoolean(
-                    getString(me.vanjavk.isa_shows_app_vanjavk.R.string.logged_in_key),
-                    false
-                )
-                apply()
-            }
-            ShowsFragmentDirections.actionLogout()
-                .let { findNavController().navigate(it) }
+            logout()
             dialog.dismiss()
         }
+    }
 
-        dialog.show()
+    private fun logout() {
+        showsViewModel.logout()
+        ShowsFragmentDirections.actionLogout()
+            .let { findNavController().navigate(it) }
     }
 
     private fun handleChangeProfilePicture() {
