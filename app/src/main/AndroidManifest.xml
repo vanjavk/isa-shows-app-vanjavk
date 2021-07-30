@@ -18,7 +18,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="me.vanjavk.isa-shows-app-vanjavk.fileprovider"
+            android:authorities="me.vanjavk.isa_shows_app_vanjavk.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
