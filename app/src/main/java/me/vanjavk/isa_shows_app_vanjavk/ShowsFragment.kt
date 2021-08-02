@@ -24,6 +24,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.Adapter.StateRestorationPolicy
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -97,7 +99,7 @@ class ShowsFragment : Fragment() {
     private val selectImageFromGallery =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             uri.let {
-                if (uri==null){
+                if (uri == null) {
                     return@let
                 }
                 //Prvo trebam kopirati odabranu sliku u aplikacijski folder kako bi se ona mogla pomocu fileutilsa smanjiti, no kako bi dobio File za copy moram koristiti ekstenzijsku funkciju Uri.getFileFromUri() kako bih dobio ispravan file koji mogu kopirati.
@@ -286,6 +288,8 @@ class ShowsFragment : Fragment() {
                 item.id
             )
                 .let { findNavController().navigate(it) }
+        }.apply {
+            stateRestorationPolicy = StateRestorationPolicy.PREVENT_WHEN_EMPTY
         }
 
         binding.showsRecyclerView.layoutManager = LinearLayoutManager(activity)

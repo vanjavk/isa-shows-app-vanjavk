@@ -19,7 +19,6 @@ class ShowsAdapter(
 
         val binding =
             ViewShowItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-
         return ShowViewHolder(binding)
     }
 
@@ -54,4 +53,8 @@ class ShowsAdapter(
             }
         }
     }
+
+
+
+
 }
