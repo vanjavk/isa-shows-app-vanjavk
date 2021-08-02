@@ -9,6 +9,8 @@ import android.provider.MediaStore
 import android.util.Patterns
 import java.io.File
 import android.util.Log
+import android.view.View
+import android.view.animation.AnimationUtils
 import java.io.IOException
 import java.net.InetSocketAddress
 import java.net.Socket
@@ -18,6 +20,8 @@ const val MIN_PASSWORD_LENGTH = 6
 fun CharSequence?.isValidEmail() = !(!isNullOrEmpty() && Patterns.EMAIL_ADDRESS.matcher(this).matches())
 
 fun CharSequence.getUsername() = this.substring(0, this.indexOf('@')).orEmpty()
+
+fun View.applyAnimation(resourceId: Int) = startAnimation(AnimationUtils.loadAnimation(context, resourceId))
 
 fun Context.isOnline() : Boolean {
     val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager

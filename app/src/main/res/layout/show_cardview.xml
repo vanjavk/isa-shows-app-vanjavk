@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/showItemCardView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="16dp"
+    app:cardCornerRadius="4dp"
+    tools:parentTag="androidx.cardview.widget.CardView">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+        android:id="@+id/showItemConstraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/showImage"
+            android:layout_width="0dp"
+            android:layout_height="192dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/show_butterflyeffect" />
+
+        <TextView
+            android:id="@+id/showTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:textColor="@android:color/black"
+            android:textFontWeight="500"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/showImage"
+            tools:text="@string/placeholder_title" />
+
+        <TextView
+            android:id="@+id/showGenre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/showTitle"
+            app:layout_constraintStart_toEndOf="@id/showTitle"
+            app:layout_constraintTop_toTopOf="@id/showTitle"
+            tools:text="@string/placeholder_genre" />
+
+        <TextView
+            android:id="@+id/showDescription"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif"
+            android:maxLines="2"
+            android:paddingBottom="16dp"
+            android:textColor="@android:color/darker_gray"
+            android:textFontWeight="400"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/showTitle"
+            tools:text="@string/placeholder_description" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</merge>
