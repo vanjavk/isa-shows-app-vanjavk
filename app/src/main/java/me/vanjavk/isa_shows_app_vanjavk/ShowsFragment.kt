@@ -1,15 +1,10 @@
 package me.vanjavk.isa_shows_app_vanjavk
 
-import Show
 import android.Manifest
-import android.R.attr.data
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.provider.DocumentsContract
-import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,10 +16,8 @@ import androidx.core.content.FileProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter.StateRestorationPolicy
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -32,14 +25,15 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import me.vanjavk.isa_shows_app_vanjavk.adapter.ShowsAdapter
 import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogUserProfileBinding
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowsBinding
-import me.vanjavk.isa_shows_app_vanjavk.model.ShowEntity
 import me.vanjavk.isa_shows_app_vanjavk.utils.FileUtil.createImageFile
 import me.vanjavk.isa_shows_app_vanjavk.utils.FileUtil.getImageFile
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowsViewModel
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ViewModelFactory
 import java.io.File
-import java.io.InputStream
 import java.util.*
+import androidx.recyclerview.widget.RecyclerView
+
+import Show
 
 
 class ShowsFragment : Fragment() {
@@ -291,8 +285,11 @@ class ShowsFragment : Fragment() {
         }.apply {
             stateRestorationPolicy = StateRestorationPolicy.PREVENT_WHEN_EMPTY
         }
-
-        binding.showsRecyclerView.layoutManager = LinearLayoutManager(activity)
+        binding.showsRecyclerView.layoutManager = object : LinearLayoutManager(activity) {
+            override fun getExtraLayoutSpace(state: RecyclerView.State): Int {
+                return requireContext().resources.getDimensionPixelSize(R.dimen.recycler_view_extra_space)
+            }
+        }
         binding.showsRecyclerView.adapter = showsAdapter
     }
 
