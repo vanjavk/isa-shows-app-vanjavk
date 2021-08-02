@@ -1,5 +1,6 @@
 package me.vanjavk.isa_shows_app_vanjavk.adapter
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View.GONE
 import android.view.ViewGroup
@@ -49,6 +50,8 @@ class ReviewsAdapter(
             binding.reviewContent.isVisible = !item.comment.isNullOrEmpty()
             binding.reviewContent.text = item.comment
             binding.reviewerName.text = item.user.email.getUsername()
+
+            binding.frameLayout.setBackgroundColor( if (item.sync) Color.parseColor("#ffffff") else Color.parseColor("#808080"))
             if (item.user.imageUrl!=null){
                 Glide.with(itemView.context).load(item.user.imageUrl).into(binding.profileIconImage)
             }else{

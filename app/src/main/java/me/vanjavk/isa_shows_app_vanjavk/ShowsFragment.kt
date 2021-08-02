@@ -18,7 +18,9 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,6 +32,7 @@ import me.vanjavk.isa_shows_app_vanjavk.FileUtil.getImageFile
 import me.vanjavk.isa_shows_app_vanjavk.adapter.ShowsAdapter
 import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogUserProfileBinding
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowsBinding
+import me.vanjavk.isa_shows_app_vanjavk.model.ShowEntity
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowsViewModel
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ViewModelFactory
 import java.io.File
@@ -48,8 +51,12 @@ class ShowsFragment : Fragment() {
 
     private var showsAdapter: ShowsAdapter? = null
 
-    private lateinit var showsViewModel: ShowsViewModel
-    private lateinit var showsViewModelFactory: ViewModelFactory
+    private val showsViewModel: ShowsViewModel by viewModels {
+        ViewModelFactory(
+            requireActivity().getPreferences(Context.MODE_PRIVATE),
+            (requireActivity().application as ShowsApp).showsDatabase
+        )
+    }
 
     private val permissionForCamera = preparePermissionsContract(onPermissionsGranted = {
         val uri = createImageFile(requireContext())?.let {
@@ -137,10 +144,6 @@ class ShowsFragment : Fragment() {
             return binding.root
         }
 
-        showsViewModelFactory = ViewModelFactory(sharedPref)
-        showsViewModel = ViewModelProvider(this, showsViewModelFactory)
-            .get(ShowsViewModel::class.java)
-
         return binding.root
     }
 
@@ -150,7 +153,18 @@ class ShowsFragment : Fragment() {
         initShowsRecycler()
 
         showsViewModel.getShowsLiveData().observe(viewLifecycleOwner, { shows ->
-            updateItems(shows)
+            binding.showsRecyclerView.isVisible = !shows.isNullOrEmpty()
+            updateItems(shows.map {
+                Show(
+                    it.id,
+                    it.averageRating,
+                    it.description,
+                    it.imageUrl,
+                    it.numberOfReviews,
+                    it.title
+                )
+            })
+
         })
 
         showsViewModel.getUserLiveData().observe(viewLifecycleOwner, { user ->
@@ -161,14 +175,22 @@ class ShowsFragment : Fragment() {
         showsViewModel.getShowsResultLiveData()
             .observe(viewLifecycleOwner, { isGetShowsSuccessful ->
                 if (!isGetShowsSuccessful) {
-                    logout()
+//                    Toast.makeText(
+//                        activity,
+//                        getString(R.string.error_failure_response),
+//                        Toast.LENGTH_SHORT
+//                    ).show()
                 }
             })
 
         showsViewModel.getCurrentUserResultLiveData()
             .observe(viewLifecycleOwner, { isGetCurrentUserSuccessful ->
                 if (!isGetCurrentUserSuccessful) {
-                    logout()
+//                    Toast.makeText(
+//                        activity,
+//                        getString(R.string.error_failure_response),
+//                        Toast.LENGTH_SHORT
+//                    ).show()
                 }
             })
 

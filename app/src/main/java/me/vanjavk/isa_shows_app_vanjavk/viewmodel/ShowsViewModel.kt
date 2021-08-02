@@ -8,6 +8,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import me.vanjavk.isa_shows_app_vanjavk.*
+import me.vanjavk.isa_shows_app_vanjavk.database.ShowsDatabase
+import me.vanjavk.isa_shows_app_vanjavk.model.ShowEntity
 import me.vanjavk.isa_shows_app_vanjavk.model.User
 import me.vanjavk.isa_shows_app_vanjavk.model.network.UserResponse
 import me.vanjavk.isa_shows_app_vanjavk.model.network.ShowsResponse
@@ -22,9 +24,13 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
+import java.util.concurrent.Executors
 
 
-class ShowsViewModel(var sharedPref: SharedPreferences) : ViewModel() {
+class ShowsViewModel(
+    private val sharedPref: SharedPreferences,
+    private val database: ShowsDatabase
+) : ViewModel() {
 
     private val showsResultLiveData: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
@@ -38,8 +44,8 @@ class ShowsViewModel(var sharedPref: SharedPreferences) : ViewModel() {
         MutableLiveData<List<Show>>()
     }
 
-    fun getShowsLiveData(): LiveData<List<Show>> {
-        return showsLiveData
+    fun getShowsLiveData(): LiveData<List<ShowEntity>> {
+        return database.showDao().getAllShows()
     }
 
     fun getShowsResultLiveData(): LiveData<Boolean> {
@@ -65,12 +71,30 @@ class ShowsViewModel(var sharedPref: SharedPreferences) : ViewModel() {
                 call: Call<ShowsResponse>,
                 response: Response<ShowsResponse>
             ) {
-                showsLiveData.value = response.body()?.shows
-                showsResultLiveData.value = true
+                val shows = response.body()?.shows
+                if (shows != null) {
+                    Executors.newSingleThreadExecutor().execute {
+                        database.showDao().insertAllShows(
+                            shows.map {
+                                ShowEntity(
+                                    it.id,
+                                    it.averageRating,
+                                    it.description,
+                                    it.imageUrl,
+                                    it.numberOfReviews,
+                                    it.title
+                                )
+                            }
+                        )
+                    }
+                    showsResultLiveData.value = true
+                } else {
+                    showsResultLiveData.value = false
+                }
             }
 
             override fun onFailure(call: Call<ShowsResponse>, t: Throwable) {
-                Log.d("TAG", t.message.toString())
+                Log.d("GETSHOWSFAILURE", t.message.toString())
                 showsResultLiveData.value = false
             }
 
@@ -93,6 +117,7 @@ class ShowsViewModel(var sharedPref: SharedPreferences) : ViewModel() {
                     userLiveData.value = user
                     sharedPref.edit {
                         putString(USER_IMAGE_URL_KEY, user.imageUrl)
+                        putString(USER_ID_KEY, user.id)
                         apply()
                     }
                     changeProfilePictureResultLiveData.value = true
@@ -102,7 +127,7 @@ class ShowsViewModel(var sharedPref: SharedPreferences) : ViewModel() {
             }
 
             override fun onFailure(call: Call<UserResponse>, t: Throwable) {
-                Log.d("TAG", t.message.toString())
+                Log.d("CHANGEPROFILEFAILURE", t.message.toString())
                 changeProfilePictureResultLiveData.value = false
             }
 
@@ -116,12 +141,19 @@ class ShowsViewModel(var sharedPref: SharedPreferences) : ViewModel() {
                 call: Call<UserResponse>,
                 response: Response<UserResponse>
             ) {
-                userLiveData.value = response.body()?.user
-                currentUserResultLiveData.value = true
+                val user = response.body()?.user
+                if (user != null) {
+                    with(sharedPref.edit()) {
+                        putString(USER_ID_KEY, user.id)
+                        apply()
+                    }
+                    userLiveData.value = user
+                    currentUserResultLiveData.value = true
+                }
             }
 
             override fun onFailure(call: Call<UserResponse>, t: Throwable) {
-                Log.d("TAG", t.message.toString())
+                Log.d("GETUSERFAILURE", t.message.toString())
                 currentUserResultLiveData.value = false
             }
         })
@@ -133,6 +165,7 @@ class ShowsViewModel(var sharedPref: SharedPreferences) : ViewModel() {
                 REMEMBER_ME_KEY,
                 false
             )
+            remove(USER_ID_KEY)
             remove(USER_AUTH_ACCESS_TOKEN_TYPE_KEY)
             remove(USER_AUTH_CLIENT_TYPE_KEY)
             remove(USER_AUTH_UID_TYPE_KEY)

@@ -11,7 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -22,6 +22,7 @@ import me.vanjavk.isa_shows_app_vanjavk.adapter.ReviewsAdapter
 import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogAddReviewBinding
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowDetailsBinding
 import me.vanjavk.isa_shows_app_vanjavk.model.Review
+import me.vanjavk.isa_shows_app_vanjavk.model.User
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowDetailsViewModel
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ViewModelFactory
 
@@ -36,8 +37,12 @@ class ShowDetailsFragment : Fragment() {
 
     private var reviewsAdapter: ReviewsAdapter? = null
 
-    private lateinit var showDetailsViewModel: ShowDetailsViewModel
-    private lateinit var showDetailsViewModelFactory: ViewModelFactory
+    private val showDetailsViewModel: ShowDetailsViewModel by viewModels {
+        ViewModelFactory(
+            requireActivity().getPreferences(Context.MODE_PRIVATE),
+            (requireActivity().application as ShowsApp).showsDatabase
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,11 +62,6 @@ class ShowDetailsFragment : Fragment() {
             activity?.onBackPressed()
             return binding.root
         }
-
-        showDetailsViewModelFactory = ViewModelFactory(sharedPref)
-        showDetailsViewModel = ViewModelProvider(this, showDetailsViewModelFactory)
-            .get(ShowDetailsViewModel::class.java)
-
         return binding.root
     }
 
@@ -77,20 +77,39 @@ class ShowDetailsFragment : Fragment() {
             findNavController().navigateUp()
         }
 
-        val id = args.showID
+        val showId = args.showID
 
-        showDetailsViewModel.getShow(id)
+        showDetailsViewModel.getShow(showId)
 
-        showDetailsViewModel.getShowLiveData().observe(viewLifecycleOwner, { show ->
-            updateShow(show)
+        showDetailsViewModel.getShowLiveData(showId).observe(viewLifecycleOwner, { show ->
+            updateShow(show.let{
+                Show(
+                    it.id,
+                    it.averageRating,
+                    it.description,
+                    it.imageUrl,
+                    it.numberOfReviews,
+                    it.title)
+            })
         })
 
         showDetailsViewModel.getReviewLiveData().observe(viewLifecycleOwner, { review ->
             updateReviews(review)
         })
 
-        showDetailsViewModel.getReviewsLiveData().observe(viewLifecycleOwner, { reviews ->
-            updateReviews(reviews)
+        showDetailsViewModel.getReviewsLiveData(showId).observe(viewLifecycleOwner, { reviews ->
+            updateReviews(reviews.map { Review(
+                it.review.id.toString(),
+                it.review.comment,
+                it.review.rating,
+                it.review.showId,
+                User(
+                    it.user.id,
+                    it.user.email,
+                    it.user.imageUrl
+                ),
+                it.review.sync
+            ) })
         })
 
         initWriteReviewButton()

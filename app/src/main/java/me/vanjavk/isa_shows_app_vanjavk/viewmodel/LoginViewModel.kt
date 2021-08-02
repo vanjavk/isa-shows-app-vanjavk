@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import me.vanjavk.isa_shows_app_vanjavk.*
+import me.vanjavk.isa_shows_app_vanjavk.database.ShowsDatabase
 import me.vanjavk.isa_shows_app_vanjavk.model.network.LoginRequest
 import me.vanjavk.isa_shows_app_vanjavk.model.network.UserResponse
 import me.vanjavk.isa_shows_app_vanjavk.networking.ApiModule
@@ -12,7 +13,10 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class LoginViewModel(var sharedPref: SharedPreferences) : ViewModel() {
+class LoginViewModel(
+    private val sharedPref: SharedPreferences,
+    private val database: ShowsDatabase
+) : ViewModel() {
 
     private val loginResultLiveData: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
@@ -31,13 +35,14 @@ class LoginViewModel(var sharedPref: SharedPreferences) : ViewModel() {
                 val client = response.headers()["client"]
                 val uid = response.headers()["uid"]
                 val user = response.body()?.user
-                if (accessToken != null && client != null && uid != null && user!=null) {
+                if (accessToken != null && client != null && uid != null && user != null) {
                     loginResultLiveData.value = response.isSuccessful
                     with(sharedPref.edit()) {
+                        putString(USER_ID_KEY, user.id)
                         putString(USER_EMAIL_KEY, email)
                         putString(USER_IMAGE_URL_KEY, user.imageUrl)
                         putBoolean(REMEMBER_ME_KEY, rememberMe)
-                        if (rememberMe){
+                        if (rememberMe) {
                             putString(USER_AUTH_ACCESS_TOKEN_TYPE_KEY, accessToken)
                             putString(USER_AUTH_CLIENT_TYPE_KEY, client)
                             putString(USER_AUTH_UID_TYPE_KEY, uid)
@@ -54,9 +59,5 @@ class LoginViewModel(var sharedPref: SharedPreferences) : ViewModel() {
             }
 
         })
-    }
-
-    fun getSharedPreferences(): SharedPreferences {
-        return sharedPref
     }
 }
