@@ -267,14 +267,7 @@ class ShowsFragment : Fragment() {
                 ) { _, which ->
                     when (which) {
                         0 -> permissionForCamera.launch(arrayOf(Manifest.permission.CAMERA))
-                        1 ->
-//                            Toast.makeText(
-//                            activity,
-//                            "Ovo ne radi, s obzirom da je pod extra, predao sam zadacu bez toga.",
-//                            Toast.LENGTH_SHORT
-//                        )
-//                            .show()
-                            permissionForFiles.launch(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE))
+                        1 -> permissionForFiles.launch(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE))
                     }
                 }
                 setNegativeButton(

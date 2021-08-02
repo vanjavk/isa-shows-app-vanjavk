@@ -3,7 +3,6 @@ package me.vanjavk.isa_shows_app_vanjavk.adapter
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
@@ -48,18 +47,15 @@ class ReviewsAdapter(
 
         fun bind(item: Review) {
             binding.ratingStarValue.text = item.rating.toString()
+            binding.reviewContent.isVisible = !item.comment.isNullOrEmpty()
+            binding.reviewContent.text = item.comment
             binding.reviewerName.text = item.user.email.getUsername()
 
             binding.frameLayout.setBackgroundColor( if (item.sync) Color.parseColor("#ffffff") else Color.parseColor("#808080"))
             if (item.user.imageUrl!=null){
-                Glide.with(itemView.context).load(item.user.imageUrl).diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .skipMemoryCache(true).into(binding.profileIconImage)
+                Glide.with(itemView.context).load(item.user.imageUrl).into(binding.profileIconImage)
             }else{
                 binding.profileIconImage.setImageResource(R.drawable.ic_painting_art)
-            }
-            binding.reviewContent.isVisible = !item.comment.isNullOrEmpty()
-            if (!item.comment.isNullOrEmpty()) {
-                binding.reviewContent.text = item.comment
             }
 
         }

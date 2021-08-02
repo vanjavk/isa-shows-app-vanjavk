@@ -7,7 +7,6 @@ import android.net.Uri
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.util.Patterns
-import androidx.core.content.ContentProviderCompat.requireContext
 import java.io.File
 import android.util.Log
 import java.io.IOException
