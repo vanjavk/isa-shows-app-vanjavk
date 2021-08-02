@@ -15,15 +15,19 @@ import java.io.IOException
 import java.net.InetSocketAddress
 import java.net.Socket
 import java.net.SocketAddress
+import java.net.URL
+
 const val MIN_PASSWORD_LENGTH = 6
 
-fun CharSequence?.isValidEmail() = !(!isNullOrEmpty() && Patterns.EMAIL_ADDRESS.matcher(this).matches())
+fun CharSequence?.isValidEmail() =
+    !(!isNullOrEmpty() && Patterns.EMAIL_ADDRESS.matcher(this).matches())
 
 fun CharSequence.getUsername() = this.substring(0, this.indexOf('@')).orEmpty()
 
-fun View.applyAnimation(resourceId: Int) = startAnimation(AnimationUtils.loadAnimation(context, resourceId))
+fun View.applyAnimation(resourceId: Int) =
+    startAnimation(AnimationUtils.loadAnimation(context, resourceId))
 
-fun Context.isOnline() : Boolean {
+fun Context.isOnline(): Boolean {
     val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val network = connectivityManager.activeNetwork
     if (network != null) {
@@ -35,6 +39,7 @@ fun Context.isOnline() : Boolean {
     }
     return false
 }
+
 const val GOOGLE_DNS = "8.8.8.8"
 const val DNS_PORT = 53
 const val TIMEOUT = 1500
@@ -108,4 +113,9 @@ fun Uri.getFileFromUri(context: Context): File? {
         }
     }
     return File(path)
+}
+
+fun String.getImageSignature(urlString: String): String {
+    val url = URL(urlString)
+    return url.path + (System.currentTimeMillis() / (15 * 60 * 1000)).toString()
 }

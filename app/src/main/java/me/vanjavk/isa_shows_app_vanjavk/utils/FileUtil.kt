@@ -1,4 +1,4 @@
-package me.vanjavk.isa_shows_app_vanjavk
+package me.vanjavk.isa_shows_app_vanjavk.utils
 
 import android.content.Context
 import android.graphics.Bitmap

@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import me.vanjavk.isa_shows_app_vanjavk.databinding.ViewShowItemBinding
+import me.vanjavk.isa_shows_app_vanjavk.utils.GlideUrlCustomCacheKey
 
 
 class ShowsAdapter(
@@ -45,7 +46,7 @@ class ShowsAdapter(
 
         fun bind(item: Show) {
             binding.showItemCardView.setTitle(item.title)
-            Glide.with(itemView.context).load(item.imageUrl).into(binding.showItemCardView.getImageView())
+            Glide.with(itemView.context).load(GlideUrlCustomCacheKey(item.imageUrl)).into(binding.showItemCardView.getImageView())
             binding.showItemCardView.setDescription(item.description.orEmpty())
 
             binding.root.setOnClickListener {

@@ -23,6 +23,7 @@ import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogAddReviewBinding
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowDetailsBinding
 import me.vanjavk.isa_shows_app_vanjavk.model.Review
 import me.vanjavk.isa_shows_app_vanjavk.model.User
+import me.vanjavk.isa_shows_app_vanjavk.utils.GlideUrlCustomCacheKey
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowDetailsViewModel
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ViewModelFactory
 
@@ -119,7 +120,7 @@ class ShowDetailsFragment : Fragment() {
     private fun updateShow(show: Show) {
         binding.toolbarLayout.title = show.title
         if (binding.showImage.drawable == null) {
-            Glide.with(this).load(show.imageUrl).into(binding.showImage)
+            Glide.with(this).load(GlideUrlCustomCacheKey(show.imageUrl)).into(binding.showImage)
         }
         binding.showDescription.text = show.description
         updateRatingInfo(show.numberOfReviews, show.averageRating)

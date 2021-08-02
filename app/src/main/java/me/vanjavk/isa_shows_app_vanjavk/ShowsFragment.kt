@@ -27,12 +27,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import me.vanjavk.isa_shows_app_vanjavk.FileUtil.createImageFile
-import me.vanjavk.isa_shows_app_vanjavk.FileUtil.getImageFile
 import me.vanjavk.isa_shows_app_vanjavk.adapter.ShowsAdapter
 import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogUserProfileBinding
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowsBinding
 import me.vanjavk.isa_shows_app_vanjavk.model.ShowEntity
+import me.vanjavk.isa_shows_app_vanjavk.utils.FileUtil.createImageFile
+import me.vanjavk.isa_shows_app_vanjavk.utils.FileUtil.getImageFile
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ShowsViewModel
 import me.vanjavk.isa_shows_app_vanjavk.viewmodel.ViewModelFactory
 import java.io.File
