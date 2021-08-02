@@ -12,6 +12,7 @@ import me.vanjavk.isa_shows_app_vanjavk.R
 import me.vanjavk.isa_shows_app_vanjavk.databinding.ItemReviewBinding
 import me.vanjavk.isa_shows_app_vanjavk.getUsername
 import me.vanjavk.isa_shows_app_vanjavk.model.Review
+import me.vanjavk.isa_shows_app_vanjavk.utils.GlideUrlCustomCacheKey
 
 class ReviewsAdapter(
     private var items: List<Review>,
@@ -53,7 +54,7 @@ class ReviewsAdapter(
 
             binding.frameLayout.setBackgroundColor( if (item.sync) Color.parseColor("#ffffff") else Color.parseColor("#808080"))
             if (item.user.imageUrl!=null){
-                Glide.with(itemView.context).load(item.user.imageUrl).into(binding.profileIconImage)
+                Glide.with(itemView.context).load(GlideUrlCustomCacheKey(item.user.imageUrl)).into(binding.profileIconImage)
             }else{
                 binding.profileIconImage.setImageResource(R.drawable.ic_painting_art)
             }

@@ -34,6 +34,7 @@ import java.util.*
 import androidx.recyclerview.widget.RecyclerView
 
 import Show
+import me.vanjavk.isa_shows_app_vanjavk.utils.GlideUrlCustomCacheKey
 
 
 class ShowsFragment : Fragment() {
@@ -214,12 +215,11 @@ class ShowsFragment : Fragment() {
     }
 
 
-    private fun setImageFromFile(imageView: ImageView, imageFile: String?) {
-        if (imageFile.isNullOrBlank()) {
+    private fun setImageFromFile(imageView: ImageView, imageUrl: String?) {
+        if (imageUrl.isNullOrBlank()) {
             binding.profileIconImage.setImageResource(R.drawable.ic_painting_art)
         } else {
-            Glide.with(this).load(imageFile).diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true).into(imageView)
+            Glide.with(this).load(GlideUrlCustomCacheKey(imageUrl)).into(imageView)
         }
     }
 
