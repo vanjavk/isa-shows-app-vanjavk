@@ -44,7 +44,7 @@ class RegisterFragment : Fragment() {
         registrationViewModel.getRegistrationResultLiveData()
             .observe(this.viewLifecycleOwner) { isRegisterSuccessful ->
                 if (isRegisterSuccessful) {
-                    me.vanjavk.isa_shows_app_vanjavk.RegisterFragmentDirections.actionRegisterToLogin()
+                    RegisterFragmentDirections.actionRegisterToLogin()
                         .apply {
                         this.email = binding.emailInput.text.toString()
                     }

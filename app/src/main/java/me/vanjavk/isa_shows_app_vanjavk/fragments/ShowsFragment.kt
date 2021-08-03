@@ -37,6 +37,7 @@ import me.vanjavk.isa_shows_app_vanjavk.R
 import me.vanjavk.isa_shows_app_vanjavk.ShowsApp
 import me.vanjavk.isa_shows_app_vanjavk.getFileFromUri
 import me.vanjavk.isa_shows_app_vanjavk.preparePermissionsContract
+import me.vanjavk.isa_shows_app_vanjavk.repository.Repository
 import me.vanjavk.isa_shows_app_vanjavk.utils.GlideUrlCustomCacheKey
 
 
@@ -54,7 +55,7 @@ class ShowsFragment : Fragment() {
     private val showsViewModel: ShowsViewModel by viewModels {
         ViewModelFactory(
             requireActivity().getPreferences(Context.MODE_PRIVATE),
-            (requireActivity().application as ShowsApp).showsDatabase
+            Repository(requireActivity())
         )
     }
 
@@ -249,7 +250,7 @@ class ShowsFragment : Fragment() {
 
     private fun logout() {
         showsViewModel.logout()
-        me.vanjavk.isa_shows_app_vanjavk.ShowsFragmentDirections.actionLogout()
+        ShowsFragmentDirections.actionLogout()
             .let { findNavController().navigate(it) }
     }
 
@@ -281,8 +282,8 @@ class ShowsFragment : Fragment() {
 
     private fun initShowsRecycler() {
         showsAdapter = ShowsAdapter(emptyList()) { item ->
-            me.vanjavk.isa_shows_app_vanjavk.ShowsFragmentDirections.actionShowToDetails(
-                "129"//item.id
+            ShowsFragmentDirections.actionShowToDetails(
+                item.id
             )
                 .let { findNavController().navigate(it) }
         }.apply {

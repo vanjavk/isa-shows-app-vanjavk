@@ -8,12 +8,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import me.vanjavk.isa_shows_app_vanjavk.*
-import me.vanjavk.isa_shows_app_vanjavk.database.ShowsDatabase
+import me.vanjavk.isa_shows_app_vanjavk.repository.ShowsDatabase
 import me.vanjavk.isa_shows_app_vanjavk.models.ShowEntity
 import me.vanjavk.isa_shows_app_vanjavk.models.User
 import me.vanjavk.isa_shows_app_vanjavk.models.network.UserResponse
 import me.vanjavk.isa_shows_app_vanjavk.models.network.ShowsResponse
-import me.vanjavk.isa_shows_app_vanjavk.networking.ApiModule
+import me.vanjavk.isa_shows_app_vanjavk.modules.ApiModule
+import me.vanjavk.isa_shows_app_vanjavk.repository.Repository
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.MultipartBody.Part.Companion.createFormData
@@ -29,7 +30,7 @@ import java.util.concurrent.Executors
 
 class ShowsViewModel(
     private val sharedPref: SharedPreferences,
-    private val database: ShowsDatabase
+    private val repository: Repository
 ) : ViewModel() {
 
     private val showsResultLiveData: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
@@ -44,8 +45,8 @@ class ShowsViewModel(
         MutableLiveData<List<Show>>()
     }
 
-    fun getShowsLiveData(): LiveData<List<ShowEntity>> {
-        return database.showDao().getAllShows()
+    fun getShowsLiveData(): LiveData<List<Show>> {
+        return showsLiveData
     }
 
     fun getShowsResultLiveData(): LiveData<Boolean> {
@@ -65,40 +66,8 @@ class ShowsViewModel(
     }
 
     fun getShows() {
-        ApiModule.retrofit.getShows().enqueue(object :
-            Callback<ShowsResponse> {
-            override fun onResponse(
-                call: Call<ShowsResponse>,
-                response: Response<ShowsResponse>
-            ) {
-                val shows = response.body()?.shows
-                if (shows != null) {
-                    Executors.newSingleThreadExecutor().execute {
-                        database.showDao().insertAllShows(
-                            shows.map {
-                                ShowEntity(
-                                    it.id,
-                                    it.averageRating,
-                                    it.description,
-                                    it.imageUrl,
-                                    it.numberOfReviews,
-                                    it.title
-                                )
-                            }
-                        )
-                    }
-                    showsResultLiveData.value = true
-                } else {
-                    showsResultLiveData.value = false
-                }
-            }
-
-            override fun onFailure(call: Call<ShowsResponse>, t: Throwable) {
-                Log.d("GETSHOWSFAILURE", t.message.toString())
-                showsResultLiveData.value = false
-            }
-
-        })
+        showsResultLiveData.value = false
+        repository.getShows(showsLiveData, showsResultLiveData)
     }
 
     fun uploadProfilePicture(file: File) {

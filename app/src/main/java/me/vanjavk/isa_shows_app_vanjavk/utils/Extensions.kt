@@ -47,7 +47,6 @@ const val TAG = "NetworkChecker"
 
 
 fun checkInternetConnectivity(): Boolean {
-
     return try {
         val sock = Socket()
         val socketAddress: SocketAddress = InetSocketAddress(GOOGLE_DNS, DNS_PORT)
@@ -60,6 +59,8 @@ fun checkInternetConnectivity(): Boolean {
         false
     }
 }
+
+
 
 
 fun Uri.getFileFromUri(context: Context): File? {

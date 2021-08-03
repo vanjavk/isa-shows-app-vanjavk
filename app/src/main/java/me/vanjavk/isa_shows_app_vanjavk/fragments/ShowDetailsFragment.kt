@@ -25,6 +25,7 @@ import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogAddReviewBinding
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowDetailsBinding
 import me.vanjavk.isa_shows_app_vanjavk.models.Review
 import me.vanjavk.isa_shows_app_vanjavk.models.User
+import me.vanjavk.isa_shows_app_vanjavk.repository.Repository
 import me.vanjavk.isa_shows_app_vanjavk.utils.GlideUrlCustomCacheKey
 import me.vanjavk.isa_shows_app_vanjavk.viewmodels.ShowDetailsViewModel
 import me.vanjavk.isa_shows_app_vanjavk.viewmodels.ViewModelFactory
@@ -36,14 +37,15 @@ class ShowDetailsFragment : Fragment() {
 
     private val binding get() = _binding!!
 
-    private val args: me.vanjavk.isa_shows_app_vanjavk.ShowDetailsFragmentArgs by navArgs()
+    private val args: ShowDetailsFragmentArgs by navArgs()
 
     private var reviewsAdapter: ReviewsAdapter? = null
 
     private val showDetailsViewModel: ShowDetailsViewModel by viewModels {
         ViewModelFactory(
             requireActivity().getPreferences(Context.MODE_PRIVATE),
-            (requireActivity().application as ShowsApp).showsDatabase
+            Repository(requireActivity())
+//            (requireActivity().application as ShowsApp).showsDatabase
         )
     }
 

@@ -3,10 +3,9 @@ package me.vanjavk.isa_shows_app_vanjavk
 import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
 import me.vanjavk.isa_shows_app_vanjavk.databinding.ActivityMainBinding
-import me.vanjavk.isa_shows_app_vanjavk.networking.ApiModule
-import kotlin.math.log
+import me.vanjavk.isa_shows_app_vanjavk.modules.ApiModule
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,4 +18,5 @@ class MainActivity : AppCompatActivity() {
 
         ApiModule.initRetrofit(getPreferences(Context.MODE_PRIVATE),this)
     }
+
 }

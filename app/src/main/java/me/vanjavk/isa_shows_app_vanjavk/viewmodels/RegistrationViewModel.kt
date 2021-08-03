@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import me.vanjavk.isa_shows_app_vanjavk.models.network.RegisterRequest
 import me.vanjavk.isa_shows_app_vanjavk.models.network.RegisterResponse
-import me.vanjavk.isa_shows_app_vanjavk.networking.ApiModule
+import me.vanjavk.isa_shows_app_vanjavk.modules.ApiModule
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

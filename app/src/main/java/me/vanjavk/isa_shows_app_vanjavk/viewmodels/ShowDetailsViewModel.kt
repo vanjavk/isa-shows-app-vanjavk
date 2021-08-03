@@ -6,10 +6,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import me.vanjavk.isa_shows_app_vanjavk.USER_ID_KEY
-import me.vanjavk.isa_shows_app_vanjavk.database.ShowsDatabase
+import me.vanjavk.isa_shows_app_vanjavk.repository.ShowsDatabase
 import me.vanjavk.isa_shows_app_vanjavk.models.*
 import me.vanjavk.isa_shows_app_vanjavk.models.network.*
-import me.vanjavk.isa_shows_app_vanjavk.networking.ApiModule
+import me.vanjavk.isa_shows_app_vanjavk.modules.ApiModule
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

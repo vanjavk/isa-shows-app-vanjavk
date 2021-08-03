@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import me.vanjavk.isa_shows_app_vanjavk.*
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentLoginBinding
+import me.vanjavk.isa_shows_app_vanjavk.repository.Repository
 import me.vanjavk.isa_shows_app_vanjavk.viewmodels.LoginViewModel
 import me.vanjavk.isa_shows_app_vanjavk.viewmodels.ViewModelFactory
 
@@ -23,12 +24,12 @@ class LoginFragment : Fragment() {
 
     private val binding get() = _binding!!
 
-    private val args: me.vanjavk.isa_shows_app_vanjavk.LoginFragmentArgs by navArgs()
+    private val args: LoginFragmentArgs by navArgs()
 
     private val loginViewModel: LoginViewModel by viewModels {
         ViewModelFactory(
             requireActivity().getPreferences(Context.MODE_PRIVATE),
-            (requireActivity().application as ShowsApp).showsDatabase
+            Repository(requireActivity())
         )
     }
 
@@ -40,13 +41,13 @@ class LoginFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
 
         val loggedIn = sharedPref.getBoolean(REMEMBER_ME_KEY, false)
         if (loggedIn) {
-            me.vanjavk.isa_shows_app_vanjavk.LoginFragmentDirections.actionLoginToShows()
+            LoginFragmentDirections.actionLoginToShows()
                 .let { findNavController().navigate(it) }
         }
 
@@ -65,7 +66,7 @@ class LoginFragment : Fragment() {
         loginViewModel.getLoginResultLiveData()
             .observe(this.viewLifecycleOwner) { isLoginSuccessful ->
                 if (isLoginSuccessful) {
-                    me.vanjavk.isa_shows_app_vanjavk.LoginFragmentDirections.actionLoginToShows()
+                    LoginFragmentDirections.actionLoginToShows()
                         .let { findNavController().navigate(it) }
                 } else {
                     Toast.makeText(
@@ -85,7 +86,7 @@ class LoginFragment : Fragment() {
 
     private fun initRegisterButton() {
         binding.registerButton.setOnClickListener {
-            me.vanjavk.isa_shows_app_vanjavk.LoginFragmentDirections.actionLoginToRegister()
+            LoginFragmentDirections.actionLoginToRegister()
                 .let { findNavController().navigate(it) }
         }
     }

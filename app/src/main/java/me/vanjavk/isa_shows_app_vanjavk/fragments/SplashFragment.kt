@@ -43,7 +43,7 @@ class SplashFragment : Fragment() {
             }, 400)
         }, 1200)
         Handler(Looper.getMainLooper()).postDelayed({
-            me.vanjavk.isa_shows_app_vanjavk.SplashFragmentDirections.actionSplashToLogin()
+            SplashFragmentDirections.actionSplashToLogin()
                 .let { findNavController().navigate(it) }
         }, 2000)
     }

@@ -1,4 +1,4 @@
-package me.vanjavk.isa_shows_app_vanjavk.networking
+package me.vanjavk.isa_shows_app_vanjavk.modules
 
 import android.app.Activity
 import android.content.SharedPreferences
@@ -6,10 +6,10 @@ import com.chuckerteam.chucker.api.ChuckerCollector
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
+import me.vanjavk.isa_shows_app_vanjavk.networking.ShowsApiService
 import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
-import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 
@@ -35,7 +35,6 @@ object ApiModule {
 
                 val request =
                     chain.request().newBuilder().apply {
-//                        if (sharedPref.getBoolean("LOGGED_IN_KEY", false)) {
                             addHeader("token-type", "Bearer")
                             addHeader(
                                 "access-token",
@@ -50,7 +49,6 @@ object ApiModule {
                                 "uid",
                                 sharedPref.getString("USER_AUTH_UID_TYPE_KEY", "").orEmpty()
                             )
-                        //}
                     }.build()
                 chain.proceed(request)
             })
