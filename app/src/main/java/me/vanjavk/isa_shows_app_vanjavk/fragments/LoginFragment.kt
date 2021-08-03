@@ -14,7 +14,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import me.vanjavk.isa_shows_app_vanjavk.*
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentLoginBinding
-import me.vanjavk.isa_shows_app_vanjavk.repository.Repository
+import me.vanjavk.isa_shows_app_vanjavk.repository.repository.ShowsRepository
 import me.vanjavk.isa_shows_app_vanjavk.viewmodels.LoginViewModel
 import me.vanjavk.isa_shows_app_vanjavk.viewmodels.ViewModelFactory
 
@@ -29,7 +29,7 @@ class LoginFragment : Fragment() {
     private val loginViewModel: LoginViewModel by viewModels {
         ViewModelFactory(
             requireActivity().getPreferences(Context.MODE_PRIVATE),
-            Repository(requireActivity())
+            ShowsRepository(requireActivity())
         )
     }
 

@@ -19,13 +19,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import me.vanjavk.isa_shows_app_vanjavk.R
-import me.vanjavk.isa_shows_app_vanjavk.ShowsApp
 import me.vanjavk.isa_shows_app_vanjavk.adapters.ReviewsAdapter
 import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogAddReviewBinding
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowDetailsBinding
 import me.vanjavk.isa_shows_app_vanjavk.models.Review
 import me.vanjavk.isa_shows_app_vanjavk.models.User
-import me.vanjavk.isa_shows_app_vanjavk.repository.Repository
+import me.vanjavk.isa_shows_app_vanjavk.repository.repository.ShowsRepository
 import me.vanjavk.isa_shows_app_vanjavk.utils.GlideUrlCustomCacheKey
 import me.vanjavk.isa_shows_app_vanjavk.viewmodels.ShowDetailsViewModel
 import me.vanjavk.isa_shows_app_vanjavk.viewmodels.ViewModelFactory
@@ -44,7 +43,7 @@ class ShowDetailsFragment : Fragment() {
     private val showDetailsViewModel: ShowDetailsViewModel by viewModels {
         ViewModelFactory(
             requireActivity().getPreferences(Context.MODE_PRIVATE),
-            Repository(requireActivity())
+            ShowsRepository(requireActivity())
 //            (requireActivity().application as ShowsApp).showsDatabase
         )
     }

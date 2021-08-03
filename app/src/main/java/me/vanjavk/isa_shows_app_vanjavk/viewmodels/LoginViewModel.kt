@@ -5,18 +5,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import me.vanjavk.isa_shows_app_vanjavk.*
-import me.vanjavk.isa_shows_app_vanjavk.repository.ShowsDatabase
 import me.vanjavk.isa_shows_app_vanjavk.models.network.LoginRequest
 import me.vanjavk.isa_shows_app_vanjavk.models.network.UserResponse
 import me.vanjavk.isa_shows_app_vanjavk.modules.ApiModule
-import me.vanjavk.isa_shows_app_vanjavk.repository.Repository
+import me.vanjavk.isa_shows_app_vanjavk.repository.repository.Repository
+import me.vanjavk.isa_shows_app_vanjavk.repository.repository.ShowsRepository
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class LoginViewModel(
-    private val sharedPref: SharedPreferences,
-    private val repository: Repository
+    private val sharedPref: SharedPreferences
 ) : ViewModel() {
 
     private val loginResultLiveData: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }

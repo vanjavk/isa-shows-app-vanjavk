@@ -34,10 +34,10 @@ import androidx.recyclerview.widget.RecyclerView
 
 import Show
 import me.vanjavk.isa_shows_app_vanjavk.R
-import me.vanjavk.isa_shows_app_vanjavk.ShowsApp
 import me.vanjavk.isa_shows_app_vanjavk.getFileFromUri
 import me.vanjavk.isa_shows_app_vanjavk.preparePermissionsContract
-import me.vanjavk.isa_shows_app_vanjavk.repository.Repository
+import me.vanjavk.isa_shows_app_vanjavk.repository.repository.Repository
+import me.vanjavk.isa_shows_app_vanjavk.repository.repository.ShowsRepository
 import me.vanjavk.isa_shows_app_vanjavk.utils.GlideUrlCustomCacheKey
 
 
@@ -55,7 +55,7 @@ class ShowsFragment : Fragment() {
     private val showsViewModel: ShowsViewModel by viewModels {
         ViewModelFactory(
             requireActivity().getPreferences(Context.MODE_PRIVATE),
-            Repository(requireActivity())
+            ShowsRepository(requireActivity())
         )
     }
 
@@ -207,7 +207,7 @@ class ShowsFragment : Fragment() {
             })
 
         showsViewModel.getShows()
-        showsViewModel.getUser()
+        showsViewModel.getCurrentUser()
 
         initUserProfileButton()
         initUserProfileBottomSheet()
