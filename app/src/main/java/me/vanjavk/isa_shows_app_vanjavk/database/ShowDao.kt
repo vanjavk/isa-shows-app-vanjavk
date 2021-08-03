@@ -1,6 +1,6 @@
 package me.vanjavk.isa_shows_app_vanjavk.database
 
-import me.vanjavk.isa_shows_app_vanjavk.model.ShowEntity
+import me.vanjavk.isa_shows_app_vanjavk.models.ShowEntity
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert

@@ -5,8 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import me.vanjavk.isa_shows_app_vanjavk.model.ReviewEntity
-import me.vanjavk.isa_shows_app_vanjavk.model.UserEntity
+import me.vanjavk.isa_shows_app_vanjavk.models.UserEntity
 @Dao
 interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
