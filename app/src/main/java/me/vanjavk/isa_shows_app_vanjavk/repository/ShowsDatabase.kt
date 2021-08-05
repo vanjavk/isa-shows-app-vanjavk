@@ -13,7 +13,7 @@ import me.vanjavk.isa_shows_app_vanjavk.models.UserEntity
         ReviewEntity::class,
         ShowEntity::class
     ],
-    version = 15
+    version = 16
 )
 abstract class ShowsDatabase : RoomDatabase() {
 

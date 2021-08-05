@@ -24,6 +24,7 @@ import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogAddReviewBinding
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowDetailsBinding
 import me.vanjavk.isa_shows_app_vanjavk.models.Review
 import me.vanjavk.isa_shows_app_vanjavk.models.User
+import me.vanjavk.isa_shows_app_vanjavk.repository.repository.ShowDetailsRepository
 import me.vanjavk.isa_shows_app_vanjavk.repository.repository.ShowsRepository
 import me.vanjavk.isa_shows_app_vanjavk.utils.GlideUrlCustomCacheKey
 import me.vanjavk.isa_shows_app_vanjavk.viewmodels.ShowDetailsViewModel
@@ -43,7 +44,7 @@ class ShowDetailsFragment : Fragment() {
     private val showDetailsViewModel: ShowDetailsViewModel by viewModels {
         ViewModelFactory(
             requireActivity().getPreferences(Context.MODE_PRIVATE),
-            ShowsRepository(requireActivity())
+            ShowDetailsRepository(requireActivity())
 //            (requireActivity().application as ShowsApp).showsDatabase
         )
     }
@@ -85,7 +86,7 @@ class ShowDetailsFragment : Fragment() {
 
         showDetailsViewModel.getShow(showId)
 
-        showDetailsViewModel.getShowLiveData(showId).observe(viewLifecycleOwner, { show ->
+        showDetailsViewModel.getShowLiveData().observe(viewLifecycleOwner, { show ->
             updateShow(show.let{
                 Show(
                     it.id,
@@ -103,16 +104,15 @@ class ShowDetailsFragment : Fragment() {
 
         showDetailsViewModel.getReviewsLiveData(showId).observe(viewLifecycleOwner, { reviews ->
             updateReviews(reviews.map { Review(
-                it.review.id.toString(),
-                it.review.comment,
-                it.review.rating,
-                it.review.showId,
+                it.id,
+                it.comment,
+                it.rating,
+                it.showId,
                 User(
-                    it.user.id,
+                    it.user.userId,
                     it.user.email,
                     it.user.imageUrl
-                ),
-                it.review.sync
+                )
             ) })
         })
 

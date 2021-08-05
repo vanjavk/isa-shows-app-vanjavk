@@ -8,8 +8,6 @@ import me.vanjavk.isa_shows_app_vanjavk.*
 import me.vanjavk.isa_shows_app_vanjavk.models.network.LoginRequest
 import me.vanjavk.isa_shows_app_vanjavk.models.network.UserResponse
 import me.vanjavk.isa_shows_app_vanjavk.modules.ApiModule
-import me.vanjavk.isa_shows_app_vanjavk.repository.repository.Repository
-import me.vanjavk.isa_shows_app_vanjavk.repository.repository.ShowsRepository
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -38,7 +36,7 @@ class LoginViewModel(
                 if (accessToken != null && client != null && uid != null && user != null) {
                     loginResultLiveData.value = response.isSuccessful
                     with(sharedPref.edit()) {
-                        putString(USER_ID_KEY, user.id)
+                        putString(USER_ID_KEY, user.userId)
                         putString(USER_EMAIL_KEY, email)
                         putString(USER_IMAGE_URL_KEY, user.imageUrl)
                         putBoolean(REMEMBER_ME_KEY, rememberMe)

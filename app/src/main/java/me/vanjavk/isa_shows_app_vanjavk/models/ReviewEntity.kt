@@ -1,6 +1,7 @@
 package me.vanjavk.isa_shows_app_vanjavk.models
 
 import androidx.room.ColumnInfo
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -10,6 +11,5 @@ data class ReviewEntity(
     @ColumnInfo(name = "comment") val comment: String?,
     @ColumnInfo(name = "rating") val rating: Int,
     @ColumnInfo(name = "show_id") val showId: Int,
-    @ColumnInfo(name = "user_id") val userId: String,
-    @ColumnInfo(name = "sync") val sync: Boolean = true
+    @Embedded val user: User
 )

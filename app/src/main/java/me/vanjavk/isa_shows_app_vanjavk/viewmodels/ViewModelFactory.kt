@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import me.vanjavk.isa_shows_app_vanjavk.repository.repository.Repository
+import me.vanjavk.isa_shows_app_vanjavk.repository.repository.ShowDetailsRepository
 import me.vanjavk.isa_shows_app_vanjavk.repository.repository.ShowsRepository
 
 class ViewModelFactory(
@@ -15,6 +16,11 @@ class ViewModelFactory(
             modelClass.getConstructor(
                 SharedPreferences::class.java
             ).newInstance(sharedPref)
+        }else if (modelClass.isAssignableFrom(ShowDetailsViewModel::class.java)) {
+            modelClass.getConstructor(
+                SharedPreferences::class.java,
+                ShowDetailsRepository::class.java
+            ).newInstance(sharedPref, repository)
         }else{
             modelClass.getConstructor(
                 SharedPreferences::class.java,

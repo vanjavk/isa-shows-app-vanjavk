@@ -39,6 +39,8 @@ class ShowsRepository(activity: Activity) : Repository(activity) {
                 ) {
                     val shows = response.body()?.shows
                     if (shows != null) {
+                        showsResult.value = true
+                        showsLiveData.value = shows
                         Executors.newSingleThreadExecutor().execute {
                             database.showDao().insertAllShows(
                                 shows.map {
@@ -54,17 +56,17 @@ class ShowsRepository(activity: Activity) : Repository(activity) {
                             )
 
                         }
-                        showsLiveData.value = shows
-                        showsResult.value = true
                     }
                 }
 
                 override fun onFailure(call: Call<ShowsResponse>, t: Throwable) {
                     Log.d("GETSHOWSFAILURE", t.message.toString())
+                    showsResult.value = false
                     showsLiveData.value = getShowsOffline()
                 }
             })
         } else {
+            showsResult.value = false
             showsLiveData.value = getShowsOffline()
         }
     }
@@ -103,7 +105,7 @@ class ShowsRepository(activity: Activity) : Repository(activity) {
                     userLiveData.value = user
                     sharedPref.edit {
                         putString(USER_IMAGE_URL_KEY, user.imageUrl)
-                        putString(USER_ID_KEY, user.id)
+                        putString(USER_ID_KEY, user.userId)
                         apply()
                     }
                     changeProfilePictureResult.value = true
@@ -131,7 +133,7 @@ class ShowsRepository(activity: Activity) : Repository(activity) {
                 val user = response.body()?.user
                 if (user != null) {
                     with(sharedPref.edit()) {
-                        putString(USER_ID_KEY, user.id)
+                        putString(USER_ID_KEY, user.userId)
                         apply()
                     }
                     userLiveData.value = user
