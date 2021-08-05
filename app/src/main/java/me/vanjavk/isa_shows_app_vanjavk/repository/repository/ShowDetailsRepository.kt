@@ -111,11 +111,10 @@ class ShowDetailsRepository(activity: Activity) : Repository(activity) {
                             )
                         }
                     }
-                    showReviewsResult.value = false
                 }
 
                 override fun onFailure(call: Call<ReviewsResponse>, t: Throwable) {
-                    Log.d("TAG", t.message.toString())
+                    Log.d("REVIEWSFAILURE", t.message.toString())
                     showReviewsResult.value = false
                 }
 

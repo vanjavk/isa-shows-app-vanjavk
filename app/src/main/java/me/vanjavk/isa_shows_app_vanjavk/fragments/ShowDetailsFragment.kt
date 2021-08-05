@@ -45,7 +45,6 @@ class ShowDetailsFragment : Fragment() {
         ViewModelFactory(
             requireActivity().getPreferences(Context.MODE_PRIVATE),
             ShowDetailsRepository(requireActivity())
-//            (requireActivity().application as ShowsApp).showsDatabase
         )
     }
 
@@ -85,6 +84,7 @@ class ShowDetailsFragment : Fragment() {
         val showId = args.showID
 
         showDetailsViewModel.getShow(showId)
+        showDetailsViewModel.getReviews(showId)
 
         showDetailsViewModel.getShowLiveData().observe(viewLifecycleOwner, { show ->
             updateShow(show.let{
@@ -102,18 +102,8 @@ class ShowDetailsFragment : Fragment() {
             updateReviews(review)
         })
 
-        showDetailsViewModel.getReviewsLiveData(showId).observe(viewLifecycleOwner, { reviews ->
-            updateReviews(reviews.map { Review(
-                it.id,
-                it.comment,
-                it.rating,
-                it.showId,
-                User(
-                    it.user.userId,
-                    it.user.email,
-                    it.user.imageUrl
-                )
-            ) })
+        showDetailsViewModel.getReviewsLiveData().observe(viewLifecycleOwner, { reviews ->
+            updateReviews(reviews)
         })
 
         initWriteReviewButton()

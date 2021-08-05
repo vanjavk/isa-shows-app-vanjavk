@@ -24,6 +24,8 @@ class ShowDetailsViewModel(
 
     private val showDetailsResultLiveData: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
+    private val reviewsResultLiveData: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
     private val showLiveData: MutableLiveData<Show> by lazy { MutableLiveData<Show>() }
 
     private val reviewLiveData: MutableLiveData<Review> by lazy {
@@ -40,15 +42,6 @@ class ShowDetailsViewModel(
         //return database.showDao().getShow(id)
     }
 
-    fun getShow(showId: String) {
-        showDetailsResultLiveData.value = false
-        repository.getShow(showId, showLiveData, showDetailsResultLiveData)
-    }
-
-    fun getReviews(showId: String) {
-
-    }
-
     fun getShowDetailsResultLiveData(): LiveData<Boolean> {
         return showDetailsResultLiveData
     }
@@ -57,9 +50,18 @@ class ShowDetailsViewModel(
         return reviewLiveData
     }
 
-    fun getReviewsLiveData(showId: String): LiveData<List<Review>> {
+    fun getReviewsLiveData(): LiveData<List<Review>> {
         return reviewsLiveData
-        //return database.reviewDao().getReviewsAndUsers(showId)
+    }
+
+    fun getShow(showId: String) {
+        showDetailsResultLiveData.value = false
+        repository.getShow(showId, showLiveData, showDetailsResultLiveData)
+    }
+
+    fun getReviews(showId: String) {
+        reviewsResultLiveData.value = false
+        repository.getReviews(showId, reviewsLiveData, reviewsResultLiveData)
     }
 
     fun addReview(rating: Int, comment: String?, showId: Int) {
