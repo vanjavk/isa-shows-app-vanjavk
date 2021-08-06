@@ -1,3 +1,5 @@
+package me.vanjavk.isa_shows_app_vanjavk.models
+
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

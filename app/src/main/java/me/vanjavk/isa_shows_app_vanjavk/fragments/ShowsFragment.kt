@@ -31,10 +31,9 @@ import me.vanjavk.isa_shows_app_vanjavk.viewmodels.ViewModelFactory
 import java.io.File
 import java.util.*
 import androidx.recyclerview.widget.RecyclerView
-
-import Show
 import me.vanjavk.isa_shows_app_vanjavk.R
 import me.vanjavk.isa_shows_app_vanjavk.getFileFromUri
+import me.vanjavk.isa_shows_app_vanjavk.models.Show
 import me.vanjavk.isa_shows_app_vanjavk.preparePermissionsContract
 import me.vanjavk.isa_shows_app_vanjavk.repository.repository.Repository
 import me.vanjavk.isa_shows_app_vanjavk.repository.repository.ShowsRepository
@@ -155,16 +154,7 @@ class ShowsFragment : Fragment() {
 
         showsViewModel.getShowsLiveData().observe(viewLifecycleOwner, { shows ->
             binding.showsRecyclerView.isVisible = !shows.isNullOrEmpty()
-            updateItems(shows.map {
-                Show(
-                    it.id,
-                    it.averageRating,
-                    it.description,
-                    it.imageUrl,
-                    it.numberOfReviews,
-                    it.title
-                )
-            })
+            updateItems(shows)
 
         })
 

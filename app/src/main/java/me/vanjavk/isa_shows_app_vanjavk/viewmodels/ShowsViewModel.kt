@@ -1,11 +1,12 @@
 package me.vanjavk.isa_shows_app_vanjavk.viewmodels
 
-import Show
 import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import me.vanjavk.isa_shows_app_vanjavk.*
+import me.vanjavk.isa_shows_app_vanjavk.models.Show
 import me.vanjavk.isa_shows_app_vanjavk.models.User
 import me.vanjavk.isa_shows_app_vanjavk.repository.repository.ShowsRepository
 import java.io.File
@@ -24,13 +25,7 @@ class ShowsViewModel(
 
     private val currentUserResultLiveData: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
-    private val showsLiveData: MutableLiveData<List<Show>> by lazy {
-        MutableLiveData<List<Show>>()
-    }
-
-    fun getShowsLiveData(): LiveData<List<Show>> {
-        return showsLiveData
-    }
+    fun getShowsLiveData(): LiveData<List<Show>> = repository.getShowsLiveData()
 
     fun getShowsResultLiveData(): LiveData<Boolean> {
         return showsResultLiveData
@@ -50,7 +45,7 @@ class ShowsViewModel(
 
     fun getShows() {
         showsResultLiveData.value = false
-        repository.getShows(showsLiveData, showsResultLiveData)
+        repository.getShows(showsResultLiveData)
     }
 
     fun uploadProfilePicture(file: File) {

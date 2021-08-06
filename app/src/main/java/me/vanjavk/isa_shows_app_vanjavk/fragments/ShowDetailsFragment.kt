@@ -1,6 +1,6 @@
 package me.vanjavk.isa_shows_app_vanjavk.fragments
 
-import Show
+
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -23,12 +23,17 @@ import me.vanjavk.isa_shows_app_vanjavk.adapters.ReviewsAdapter
 import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogAddReviewBinding
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowDetailsBinding
 import me.vanjavk.isa_shows_app_vanjavk.models.Review
+import me.vanjavk.isa_shows_app_vanjavk.models.Show
 import me.vanjavk.isa_shows_app_vanjavk.models.User
 import me.vanjavk.isa_shows_app_vanjavk.repository.repository.ShowDetailsRepository
 import me.vanjavk.isa_shows_app_vanjavk.repository.repository.ShowsRepository
 import me.vanjavk.isa_shows_app_vanjavk.utils.GlideUrlCustomCacheKey
 import me.vanjavk.isa_shows_app_vanjavk.viewmodels.ShowDetailsViewModel
 import me.vanjavk.isa_shows_app_vanjavk.viewmodels.ViewModelFactory
+
+
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.DiffUtil.DiffResult
 
 
 class ShowDetailsFragment : Fragment() {
@@ -86,25 +91,21 @@ class ShowDetailsFragment : Fragment() {
         showDetailsViewModel.getShow(showId)
         showDetailsViewModel.getReviews(showId)
 
-        showDetailsViewModel.getShowLiveData().observe(viewLifecycleOwner, { show ->
-            updateShow(show.let{
-                Show(
-                    it.id,
-                    it.averageRating,
-                    it.description,
-                    it.imageUrl,
-                    it.numberOfReviews,
-                    it.title)
+        showDetailsViewModel.getShowLiveData(showId).observe(viewLifecycleOwner, { show ->
+            updateShow(show)
+        })
+
+        showDetailsViewModel.getReviewsLiveData(showId).observe(
+            viewLifecycleOwner,
+            { reviews ->
+                //updateReviews(reviews)
             })
-        })
 
-        showDetailsViewModel.getReviewLiveData().observe(viewLifecycleOwner, { review ->
-            updateReviews(review)
-        })
-
-        showDetailsViewModel.getReviewsLiveData().observe(viewLifecycleOwner, { reviews ->
-            updateReviews(reviews)
-        })
+        showDetailsViewModel.getReviewLiveData().observe(
+            viewLifecycleOwner,
+            { review ->
+                updateReviews(review)
+            })
 
         initWriteReviewButton()
         initReviewsRecycler()
@@ -147,6 +148,7 @@ class ShowDetailsFragment : Fragment() {
             showAddReviewBottomSheet()
         }
     }
+
 
     private fun showAddReviewBottomSheet() {
 

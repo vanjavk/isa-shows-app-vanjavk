@@ -1,13 +1,18 @@
 package me.vanjavk.isa_shows_app_vanjavk.repository.repository
 
-import Show
 import android.app.Activity
+import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.core.content.edit
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
+import me.vanjavk.isa_shows_app_vanjavk.ShowsApp
 import me.vanjavk.isa_shows_app_vanjavk.USER_ID_KEY
 import me.vanjavk.isa_shows_app_vanjavk.USER_IMAGE_URL_KEY
 import me.vanjavk.isa_shows_app_vanjavk.isOnline
+import me.vanjavk.isa_shows_app_vanjavk.models.Show
 import me.vanjavk.isa_shows_app_vanjavk.models.ShowEntity
 import me.vanjavk.isa_shows_app_vanjavk.models.User
 import me.vanjavk.isa_shows_app_vanjavk.models.network.ShowsResponse
@@ -26,8 +31,14 @@ import java.util.concurrent.Executors
 
 
 class ShowsRepository(activity: Activity) : Repository(activity) {
+
+    fun getShowsLiveData(): LiveData<List<Show>> = Transformations.map(database.showDao().getAllShows()) {
+        it.map {
+            it.toShow()
+        }
+    }
+
     fun getShows(
-        showsLiveData: MutableLiveData<List<Show>>,
         showsResult: MutableLiveData<Boolean>
     ) {
         if (activity.isOnline()) {
@@ -40,47 +51,23 @@ class ShowsRepository(activity: Activity) : Repository(activity) {
                     val shows = response.body()?.shows
                     if (shows != null) {
                         showsResult.value = true
-                        showsLiveData.value = shows
                         Executors.newSingleThreadExecutor().execute {
                             database.showDao().insertAllShows(
                                 shows.map {
-                                    ShowEntity(
-                                        id = it.id,
-                                        averageRating = it.averageRating,
-                                        description = it.description,
-                                        imageUrl = it.imageUrl,
-                                        numberOfReviews = it.numberOfReviews,
-                                        title = it.title
-                                    )
+                                    ShowEntity.from(it)
                                 }
                             )
 
                         }
                     }
                 }
-
                 override fun onFailure(call: Call<ShowsResponse>, t: Throwable) {
                     Log.d("GETSHOWSFAILURE", t.message.toString())
                     showsResult.value = false
-                    showsLiveData.value = getShowsOffline()
                 }
             })
         } else {
             showsResult.value = false
-            showsLiveData.value = getShowsOffline()
-        }
-    }
-
-    private fun getShowsOffline(): List<Show>? {
-        return database.showDao().getAllShows().value?.map {
-            Show(
-                it.id,
-                it.averageRating,
-                it.description,
-                it.imageUrl,
-                it.numberOfReviews,
-                it.title
-            )
         }
     }
 
@@ -113,7 +100,6 @@ class ShowsRepository(activity: Activity) : Repository(activity) {
                     changeProfilePictureResult.value = false
                 }
             }
-
             override fun onFailure(call: Call<UserResponse>, t: Throwable) {
                 Log.d("CHANGEPROFILEFAILURE", t.message.toString())
                 changeProfilePictureResult.value = false
@@ -140,7 +126,6 @@ class ShowsRepository(activity: Activity) : Repository(activity) {
                     currentUserResult.value = true
                 }
             }
-
             override fun onFailure(call: Call<UserResponse>, t: Throwable) {
                 Log.d("GETUSERFAILURE", t.message.toString())
                 currentUserResult.value = false

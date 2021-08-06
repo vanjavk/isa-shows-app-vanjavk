@@ -1,11 +1,14 @@
 package me.vanjavk.isa_shows_app_vanjavk.repository.repository
 
-import Show
 import android.app.Activity
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import me.vanjavk.isa_shows_app_vanjavk.isOnline
+import androidx.lifecycle.Transformations
+import me.vanjavk.isa_shows_app_vanjavk.*
 import me.vanjavk.isa_shows_app_vanjavk.models.*
+import me.vanjavk.isa_shows_app_vanjavk.models.network.AddReviewRequest
+import me.vanjavk.isa_shows_app_vanjavk.models.network.AddReviewResponse
 import me.vanjavk.isa_shows_app_vanjavk.models.network.ReviewsResponse
 import me.vanjavk.isa_shows_app_vanjavk.models.network.ShowResponse
 import me.vanjavk.isa_shows_app_vanjavk.modules.ApiModule
@@ -15,9 +18,19 @@ import retrofit2.Response
 import java.util.concurrent.Executors
 
 class ShowDetailsRepository(activity: Activity) : Repository(activity) {
+
+    fun getShowLiveData(showId: String): LiveData<Show> =
+        Transformations.map(database.showDao().getShow(showId)) {
+            it.toShow()
+        }
+
+    fun getReviewsLiveData(showId: String): LiveData<List<Review>> =
+        Transformations.map(database.reviewDao().getReviews(showId)) {
+            it.map { it.toReview() }
+        }
+
     fun getShow(
         showId: String,
-        showLiveData: MutableLiveData<Show>,
         showResult: MutableLiveData<Boolean>
     ) {
         if (activity.isOnline()) {
@@ -30,49 +43,24 @@ class ShowDetailsRepository(activity: Activity) : Repository(activity) {
                     val show = response.body()?.show
                     if (show != null) {
                         showResult.value = true
-                        showLiveData.value = show
                         Executors.newSingleThreadExecutor().execute {
-                            database.showDao().addShow(show.let {
-                                ShowEntity(
-                                    it.id,
-                                    it.averageRating,
-                                    it.description,
-                                    it.imageUrl,
-                                    it.numberOfReviews,
-                                    it.title
-                                )
-                            })
+                            database.showDao().addShow(
+                                ShowEntity.from(show)
+                            )
                         }
                     } else {
-                        showLiveData.value =
-                            getShowOffline(showId)// = database.showDao().getShow(id)
                         showResult.value = false
                     }
                 }
 
                 override fun onFailure(call: Call<ShowResponse>, t: Throwable) {
-                    Log.d("TAG", t.message.toString())
+                    Log.d("GETSHOWFAILURE", t.message.toString())
                     showResult.value = false
-                    showLiveData.value = getShowOffline(showId)
                 }
 
             })
         } else {
             showResult.value = false
-            showLiveData.value = getShowOffline(showId)
-        }
-    }
-
-    private fun getShowOffline(showId: String): Show? {
-        return database.showDao().getShow(showId).value?.let {
-            Show(
-                it.id,
-                it.averageRating,
-                it.description,
-                it.imageUrl,
-                it.numberOfReviews,
-                it.title
-            )
         }
     }
 
@@ -81,6 +69,7 @@ class ShowDetailsRepository(activity: Activity) : Repository(activity) {
         reviewsLiveData: MutableLiveData<List<Review>>,
         showReviewsResult: MutableLiveData<Boolean>
     ) {
+        uploadOfflineReviews()
         if (activity.isOnline()) {
             ApiModule.retrofit.getReviews(showId).enqueue(object :
                 Callback<ReviewsResponse> {
@@ -88,7 +77,6 @@ class ShowDetailsRepository(activity: Activity) : Repository(activity) {
                     call: Call<ReviewsResponse>,
                     response: Response<ReviewsResponse>
                 ) {
-                    //uploadOfflineReviews(showId)
                     val reviews = response.body()?.reviews
                     if (reviews != null) {
                         showReviewsResult.value = true
@@ -96,17 +84,7 @@ class ShowDetailsRepository(activity: Activity) : Repository(activity) {
                         Executors.newSingleThreadExecutor().execute {
                             database.reviewDao().insertReviews(
                                 reviews.map {
-                                    ReviewEntity(
-                                        id = it.id.toLong(),
-                                        comment = it.comment,
-                                        rating = it.rating,
-                                        showId = it.showId,
-                                        User(
-                                            userId = it.user.userId,
-                                            email = it.user.email,
-                                            imageUrl = it.user.imageUrl
-                                        )
-                                    )
+                                    ReviewEntity.from(it)
                                 }
                             )
                         }
@@ -121,8 +99,91 @@ class ShowDetailsRepository(activity: Activity) : Repository(activity) {
             })
         } else {
             showReviewsResult.value = false
-//            showLiveData.value = getShowOffline(showId)
         }
     }
+
+
+    private fun uploadOfflineReviews() {
+        if (activity.isOnline()) {
+            Executors.newSingleThreadExecutor().execute {
+                val reviewsToUpload = database.reviewDao().getOfflineReviews()
+//                reviewsToUpload.forEach {
+//                    it.id?.let { id -> database.reviewDao().removeReview(id) }
+//                }
+                database.reviewDao().removeReviews(reviewsToUpload)
+                reviewsToUpload.forEach {
+                    addReview(it.rating, it.comment, it.showId, null)
+                }
+            }
+        }
+    }
+
+    fun addReview(
+        rating: Int, comment: String?, showId: Int,
+        addReviewResult: MutableLiveData<Boolean>?
+    ) {
+
+        if (activity.isOnline()) {
+            ApiModule.retrofit.addReview(AddReviewRequest(rating, comment, showId)).enqueue(object :
+                Callback<AddReviewResponse> {
+                override fun onResponse(
+                    call: Call<AddReviewResponse>,
+                    response: Response<AddReviewResponse>
+                ) {
+                    val review = response.body()?.review
+                    if (review != null) {
+                        addReviewResult?.value = true
+                        Executors.newSingleThreadExecutor().execute {
+                            database.reviewDao().addReview(
+                                ReviewEntity.from(review)
+                            )
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<AddReviewResponse>, t: Throwable) {
+                    Executors.newSingleThreadExecutor().execute {
+                        addReviewResult?.value = false
+                        database.reviewDao().addReview(
+                            ReviewEntity(
+                                id = null,
+                                comment = comment,
+                                rating = rating,
+                                showId = showId,
+                                user = User(
+                                    userId = sharedPref.getString(USER_ID_KEY, "").orEmpty(),
+                                    email = sharedPref.getString(USER_EMAIL_KEY, "").orEmpty(),
+                                    imageUrl = sharedPref.getString(USER_IMAGE_URL_KEY, "")
+                                        .orEmpty()
+                                ),
+                                sync = false
+                            )
+                        )
+                    }
+                    Log.d("ADDREVIEWFAILURE", t.message.toString())
+                }
+            })
+        } else {
+            addReviewResult?.value = false
+            Executors.newSingleThreadExecutor().execute {
+                database.reviewDao().addReview(
+                    ReviewEntity(
+                        id = null,
+                        comment = comment,
+                        rating = rating,
+                        showId = showId,
+                        user = User(
+                            userId = sharedPref.getString(USER_ID_KEY, "").orEmpty(),
+                            email = sharedPref.getString(USER_EMAIL_KEY, "").orEmpty(),
+                            imageUrl = sharedPref.getString(USER_IMAGE_URL_KEY, "")
+                                .orEmpty()
+                        ),
+                        sync = false
+                    )
+                )
+            }
+        }
+    }
+
 
 }

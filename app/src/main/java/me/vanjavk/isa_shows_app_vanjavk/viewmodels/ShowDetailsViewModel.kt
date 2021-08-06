@@ -1,6 +1,5 @@
 package me.vanjavk.isa_shows_app_vanjavk.viewmodels
 
-import Show
 import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -36,11 +35,9 @@ class ShowDetailsViewModel(
         MutableLiveData<List<Review>>()
     }
 
+    fun getShowLiveData(showId: String): LiveData<Show> = repository.getShowLiveData(showId)
 
-    fun getShowLiveData(): LiveData<Show> {
-        return showLiveData
-        //return database.showDao().getShow(id)
-    }
+    fun getReviewsLiveData(showId: String): LiveData<List<Review>> = repository.getReviewsLiveData(showId)
 
     fun getShowDetailsResultLiveData(): LiveData<Boolean> {
         return showDetailsResultLiveData
@@ -50,13 +47,9 @@ class ShowDetailsViewModel(
         return reviewLiveData
     }
 
-    fun getReviewsLiveData(): LiveData<List<Review>> {
-        return reviewsLiveData
-    }
-
     fun getShow(showId: String) {
         showDetailsResultLiveData.value = false
-        repository.getShow(showId, showLiveData, showDetailsResultLiveData)
+        repository.getShow(showId, showDetailsResultLiveData)
     }
 
     fun getReviews(showId: String) {
@@ -65,57 +58,6 @@ class ShowDetailsViewModel(
     }
 
     fun addReview(rating: Int, comment: String?, showId: Int) {
-//        ApiModule.retrofit.addReview(AddReviewRequest(rating, comment, showId)).enqueue(object :
-//            Callback<AddReviewResponse> {
-//            override fun onResponse(
-//                call: Call<AddReviewResponse>,
-//                response: Response<AddReviewResponse>
-//            ) {
-//                val review = response.body()?.review
-//                if (review != null) {
-//                    getShow(showId.toString())
-//                    Executors.newSingleThreadExecutor().execute {
-//                        database.reviewDao().addReview(
-//                            ReviewEntity(
-//                                review.id.toLong(),
-//                                comment,
-//                                rating,
-//                                showId,
-//                                sharedPref.getString(USER_ID_KEY, "").orEmpty()
-//                            )
-//                        )
-//                    }
-//                }
-//            }
-//            override fun onFailure(call: Call<AddReviewResponse>, t: Throwable) {
-//                Executors.newSingleThreadExecutor().execute {
-//                    database.reviewDao().addReview(
-//                        ReviewEntity(
-//                            null,
-//                            comment,
-//                            rating,
-//                            showId,
-//                            sharedPref.getString(USER_ID_KEY, "").orEmpty(),
-//                            false
-//                        )
-//                    )
-//                }
-//                Log.d("TAG", t.message.toString())
-//            }
-//        })
-    }
-
-    private fun uploadOfflineReviews(showId: String) {
-
-//
-//        Executors.newSingleThreadExecutor().execute {
-//            val reviewsToUpload = database.reviewDao().getOfflineReviews(
-//                showId
-//            )
-//            reviewsToUpload.forEach {
-//                it.id?.let { id -> database.reviewDao().removeReview(id) }
-//                addReview(it.rating, it.comment, it.showId)
-//            }
-//        }
+        repository.addReview(rating, comment, showId, reviewsResultLiveData)
     }
 }

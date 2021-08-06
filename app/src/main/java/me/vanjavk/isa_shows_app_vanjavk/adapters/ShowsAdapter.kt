@@ -1,11 +1,12 @@
 package me.vanjavk.isa_shows_app_vanjavk.adapters
 
-import Show
+
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import me.vanjavk.isa_shows_app_vanjavk.databinding.ViewShowItemBinding
+import me.vanjavk.isa_shows_app_vanjavk.models.Show
 import me.vanjavk.isa_shows_app_vanjavk.utils.GlideUrlCustomCacheKey
 
 

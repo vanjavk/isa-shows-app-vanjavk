@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import me.vanjavk.isa_shows_app_vanjavk.R
@@ -32,8 +33,10 @@ class ReviewsAdapter(
     }
 
     fun setItems(reviews: List<Review>) {
+        val diffResult = DiffUtil.calculateDiff(ReviewDiff(items, reviews))
         items = reviews
-        notifyDataSetChanged()
+        diffResult.dispatchUpdatesTo(this)
+        //notifyDataSetChanged()
     }
 
     fun addItem(review: Review) {
