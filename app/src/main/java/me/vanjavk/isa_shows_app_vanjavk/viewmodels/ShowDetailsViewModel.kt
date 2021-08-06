@@ -35,7 +35,7 @@ class ShowDetailsViewModel(
         MutableLiveData<List<Review>>()
     }
 
-    fun getShowLiveData(showId: String): LiveData<Show> = repository.getShowLiveData(showId)
+    fun getShowLiveData(showId: String): LiveData<List<Show>> = repository.getShowLiveData(showId)
 
     fun getReviewsLiveData(showId: String): LiveData<List<Review>> = repository.getReviewsLiveData(showId)
 

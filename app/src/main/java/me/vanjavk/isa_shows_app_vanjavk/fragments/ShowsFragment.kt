@@ -133,17 +133,6 @@ class ShowsFragment : Fragment() {
         dialog = BottomSheetDialog(requireContext())
         dialog.setContentView(bottomSheetBinding.root)
 
-        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
-        if (sharedPref == null) {
-            Toast.makeText(
-                activity,
-                getString(R.string.error_shared_pref_is_null),
-                Toast.LENGTH_SHORT
-            ).show()
-            activity?.onBackPressed()
-            return binding.root
-        }
-
         return binding.root
     }
 
@@ -190,7 +179,7 @@ class ShowsFragment : Fragment() {
                 if (!isChangeProfilePictureSuccessful) {
                     Toast.makeText(
                         activity,
-                        "Changing profile picture was unsuccessful!",
+                        getString(R.string.error_changing_profile_picture),
                         Toast.LENGTH_SHORT
                     ).show()
                 }

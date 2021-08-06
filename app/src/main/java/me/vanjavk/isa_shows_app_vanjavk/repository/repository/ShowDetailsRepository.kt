@@ -19,9 +19,9 @@ import java.util.concurrent.Executors
 
 class ShowDetailsRepository(activity: Activity) : Repository(activity) {
 
-    fun getShowLiveData(showId: String): LiveData<Show> =
+    fun getShowLiveData(showId: String): LiveData<List<Show>> =
         Transformations.map(database.showDao().getShow(showId)) {
-            it.toShow()
+            it.map {it.toShow()}
         }
 
     fun getReviewsLiveData(showId: String): LiveData<List<Review>> =
@@ -31,7 +31,7 @@ class ShowDetailsRepository(activity: Activity) : Repository(activity) {
 
     fun getShow(
         showId: String,
-        showResult: MutableLiveData<Boolean>
+        showResult: MutableLiveData<Boolean>?
     ) {
         if (activity.isOnline()) {
             ApiModule.retrofit.getShow(showId).enqueue(object :
@@ -42,25 +42,25 @@ class ShowDetailsRepository(activity: Activity) : Repository(activity) {
                 ) {
                     val show = response.body()?.show
                     if (show != null) {
-                        showResult.value = true
+                        showResult?.value = true
                         Executors.newSingleThreadExecutor().execute {
                             database.showDao().addShow(
                                 ShowEntity.from(show)
                             )
                         }
                     } else {
-                        showResult.value = false
+                        showResult?.value = false
                     }
                 }
 
                 override fun onFailure(call: Call<ShowResponse>, t: Throwable) {
                     Log.d("GETSHOWFAILURE", t.message.toString())
-                    showResult.value = false
+                    showResult?.value = false
                 }
 
             })
         } else {
-            showResult.value = false
+            showResult?.value = false
         }
     }
 
@@ -138,6 +138,7 @@ class ShowDetailsRepository(activity: Activity) : Repository(activity) {
                                 ReviewEntity.from(review)
                             )
                         }
+                        getShow(showId.toString(), null)
                     }
                 }
 

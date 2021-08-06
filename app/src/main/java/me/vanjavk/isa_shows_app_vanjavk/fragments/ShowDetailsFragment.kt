@@ -92,13 +92,15 @@ class ShowDetailsFragment : Fragment() {
         showDetailsViewModel.getReviews(showId)
 
         showDetailsViewModel.getShowLiveData(showId).observe(viewLifecycleOwner, { show ->
-            updateShow(show)
+            if (show.isNotEmpty()){
+                updateShow(show.first())
+            }
         })
 
         showDetailsViewModel.getReviewsLiveData(showId).observe(
             viewLifecycleOwner,
             { reviews ->
-                //updateReviews(reviews)
+                updateReviews(reviews)
             })
 
         showDetailsViewModel.getReviewLiveData().observe(
