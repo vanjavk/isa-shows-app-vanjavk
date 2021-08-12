@@ -1,11 +1,13 @@
 package me.vanjavk.isa_shows_app_vanjavk.repository
 
 import android.app.Activity
+import android.content.res.Resources
 import android.util.Log
 import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import me.vanjavk.isa_shows_app_vanjavk.R
 import me.vanjavk.isa_shows_app_vanjavk.USER_ID_KEY
 import me.vanjavk.isa_shows_app_vanjavk.USER_IMAGE_URL_KEY
 import me.vanjavk.isa_shows_app_vanjavk.isOnline
@@ -15,6 +17,7 @@ import me.vanjavk.isa_shows_app_vanjavk.models.User
 import me.vanjavk.isa_shows_app_vanjavk.models.network.ShowsResponse
 import me.vanjavk.isa_shows_app_vanjavk.models.network.UserResponse
 import me.vanjavk.isa_shows_app_vanjavk.modules.ApiModule
+import me.vanjavk.isa_shows_app_vanjavk.networking.Resource
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -29,11 +32,38 @@ import java.util.concurrent.Executors
 
 class ShowsRepository(activity: Activity) : Repository(activity) {
 
-    fun getShowsLiveData(): LiveData<List<Show>> = Transformations.map(database.showDao().getAllShows()) {
-        it.map {
-            it.toShow()
+    private val topRatedShowsLiveData = MutableLiveData<Resource<List<Show>>>()
+
+    fun getTopRatedShows(): LiveData<Resource<List<Show>>> = topRatedShowsLiveData
+
+    fun fetchTopRatedShows() {
+        topRatedShowsLiveData.value = Resource.loading(null)
+        if (activity.isOnline()) {
+            ApiModule.retrofit.getTopRatedShows().enqueue(object :
+                Callback<ShowsResponse> {
+                override fun onResponse(
+                    call: Call<ShowsResponse>,
+                    response: Response<ShowsResponse>
+                ) {
+                    response.body()
+                        ?.let { topRatedShowsLiveData.postValue(Resource.success(it.shows)) }
+                }
+
+                override fun onFailure(call: Call<ShowsResponse>, t: Throwable) {
+                    topRatedShowsLiveData.postValue(Resource.error(null, null))
+                }
+            })
+        } else {
+            topRatedShowsLiveData.postValue(Resource.error(null, null))
         }
     }
+
+    fun getShowsLiveData(): LiveData<List<Show>> =
+        Transformations.map(database.showDao().getAllShows()) {
+            it.map {
+                it.toShow()
+            }
+        }
 
     fun getShows(
         showsResult: MutableLiveData<Boolean>
@@ -58,6 +88,7 @@ class ShowsRepository(activity: Activity) : Repository(activity) {
                         }
                     }
                 }
+
                 override fun onFailure(call: Call<ShowsResponse>, t: Throwable) {
                     Log.d("GETSHOWSFAILURE", t.message.toString())
                     showsResult.value = false
@@ -65,27 +96,6 @@ class ShowsRepository(activity: Activity) : Repository(activity) {
             })
         } else {
             showsResult.value = false
-        }
-    }
-
-    fun getTopRatedShows(topRatedShowsLiveData: MutableLiveData<List<Show>>) {
-        if (activity.isOnline()) {
-            ApiModule.retrofit.getTopRatedShows().enqueue(object :
-                Callback<ShowsResponse> {
-                override fun onResponse(
-                    call: Call<ShowsResponse>,
-                    response: Response<ShowsResponse>
-                ) {
-                    val shows = response.body()?.shows
-                    if (shows != null) {
-                        topRatedShowsLiveData.value = shows
-                    }
-                }
-                override fun onFailure(call: Call<ShowsResponse>, t: Throwable) {
-                    Log.d("GETSHOWSFAILURE", t.message.toString())
-                }
-            })
-        } else {
         }
     }
 
@@ -118,6 +128,7 @@ class ShowsRepository(activity: Activity) : Repository(activity) {
                     changeProfilePictureResult.value = false
                 }
             }
+
             override fun onFailure(call: Call<UserResponse>, t: Throwable) {
                 Log.d("CHANGEPROFILEFAILURE", t.message.toString())
                 changeProfilePictureResult.value = false
@@ -144,6 +155,7 @@ class ShowsRepository(activity: Activity) : Repository(activity) {
                     currentUserResult.value = true
                 }
             }
+
             override fun onFailure(call: Call<UserResponse>, t: Throwable) {
                 Log.d("GETUSERFAILURE", t.message.toString())
                 currentUserResult.value = false

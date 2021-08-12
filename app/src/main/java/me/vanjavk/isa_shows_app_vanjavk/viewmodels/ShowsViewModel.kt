@@ -3,10 +3,12 @@ package me.vanjavk.isa_shows_app_vanjavk.viewmodels
 import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import me.vanjavk.isa_shows_app_vanjavk.*
 import me.vanjavk.isa_shows_app_vanjavk.models.Show
 import me.vanjavk.isa_shows_app_vanjavk.models.User
+import me.vanjavk.isa_shows_app_vanjavk.networking.Resource
 import me.vanjavk.isa_shows_app_vanjavk.repository.ShowsRepository
 import java.io.File
 
@@ -24,16 +26,16 @@ class ShowsViewModel(
 
     private val currentUserResultLiveData: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
-    private val topRatedShowsLiveData: MutableLiveData<List<Show>> by lazy { MutableLiveData<List<Show>>() }
+    val topRatedShowsLiveData: LiveData<Resource<List<Show>>> = repository.getTopRatedShows()
+
+    //private val topRatedShowsLiveData = Transformations.switchMap { repository.getTopRatedShows() }
 
     fun getShowsLiveData(): LiveData<List<Show>> = repository.getShowsLiveData()
 
+    fun fetchTopRatedShows() = repository.fetchTopRatedShows()
+
     fun getShowsResultLiveData(): LiveData<Boolean> {
         return showsResultLiveData
-    }
-
-    fun getTopRatedShowsLiveData(): LiveData<List<Show>> {
-        return topRatedShowsLiveData
     }
 
     fun getChangeProfilePictureResultLiveDataLiveData(): LiveData<Boolean> {
@@ -51,10 +53,6 @@ class ShowsViewModel(
     fun getShows() {
         showsResultLiveData.value = false
         repository.getShows(showsResultLiveData)
-    }
-
-    fun getTopRatedShows() {
-        repository.getTopRatedShows(topRatedShowsLiveData)
     }
 
     fun uploadProfilePicture(file: File) {

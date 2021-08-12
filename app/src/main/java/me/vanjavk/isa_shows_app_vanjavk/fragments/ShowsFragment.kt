@@ -34,6 +34,7 @@ import androidx.recyclerview.widget.RecyclerView
 import me.vanjavk.isa_shows_app_vanjavk.R
 import me.vanjavk.isa_shows_app_vanjavk.getFileFromUri
 import me.vanjavk.isa_shows_app_vanjavk.models.Show
+import me.vanjavk.isa_shows_app_vanjavk.networking.Status
 import me.vanjavk.isa_shows_app_vanjavk.preparePermissionsContract
 import me.vanjavk.isa_shows_app_vanjavk.repository.ShowsRepository
 import me.vanjavk.isa_shows_app_vanjavk.utils.GlideUrlCustomCacheKey
@@ -148,9 +149,17 @@ class ShowsFragment : Fragment() {
 
         })
 
-        showsViewModel.getTopRatedShowsLiveData().observe(viewLifecycleOwner, { shows ->
-            binding.showsRecyclerView.isVisible = !shows.isNullOrEmpty()
-            updateTopRatedShows(shows)
+        showsViewModel.topRatedShowsLiveData.observe(viewLifecycleOwner, { resource ->
+            binding.showsRecyclerView.isVisible = !resource.data.isNullOrEmpty()
+            when (resource.status) {
+                Status.LOADING -> {
+                }
+                Status.SUCCESS -> {
+                    resource.data?.let { updateTopRatedShows(it) }
+                }
+                Status.ERROR -> {
+                }
+            }
         })
 
         showsViewModel.getUserLiveData().observe(viewLifecycleOwner, { user ->
@@ -193,7 +202,7 @@ class ShowsFragment : Fragment() {
 
         showsViewModel.getCurrentUser()
         showsViewModel.getShows()
-        showsViewModel.getTopRatedShows()
+        showsViewModel.fetchTopRatedShows()
 
         initUserProfileButton()
         initUserProfileBottomSheet()
@@ -300,7 +309,12 @@ class ShowsFragment : Fragment() {
 
     private fun initTopRatedShowsChip() {
         binding.topRatedShowChip.setOnCheckedChangeListener { _, isChecked ->
-            binding.showsRecyclerView.adapter = if (isChecked) topRatedShowsAdapter else showsAdapter
+            binding.showsRecyclerView.adapter =
+                if (isChecked) topRatedShowsAdapter else showsAdapter
+            binding.showsRecyclerView.isVisible = binding.showsRecyclerView.adapter?.itemCount != 0
+            if (isChecked) {
+                showsViewModel.fetchTopRatedShows()
+            }
         }
     }
 

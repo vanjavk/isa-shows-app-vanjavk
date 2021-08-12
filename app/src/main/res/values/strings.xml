@@ -43,4 +43,5 @@
     <string name="error_failure_response">Failed to get correct response from server. Check your internet connection!</string>
     <string name="error_changing_profile_picture">Changing profile picture was unsuccessful!</string>
     <string name="top_rated">Top rated</string>
+    <string name="no_internet_connection">No internet connection.</string>
 </resources>
