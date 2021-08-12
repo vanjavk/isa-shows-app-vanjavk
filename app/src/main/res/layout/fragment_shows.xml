@@ -16,15 +16,41 @@
         android:src="@drawable/ic_painting_art"
         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent" />
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/shows"
-        android:textColor="@color/black"
-        android:textSize="36sp"
-        android:textStyle="bold" />
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="56dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:text="@string/shows"
+            android:textColor="@color/black"
+            android:textSize="36sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:text="@string/top_rated"
+            android:textColor="@color/color_state_chip_inverted"
+            android:textSize="14sp"
+            app:chipBackgroundColor="@color/color_state_chip"
+            app:chipIcon="@drawable/ic_favorite"
+            app:chipIconTint="@color/color_state_chip_inverted"
+            app:chipStrokeColor="@color/purple_infinum_dark"
+            app:chipStrokeWidth="1dp"
+            android:checkable="true"
+            tools:checked="true"
+            app:checkedIconVisible="false"
+            />
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/showsRecyclerView"
