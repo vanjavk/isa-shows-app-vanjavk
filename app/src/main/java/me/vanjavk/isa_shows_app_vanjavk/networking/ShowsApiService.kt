@@ -17,6 +17,9 @@ interface ShowsApiService {
     @GET("/shows")
     fun getShows(): Call<ShowsResponse>
 
+    @GET("/shows/top_rated")
+    fun getTopRatedShows(): Call<ShowsResponse>
+
     @GET("/shows/{id}")
     fun getShow(@Path("id") id: String): Call<ShowResponse>
 

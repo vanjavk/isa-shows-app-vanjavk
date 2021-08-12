@@ -68,6 +68,27 @@ class ShowsRepository(activity: Activity) : Repository(activity) {
         }
     }
 
+    fun getTopRatedShows(topRatedShowsLiveData: MutableLiveData<List<Show>>) {
+        if (activity.isOnline()) {
+            ApiModule.retrofit.getTopRatedShows().enqueue(object :
+                Callback<ShowsResponse> {
+                override fun onResponse(
+                    call: Call<ShowsResponse>,
+                    response: Response<ShowsResponse>
+                ) {
+                    val shows = response.body()?.shows
+                    if (shows != null) {
+                        topRatedShowsLiveData.value = shows
+                    }
+                }
+                override fun onFailure(call: Call<ShowsResponse>, t: Throwable) {
+                    Log.d("GETSHOWSFAILURE", t.message.toString())
+                }
+            })
+        } else {
+        }
+    }
+
     fun uploadProfilePicture(
         file: File,
         userLiveData: MutableLiveData<User>,

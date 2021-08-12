@@ -24,10 +24,16 @@ class ShowsViewModel(
 
     private val currentUserResultLiveData: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
+    private val topRatedShowsLiveData: MutableLiveData<List<Show>> by lazy { MutableLiveData<List<Show>>() }
+
     fun getShowsLiveData(): LiveData<List<Show>> = repository.getShowsLiveData()
 
     fun getShowsResultLiveData(): LiveData<Boolean> {
         return showsResultLiveData
+    }
+
+    fun getTopRatedShowsLiveData(): LiveData<List<Show>> {
+        return topRatedShowsLiveData
     }
 
     fun getChangeProfilePictureResultLiveDataLiveData(): LiveData<Boolean> {
@@ -45,6 +51,10 @@ class ShowsViewModel(
     fun getShows() {
         showsResultLiveData.value = false
         repository.getShows(showsResultLiveData)
+    }
+
+    fun getTopRatedShows() {
+        repository.getTopRatedShows(topRatedShowsLiveData)
     }
 
     fun uploadProfilePicture(file: File) {

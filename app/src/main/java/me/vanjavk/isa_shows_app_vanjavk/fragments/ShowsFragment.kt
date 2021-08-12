@@ -50,6 +50,8 @@ class ShowsFragment : Fragment() {
 
     private var showsAdapter: ShowsAdapter? = null
 
+    private var topRatedShowsAdapter: ShowsAdapter? = null
+
     private val showsViewModel: ShowsViewModel by viewModels {
         ViewModelFactory(
             requireActivity().getPreferences(Context.MODE_PRIVATE),
@@ -142,8 +144,13 @@ class ShowsFragment : Fragment() {
 
         showsViewModel.getShowsLiveData().observe(viewLifecycleOwner, { shows ->
             binding.showsRecyclerView.isVisible = !shows.isNullOrEmpty()
-            updateItems(shows)
+            updateShows(shows)
 
+        })
+
+        showsViewModel.getTopRatedShowsLiveData().observe(viewLifecycleOwner, { shows ->
+            binding.showsRecyclerView.isVisible = !shows.isNullOrEmpty()
+            updateTopRatedShows(shows)
         })
 
         showsViewModel.getUserLiveData().observe(viewLifecycleOwner, { user ->
@@ -184,11 +191,13 @@ class ShowsFragment : Fragment() {
                 }
             })
 
-        showsViewModel.getShows()
         showsViewModel.getCurrentUser()
+        showsViewModel.getShows()
+        showsViewModel.getTopRatedShows()
 
         initUserProfileButton()
         initUserProfileBottomSheet()
+        initTopRatedShowsChip()
     }
 
     private fun updateProfileIcons(imageUrl: String?) {
@@ -205,8 +214,12 @@ class ShowsFragment : Fragment() {
         }
     }
 
-    private fun updateItems(shows: List<Show>) {
+    private fun updateShows(shows: List<Show>) {
         showsAdapter?.setItems(shows)
+    }
+
+    private fun updateTopRatedShows(shows: List<Show>) {
+        topRatedShowsAdapter?.setItems(shows)
     }
 
     private fun initUserProfileButton() {
@@ -267,12 +280,28 @@ class ShowsFragment : Fragment() {
         }.apply {
             stateRestorationPolicy = StateRestorationPolicy.PREVENT_WHEN_EMPTY
         }
+
+        topRatedShowsAdapter = ShowsAdapter(emptyList()) { item ->
+            ShowsFragmentDirections.actionShowToDetails(
+                item.id
+            )
+                .let { findNavController().navigate(it) }
+        }.apply {
+            stateRestorationPolicy = StateRestorationPolicy.PREVENT_WHEN_EMPTY
+        }
+
         binding.showsRecyclerView.layoutManager = object : LinearLayoutManager(activity) {
             override fun getExtraLayoutSpace(state: RecyclerView.State): Int {
                 return requireContext().resources.getDimensionPixelSize(R.dimen.recycler_view_extra_space)
             }
         }
         binding.showsRecyclerView.adapter = showsAdapter
+    }
+
+    private fun initTopRatedShowsChip() {
+        binding.topRatedShowChip.setOnCheckedChangeListener { _, isChecked ->
+            binding.showsRecyclerView.adapter = if (isChecked) topRatedShowsAdapter else showsAdapter
+        }
     }
 
     override fun onDestroyView() {
