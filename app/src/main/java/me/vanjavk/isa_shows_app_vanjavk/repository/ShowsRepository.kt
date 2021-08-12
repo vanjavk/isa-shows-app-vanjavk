@@ -1,13 +1,11 @@
 package me.vanjavk.isa_shows_app_vanjavk.repository
 
 import android.app.Activity
-import android.content.res.Resources
 import android.util.Log
 import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import me.vanjavk.isa_shows_app_vanjavk.R
 import me.vanjavk.isa_shows_app_vanjavk.USER_ID_KEY
 import me.vanjavk.isa_shows_app_vanjavk.USER_IMAGE_URL_KEY
 import me.vanjavk.isa_shows_app_vanjavk.isOnline
@@ -37,7 +35,7 @@ class ShowsRepository(activity: Activity) : Repository(activity) {
     fun getTopRatedShows(): LiveData<Resource<List<Show>>> = topRatedShowsLiveData
 
     fun fetchTopRatedShows() {
-        topRatedShowsLiveData.value = Resource.loading(topRatedShowsLiveData.value?.data)
+        topRatedShowsLiveData.postValue(Resource.loading(topRatedShowsLiveData.value?.data))
         if (activity.isOnline()) {
             ApiModule.retrofit.getTopRatedShows().enqueue(object :
                 Callback<ShowsResponse> {

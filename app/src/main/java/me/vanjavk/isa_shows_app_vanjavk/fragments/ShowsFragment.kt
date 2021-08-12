@@ -153,11 +153,13 @@ class ShowsFragment : Fragment() {
             binding.showsRecyclerView.isVisible = !resource.data.isNullOrEmpty()
             when (resource.status) {
                 Status.LOADING -> {
+                    resource.data?.let { updateTopRatedShows(it) }
                 }
                 Status.SUCCESS -> {
                     resource.data?.let { updateTopRatedShows(it) }
                 }
                 Status.ERROR -> {
+                    resource.data?.let { updateTopRatedShows(it) }
                 }
             }
         })
