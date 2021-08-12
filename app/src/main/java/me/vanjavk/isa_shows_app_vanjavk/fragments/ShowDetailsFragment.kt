@@ -141,6 +141,8 @@ class ShowDetailsFragment : Fragment() {
 
     private fun initWriteReviewButton() {
         binding.writeReviewButton.setOnClickListener {
+            bottomSheetBinding.starRatingBar.rating = 0f
+            bottomSheetBinding.commentInput.text?.clear()
             dialog.show()
         }
     }
