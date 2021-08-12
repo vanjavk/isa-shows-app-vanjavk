@@ -37,7 +37,7 @@ class ShowsRepository(activity: Activity) : Repository(activity) {
     fun getTopRatedShows(): LiveData<Resource<List<Show>>> = topRatedShowsLiveData
 
     fun fetchTopRatedShows() {
-        topRatedShowsLiveData.value = Resource.loading(null)
+        topRatedShowsLiveData.value = Resource.loading(topRatedShowsLiveData.value?.data)
         if (activity.isOnline()) {
             ApiModule.retrofit.getTopRatedShows().enqueue(object :
                 Callback<ShowsResponse> {
