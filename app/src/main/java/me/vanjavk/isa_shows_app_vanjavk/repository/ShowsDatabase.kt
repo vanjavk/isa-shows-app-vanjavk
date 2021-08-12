@@ -6,6 +6,9 @@ import androidx.room.RoomDatabase
 import me.vanjavk.isa_shows_app_vanjavk.models.ReviewEntity
 import me.vanjavk.isa_shows_app_vanjavk.models.ShowEntity
 import me.vanjavk.isa_shows_app_vanjavk.models.UserEntity
+import me.vanjavk.isa_shows_app_vanjavk.repository.database.ReviewDao
+import me.vanjavk.isa_shows_app_vanjavk.repository.database.ShowDao
+import me.vanjavk.isa_shows_app_vanjavk.repository.database.UserDao
 
 @Database(
     entities = [

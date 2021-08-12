@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RatingBar
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -21,11 +20,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import me.vanjavk.isa_shows_app_vanjavk.R
 import me.vanjavk.isa_shows_app_vanjavk.adapters.ReviewsAdapter
 import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogAddReviewBinding
-import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogUserProfileBinding
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowDetailsBinding
 import me.vanjavk.isa_shows_app_vanjavk.models.Review
 import me.vanjavk.isa_shows_app_vanjavk.models.Show
-import me.vanjavk.isa_shows_app_vanjavk.repository.repository.ShowDetailsRepository
+import me.vanjavk.isa_shows_app_vanjavk.repository.ShowDetailsRepository
 import me.vanjavk.isa_shows_app_vanjavk.utils.GlideUrlCustomCacheKey
 import me.vanjavk.isa_shows_app_vanjavk.viewmodels.ShowDetailsViewModel
 import me.vanjavk.isa_shows_app_vanjavk.viewmodels.ViewModelFactory

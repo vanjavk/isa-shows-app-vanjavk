@@ -1,14 +1,11 @@
-package me.vanjavk.isa_shows_app_vanjavk.repository.repository
+package me.vanjavk.isa_shows_app_vanjavk.repository
 
 import android.app.Activity
-import android.content.Context
-import android.content.SharedPreferences
 import android.util.Log
 import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import me.vanjavk.isa_shows_app_vanjavk.ShowsApp
 import me.vanjavk.isa_shows_app_vanjavk.USER_ID_KEY
 import me.vanjavk.isa_shows_app_vanjavk.USER_IMAGE_URL_KEY
 import me.vanjavk.isa_shows_app_vanjavk.isOnline

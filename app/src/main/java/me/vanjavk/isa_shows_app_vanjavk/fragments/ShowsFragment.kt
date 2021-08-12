@@ -35,8 +35,7 @@ import me.vanjavk.isa_shows_app_vanjavk.R
 import me.vanjavk.isa_shows_app_vanjavk.getFileFromUri
 import me.vanjavk.isa_shows_app_vanjavk.models.Show
 import me.vanjavk.isa_shows_app_vanjavk.preparePermissionsContract
-import me.vanjavk.isa_shows_app_vanjavk.repository.repository.Repository
-import me.vanjavk.isa_shows_app_vanjavk.repository.repository.ShowsRepository
+import me.vanjavk.isa_shows_app_vanjavk.repository.ShowsRepository
 import me.vanjavk.isa_shows_app_vanjavk.utils.GlideUrlCustomCacheKey
 
 

@@ -1,4 +1,4 @@
-package me.vanjavk.isa_shows_app_vanjavk.repository.repository
+package me.vanjavk.isa_shows_app_vanjavk.repository
 
 import android.app.Activity
 import android.util.Log

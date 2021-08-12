@@ -1,19 +1,11 @@
 package me.vanjavk.isa_shows_app_vanjavk.viewmodels
 
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import me.vanjavk.isa_shows_app_vanjavk.USER_ID_KEY
 import me.vanjavk.isa_shows_app_vanjavk.models.*
-import me.vanjavk.isa_shows_app_vanjavk.models.network.*
-import me.vanjavk.isa_shows_app_vanjavk.modules.ApiModule
-import me.vanjavk.isa_shows_app_vanjavk.repository.repository.ShowDetailsRepository
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.util.concurrent.Executors
+import me.vanjavk.isa_shows_app_vanjavk.repository.ShowDetailsRepository
 
 
 class ShowDetailsViewModel(

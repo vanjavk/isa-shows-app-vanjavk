@@ -3,12 +3,11 @@ package me.vanjavk.isa_shows_app_vanjavk.viewmodels
 import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import me.vanjavk.isa_shows_app_vanjavk.*
 import me.vanjavk.isa_shows_app_vanjavk.models.Show
 import me.vanjavk.isa_shows_app_vanjavk.models.User
-import me.vanjavk.isa_shows_app_vanjavk.repository.repository.ShowsRepository
+import me.vanjavk.isa_shows_app_vanjavk.repository.ShowsRepository
 import java.io.File
 
 

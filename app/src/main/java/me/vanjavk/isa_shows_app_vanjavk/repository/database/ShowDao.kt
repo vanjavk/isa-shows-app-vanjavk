@@ -1,4 +1,4 @@
-package me.vanjavk.isa_shows_app_vanjavk.repository
+package me.vanjavk.isa_shows_app_vanjavk.repository.database
 
 import me.vanjavk.isa_shows_app_vanjavk.models.ShowEntity
 import androidx.lifecycle.LiveData
