@@ -144,7 +144,6 @@ class ShowDetailsRepository(activity: Activity) : Repository(activity) {
 
                 override fun onFailure(call: Call<AddReviewResponse>, t: Throwable) {
                     Executors.newSingleThreadExecutor().execute {
-                        addReviewResult?.value = false
                         database.reviewDao().addReview(
                             ReviewEntity(
                                 id = null,

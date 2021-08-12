@@ -21,19 +21,14 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import me.vanjavk.isa_shows_app_vanjavk.R
 import me.vanjavk.isa_shows_app_vanjavk.adapters.ReviewsAdapter
 import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogAddReviewBinding
+import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogUserProfileBinding
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowDetailsBinding
 import me.vanjavk.isa_shows_app_vanjavk.models.Review
 import me.vanjavk.isa_shows_app_vanjavk.models.Show
-import me.vanjavk.isa_shows_app_vanjavk.models.User
 import me.vanjavk.isa_shows_app_vanjavk.repository.repository.ShowDetailsRepository
-import me.vanjavk.isa_shows_app_vanjavk.repository.repository.ShowsRepository
 import me.vanjavk.isa_shows_app_vanjavk.utils.GlideUrlCustomCacheKey
 import me.vanjavk.isa_shows_app_vanjavk.viewmodels.ShowDetailsViewModel
 import me.vanjavk.isa_shows_app_vanjavk.viewmodels.ViewModelFactory
-
-
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.DiffUtil.DiffResult
 
 
 class ShowDetailsFragment : Fragment() {
@@ -41,6 +36,9 @@ class ShowDetailsFragment : Fragment() {
     private var _binding: FragmentShowDetailsBinding? = null
 
     private val binding get() = _binding!!
+
+    private lateinit var bottomSheetBinding: DialogAddReviewBinding
+    private lateinit var dialog: BottomSheetDialog
 
     private val args: ShowDetailsFragmentArgs by navArgs()
 
@@ -61,16 +59,11 @@ class ShowDetailsFragment : Fragment() {
         _binding = FragmentShowDetailsBinding.inflate(inflater, container, false)
         setHasOptionsMenu(true);
 
-        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
-        if (sharedPref == null) {
-            Toast.makeText(
-                activity,
-                getString(R.string.error_shared_pref_is_null),
-                Toast.LENGTH_SHORT
-            ).show()
-            activity?.onBackPressed()
-            return binding.root
-        }
+        bottomSheetBinding = DialogAddReviewBinding.inflate(layoutInflater)
+
+        dialog = BottomSheetDialog(requireContext())
+        dialog.setContentView(bottomSheetBinding.root)
+
         return binding.root
     }
 
@@ -111,6 +104,7 @@ class ShowDetailsFragment : Fragment() {
 
         initWriteReviewButton()
         initReviewsRecycler()
+        initAddReviewBottomSheet()
     }
 
     private fun updateShow(show: Show) {
@@ -147,26 +141,16 @@ class ShowDetailsFragment : Fragment() {
 
     private fun initWriteReviewButton() {
         binding.writeReviewButton.setOnClickListener {
-            showAddReviewBottomSheet()
+            dialog.show()
         }
     }
 
-
-    private fun showAddReviewBottomSheet() {
-
-        val activity = activity as AppCompatActivity
-
-        val dialog = BottomSheetDialog(activity)
-
-        val bottomSheetBinding = DialogAddReviewBinding.inflate(layoutInflater)
-        dialog.setContentView(bottomSheetBinding.root)
-
+    private fun initAddReviewBottomSheet() {
         bottomSheetBinding.starRatingBar.setOnRatingBarChangeListener { _: RatingBar, _: Float, _: Boolean ->
             bottomSheetBinding.confirmButton.isEnabled = true
         }
 
         bottomSheetBinding.confirmButton.setOnClickListener {
-
             showDetailsViewModel.addReview(
                 bottomSheetBinding.starRatingBar.rating.toInt(),
                 bottomSheetBinding.commentInput.text.toString(),
@@ -174,7 +158,10 @@ class ShowDetailsFragment : Fragment() {
             )
             dialog.dismiss()
         }
-        dialog.show()
+
+        bottomSheetBinding.closeButton.setOnClickListener{
+            dialog.dismiss()
+        }
     }
 
     private fun initReviewsRecycler() {
