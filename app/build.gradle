@@ -82,5 +82,7 @@ dependencies {
 
 //    implementation 'com.google.dagger:dagger:2.28.3'
 //    annotationProcessor 'com.google.dagger:dagger-compiler:2.28.3'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+
 
 }

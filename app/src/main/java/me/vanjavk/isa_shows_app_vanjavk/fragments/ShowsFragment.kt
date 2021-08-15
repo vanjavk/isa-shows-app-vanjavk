@@ -154,12 +154,15 @@ class ShowsFragment : Fragment() {
             when (resource.status) {
                 Status.LOADING -> {
                     resource.data?.let { updateTopRatedShows(it) }
+                    binding.pullToRefresh.isRefreshing = true
                 }
                 Status.SUCCESS -> {
                     resource.data?.let { updateTopRatedShows(it) }
+                    binding.pullToRefresh.isRefreshing = false
                 }
                 Status.ERROR -> {
                     resource.data?.let { updateTopRatedShows(it) }
+                    binding.pullToRefresh.isRefreshing = false
                 }
             }
         })
@@ -307,6 +310,19 @@ class ShowsFragment : Fragment() {
             }
         }
         binding.showsRecyclerView.adapter = showsAdapter
+
+        binding.pullToRefresh.setOnRefreshListener {
+            refreshShows(binding.topRatedShowChip.isChecked)
+        }
+        binding.pullToRefresh.setColorSchemeResources(R.color.purple_infinum_dark)
+    }
+
+    private fun refreshShows(isChecked: Boolean){
+        if (isChecked){
+            showsViewModel.fetchTopRatedShows()
+        }else{
+          //
+        }
     }
 
     private fun initTopRatedShowsChip() {
@@ -314,9 +330,7 @@ class ShowsFragment : Fragment() {
             binding.showsRecyclerView.adapter =
                 if (isChecked) topRatedShowsAdapter else showsAdapter
             binding.showsRecyclerView.isVisible = binding.showsRecyclerView.adapter?.itemCount != 0
-            if (isChecked) {
-                showsViewModel.fetchTopRatedShows()
-            }
+            refreshShows(isChecked)
         }
     }
 
