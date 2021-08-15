@@ -150,21 +150,22 @@ class ShowsFragment : Fragment() {
         })
 
         showsViewModel.topRatedShowsLiveData.observe(viewLifecycleOwner, { resource ->
-            binding.showsRecyclerView.isVisible = !resource.data.isNullOrEmpty()
+            //binding.pullToRefresh.isVisible = !resource.data.isNullOrEmpty()
             when (resource.status) {
                 Status.LOADING -> {
                     resource.data?.let { updateTopRatedShows(it) }
-                    binding.pullToRefresh.isRefreshing = true
+                    binding.swipeRefreshLayout.isRefreshing = true
                 }
                 Status.SUCCESS -> {
                     resource.data?.let { updateTopRatedShows(it) }
-                    binding.pullToRefresh.isRefreshing = false
+                    binding.swipeRefreshLayout.isRefreshing = false
                 }
                 Status.ERROR -> {
                     resource.data?.let { updateTopRatedShows(it) }
-                    binding.pullToRefresh.isRefreshing = false
+                    binding.swipeRefreshLayout.isRefreshing = false
                 }
             }
+            checkShowsEmpty()
         })
 
         showsViewModel.getUserLiveData().observe(viewLifecycleOwner, { user ->
@@ -219,7 +220,6 @@ class ShowsFragment : Fragment() {
         setImageFromFile(bottomSheetBinding.userProfileImage, imageUrl)
     }
 
-
     private fun setImageFromFile(imageView: ImageView, imageUrl: String?) {
         if (imageUrl.isNullOrBlank()) {
             binding.profileIconImage.setImageResource(R.drawable.ic_painting_art)
@@ -234,6 +234,10 @@ class ShowsFragment : Fragment() {
 
     private fun updateTopRatedShows(shows: List<Show>) {
         topRatedShowsAdapter?.setItems(shows)
+    }
+
+    private fun checkShowsEmpty(){
+        binding.showsRecyclerView.isVisible = binding.showsRecyclerView.adapter?.itemCount != 0
     }
 
     private fun initUserProfileButton() {
@@ -311,26 +315,27 @@ class ShowsFragment : Fragment() {
         }
         binding.showsRecyclerView.adapter = showsAdapter
 
-        binding.pullToRefresh.setOnRefreshListener {
+        binding.swipeRefreshLayout.setOnRefreshListener {
             refreshShows(binding.topRatedShowChip.isChecked)
         }
-        binding.pullToRefresh.setColorSchemeResources(R.color.purple_infinum_dark)
+        binding.swipeRefreshLayout.setColorSchemeResources(R.color.purple_infinum_dark)
     }
 
-    private fun refreshShows(isChecked: Boolean){
-        if (isChecked){
+    private fun refreshShows(isChecked: Boolean) {
+        if (isChecked) {
             showsViewModel.fetchTopRatedShows()
-        }else{
-          //
+        } else {
+            //
         }
+
     }
 
     private fun initTopRatedShowsChip() {
         binding.topRatedShowChip.setOnCheckedChangeListener { _, isChecked ->
             binding.showsRecyclerView.adapter =
                 if (isChecked) topRatedShowsAdapter else showsAdapter
-            binding.showsRecyclerView.isVisible = binding.showsRecyclerView.adapter?.itemCount != 0
             refreshShows(isChecked)
+            checkShowsEmpty()
         }
     }
 
