@@ -17,6 +17,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.Adapter.StateRestorationPolicy
 import com.bumptech.glide.Glide
@@ -43,6 +44,8 @@ import me.vanjavk.isa_shows_app_vanjavk.utils.GlideUrlCustomCacheKey
 class ShowsFragment : Fragment() {
 
     private var _binding: FragmentShowsBinding? = null
+
+    private var recyclerViewViewType = ShowsAdapter.ViewType.VIEW_TYPE_CARD
 
     private val binding get() = _binding!!
 
@@ -212,7 +215,6 @@ class ShowsFragment : Fragment() {
 
         initUserProfileButton()
         initUserProfileBottomSheet()
-        initTopRatedShowsChip()
     }
 
     private fun updateProfileIcons(imageUrl: String?) {
@@ -236,7 +238,7 @@ class ShowsFragment : Fragment() {
         topRatedShowsAdapter?.setItems(shows)
     }
 
-    private fun checkShowsEmpty(){
+    private fun checkShowsEmpty() {
         binding.showsRecyclerView.isVisible = binding.showsRecyclerView.adapter?.itemCount != 0
     }
 
@@ -290,6 +292,9 @@ class ShowsFragment : Fragment() {
     }
 
     private fun initShowsRecycler() {
+
+        initTopRatedShowsChip()
+
         showsAdapter = ShowsAdapter(emptyList()) { item ->
             ShowsFragmentDirections.actionShowToDetails(
                 item.id
@@ -319,15 +324,17 @@ class ShowsFragment : Fragment() {
             refreshShows(binding.topRatedShowChip.isChecked)
         }
         binding.swipeRefreshLayout.setColorSchemeResources(R.color.purple_infinum_dark)
-    }
 
-    private fun refreshShows(isChecked: Boolean) {
-        if (isChecked) {
-            showsViewModel.fetchTopRatedShows()
-        } else {
-            //
+        binding.changeLayoutFAB.setOnClickListener {
+            when (recyclerViewViewType) {
+                ShowsAdapter.ViewType.VIEW_TYPE_CARD -> {
+                    setViewType(ShowsAdapter.ViewType.VIEW_TYPE_GRID)
+                }
+                ShowsAdapter.ViewType.VIEW_TYPE_GRID -> {
+                    setViewType(ShowsAdapter.ViewType.VIEW_TYPE_CARD)
+                }
+            }
         }
-
     }
 
     private fun initTopRatedShowsChip() {
@@ -336,7 +343,44 @@ class ShowsFragment : Fragment() {
                 if (isChecked) topRatedShowsAdapter else showsAdapter
             refreshShows(isChecked)
             checkShowsEmpty()
+            setViewType()
         }
+    }
+
+    private fun setViewType(viewType: ShowsAdapter.ViewType = recyclerViewViewType) {
+        recyclerViewViewType = viewType
+        //val recyclerBinding = (binding.showsRecyclerView.adapter as ShowsAdapter)
+        when (recyclerViewViewType) {
+            ShowsAdapter.ViewType.VIEW_TYPE_CARD -> {
+                binding.changeLayoutFAB.setImageResource(R.drawable.ic_fab_grid)
+                binding.showsRecyclerView.layoutManager = object : LinearLayoutManager(activity) {
+                    override fun getExtraLayoutSpace(state: RecyclerView.State): Int {
+                        return requireContext().resources.getDimensionPixelSize(R.dimen.recycler_view_extra_space)
+                    }
+                }
+            }
+            ShowsAdapter.ViewType.VIEW_TYPE_GRID -> {
+                binding.changeLayoutFAB.setImageResource(R.drawable.ic_fab_card)
+                binding.showsRecyclerView.layoutManager = object : GridLayoutManager(activity, 2) {
+                    override fun getExtraLayoutSpace(state: RecyclerView.State): Int {
+                        return requireContext().resources.getDimensionPixelSize(R.dimen.recycler_view_extra_space)
+                    }
+                }
+            }
+
+        }
+        (binding.showsRecyclerView.adapter as ShowsAdapter).setViewType(recyclerViewViewType)
+        binding.showsRecyclerView.adapter =
+            if (binding.topRatedShowChip.isChecked) topRatedShowsAdapter else showsAdapter
+    }
+
+    private fun refreshShows(isTopRatedShowsChecked: Boolean) {
+        if (isTopRatedShowsChecked) {
+            showsViewModel.fetchTopRatedShows()
+        } else {
+            //
+        }
+
     }
 
     override fun onDestroyView() {

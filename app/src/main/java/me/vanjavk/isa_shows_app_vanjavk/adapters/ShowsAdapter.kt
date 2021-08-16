@@ -21,18 +21,18 @@ class ShowsAdapter(
         VIEW_TYPE_CARD, VIEW_TYPE_GRID
     }
 
-    private var viewType: ViewType = ViewType.VIEW_TYPE_GRID
+    private var layoutType: ViewType = ViewType.VIEW_TYPE_CARD
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return when (viewType) {
-            ViewType.VIEW_TYPE_CARD.ordinal -> ShowViewHolder(
+        return when (layoutType) {
+            ViewType.VIEW_TYPE_CARD -> ShowViewHolder(
                 ViewShowItemBinding.inflate(
                     LayoutInflater.from(parent.context),
                     parent,
                     false
                 )
             )
-            ViewType.VIEW_TYPE_GRID.ordinal -> ShowViewHolderGrid(
+            ViewType.VIEW_TYPE_GRID -> ShowViewHolderGrid(
                 ViewShowItemGridBinding.inflate(
                     LayoutInflater.from(parent.context),
                     parent,
@@ -49,7 +49,7 @@ class ShowsAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (viewType) {
+        when (layoutType) {
             ViewType.VIEW_TYPE_CARD -> {
                 if (holder is ShowViewHolder) {
                     holder.bind(items[position])
@@ -62,6 +62,11 @@ class ShowsAdapter(
             }
         }
     }
+    fun setViewType(viewType: ViewType) {
+        this.layoutType = viewType
+        notifyDataSetChanged()
+    }
+    fun getViewType(): ViewType = layoutType
 
     fun setItems(shows: List<Show>) {
         items = shows
@@ -72,6 +77,7 @@ class ShowsAdapter(
         items = items + show
         notifyItemInserted(items.size)
     }
+
 
     inner class ShowViewHolder(private val binding: ViewShowItemBinding) :
         RecyclerView.ViewHolder(binding.root) {

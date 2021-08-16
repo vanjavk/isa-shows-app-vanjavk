@@ -6,7 +6,7 @@
     android:id="@+id/showItemFrameLayoutParent"
     android:layout_width="match_parent"
     android:layout_height="320dp"
-    android:layout_marginHorizontal="24dp"
+    android:layout_marginHorizontal="8dp"
     android:clipChildren="false"
     android:clipToPadding="false"
     android:paddingBottom="16dp">
