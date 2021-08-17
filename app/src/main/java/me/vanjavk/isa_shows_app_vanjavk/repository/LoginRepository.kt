@@ -34,7 +34,7 @@ class LoginRepository(activity: Activity) : Repository(activity) {
 
     fun login(email: String, password: String, rememberMe: Boolean) {
         loginLiveData.value = Resource.loading(true)
-        if (activity.isOnline()){
+        if (activity.isOnline()) {
             ApiModule.retrofit.login(LoginRequest(email, password)).enqueue(object :
                 Callback<UserResponse> {
                 override fun onResponse(
@@ -51,25 +51,25 @@ class LoginRepository(activity: Activity) : Repository(activity) {
                             putString(USER_EMAIL_KEY, email)
                             putString(USER_IMAGE_URL_KEY, user.imageUrl)
                             putBoolean(REMEMBER_ME_KEY, rememberMe)
-                            if (rememberMe) {
-                                putString(USER_AUTH_ACCESS_TOKEN_TYPE_KEY, accessToken)
-                                putString(USER_AUTH_CLIENT_TYPE_KEY, client)
-                                putString(USER_AUTH_UID_TYPE_KEY, uid)
-                            }
+                            putString(USER_AUTH_ACCESS_TOKEN_TYPE_KEY, accessToken)
+                            putString(USER_AUTH_CLIENT_TYPE_KEY, client)
+                            putString(USER_AUTH_UID_TYPE_KEY, uid)
+
                             apply()
                         }
                         loginLiveData.postValue(Resource.success(true))
                     } else {
-                        loginLiveData.postValue(Resource.error("",true))
+                        loginLiveData.postValue(Resource.error("", true))
                     }
                 }
+
                 override fun onFailure(call: Call<UserResponse>, t: Throwable) {
-                    loginLiveData.postValue(Resource.error("",true))
+                    loginLiveData.postValue(Resource.error("", true))
                 }
 
             })
-        }else{
-            loginLiveData.postValue(Resource.error("",false))
+        } else {
+            loginLiveData.postValue(Resource.error("", false))
         }
 
 
