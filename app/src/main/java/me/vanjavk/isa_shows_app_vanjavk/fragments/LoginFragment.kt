@@ -12,8 +12,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.snackbar.Snackbar
 import me.vanjavk.isa_shows_app_vanjavk.*
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentLoginBinding
+import me.vanjavk.isa_shows_app_vanjavk.networking.Status
+import me.vanjavk.isa_shows_app_vanjavk.repository.LoginRepository
 import me.vanjavk.isa_shows_app_vanjavk.repository.ShowsRepository
 import me.vanjavk.isa_shows_app_vanjavk.viewmodels.LoginViewModel
 import me.vanjavk.isa_shows_app_vanjavk.viewmodels.ViewModelFactory
@@ -29,7 +32,7 @@ class LoginFragment : Fragment() {
     private val loginViewModel: LoginViewModel by viewModels {
         ViewModelFactory(
             requireActivity().getPreferences(Context.MODE_PRIVATE),
-            ShowsRepository(requireActivity())
+            LoginRepository(requireActivity())
         )
     }
 
@@ -64,22 +67,34 @@ class LoginFragment : Fragment() {
         }
 
         loginViewModel.getLoginResultLiveData()
-            .observe(this.viewLifecycleOwner) { isLoginSuccessful ->
-                if (isLoginSuccessful) {
-                    LoginFragmentDirections.actionLoginToShows()
-                        .let { findNavController().navigate(it) }
-                } else {
-                    Toast.makeText(
-                        activity,
-                        "Email and password combination is incorrect!",
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
-                    loginInProcess = false
-                    checkLoginButtonEnableable()
-                }
-            }
+            .observe(this.viewLifecycleOwner) { resource ->
+                when (resource.status) {
+                    Status.LOADING -> {
+                        loginInProcess = true
+                        Snackbar.make(view, getString(R.string.logging_in), Snackbar.LENGTH_SHORT)
+                            .show()
+                    }
+                    Status.SUCCESS -> {
+                        loginInProcess = false
+                        LoginFragmentDirections.actionLoginToShows()
+                            .let { findNavController().navigate(it) }
+                    }
+                    Status.ERROR -> {
+                        loginInProcess = false
+                        if (resource.data==true){
+                            binding.passwordInputLayout.error =
+                                getString(R.string.error_email_and_password_combination)
+                        }else{
+                            binding.passwordInputLayout.error =
+                                getString(R.string.error_no_internet)
+                            Snackbar.make(view, getString(R.string.error_no_internet), Snackbar.LENGTH_LONG)
+                                .show()
+                        }
 
+                    }
+                }
+                checkLoginButtonEnableable()
+            }
         initLoginButton()
         initRegisterButton()
     }

@@ -153,7 +153,6 @@ class ShowsFragment : Fragment() {
         })
 
         showsViewModel.topRatedShowsLiveData.observe(viewLifecycleOwner, { resource ->
-            //binding.pullToRefresh.isVisible = !resource.data.isNullOrEmpty()
             when (resource.status) {
                 Status.LOADING -> {
                     resource.data?.let { updateTopRatedShows(it) }
