@@ -30,9 +30,13 @@ import java.util.concurrent.Executors
 
 class ShowsRepository(activity: Activity) : Repository(activity) {
 
+    private val showsResultLiveData = MutableLiveData<Resource<Boolean>>()
+
     private val topRatedShowsLiveData = MutableLiveData<Resource<List<Show>>>()
 
-    fun getTopRatedShows(): LiveData<Resource<List<Show>>> = topRatedShowsLiveData
+    fun getTopRatedShowsLiveData(): LiveData<Resource<List<Show>>> = topRatedShowsLiveData
+
+    fun getShowsResultLiveData(): MutableLiveData<Resource<Boolean>> = showsResultLiveData
 
     fun fetchTopRatedShows() {
         topRatedShowsLiveData.value = Resource.loading(topRatedShowsLiveData.value?.data)
@@ -63,9 +67,8 @@ class ShowsRepository(activity: Activity) : Repository(activity) {
             }
         }
 
-    fun getShows(
-        showsResult: MutableLiveData<Boolean>
-    ) {
+    fun fetchShows() {
+        showsResultLiveData.value = Resource.loading(true)
         if (activity.isOnline()) {
             ApiModule.retrofit.getShows().enqueue(object :
                 Callback<ShowsResponse> {
@@ -75,7 +78,7 @@ class ShowsRepository(activity: Activity) : Repository(activity) {
                 ) {
                     val shows = response.body()?.shows
                     if (shows != null) {
-                        showsResult.value = true
+                        showsResultLiveData.postValue(Resource.success( true))
                         Executors.newSingleThreadExecutor().execute {
                             database.showDao().insertAllShows(
                                 shows.map {
@@ -88,12 +91,11 @@ class ShowsRepository(activity: Activity) : Repository(activity) {
                 }
 
                 override fun onFailure(call: Call<ShowsResponse>, t: Throwable) {
-                    Log.d("GETSHOWSFAILURE", t.message.toString())
-                    showsResult.value = false
+                    showsResultLiveData.postValue(Resource.error(t.message.toString(), true))
                 }
             })
         } else {
-            showsResult.value = false
+            showsResultLiveData.postValue(Resource.error("", false))
         }
     }
 

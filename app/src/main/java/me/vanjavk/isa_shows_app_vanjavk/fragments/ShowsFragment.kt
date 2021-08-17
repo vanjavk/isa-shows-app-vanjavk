@@ -32,6 +32,7 @@ import me.vanjavk.isa_shows_app_vanjavk.viewmodels.ViewModelFactory
 import java.io.File
 import java.util.*
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import me.vanjavk.isa_shows_app_vanjavk.R
 import me.vanjavk.isa_shows_app_vanjavk.getFileFromUri
 import me.vanjavk.isa_shows_app_vanjavk.models.Show
@@ -51,6 +52,7 @@ class ShowsFragment : Fragment() {
 
     private lateinit var bottomSheetBinding: DialogUserProfileBinding
     private lateinit var dialog: BottomSheetDialog
+    private var snackbar: Snackbar? = null
 
     private var showsAdapter: ShowsAdapter? = null
 
@@ -149,7 +151,29 @@ class ShowsFragment : Fragment() {
         showsViewModel.getShowsLiveData().observe(viewLifecycleOwner, { shows ->
             binding.showsRecyclerView.isVisible = !shows.isNullOrEmpty()
             updateShows(shows)
+        })
 
+        showsViewModel.showsResultLiveData.observe(viewLifecycleOwner, { resource ->
+            when (resource.status) {
+                Status.LOADING -> {
+                    binding.swipeRefreshLayout.isRefreshing = true
+                    snackbar?.dismiss()
+                }
+                Status.SUCCESS -> {
+                    binding.swipeRefreshLayout.isRefreshing = false
+                    snackbar?.dismiss()
+                }
+                Status.ERROR -> {
+                    if (resource.data==true){
+                        snackbar?.dismiss()
+                    }else{
+                        snackbar = Snackbar.make(view, getString(R.string.error_no_internet), Snackbar.LENGTH_LONG)
+                        snackbar?.show()
+                    }
+                    binding.swipeRefreshLayout.isRefreshing = false
+                }
+            }
+            checkShowsEmpty()
         })
 
         showsViewModel.topRatedShowsLiveData.observe(viewLifecycleOwner, { resource ->
@@ -163,6 +187,12 @@ class ShowsFragment : Fragment() {
                     binding.swipeRefreshLayout.isRefreshing = false
                 }
                 Status.ERROR -> {
+                    snackbar = Snackbar.make(
+                        view,
+                        getString(R.string.error_no_internet),
+                        Snackbar.LENGTH_LONG
+                    )
+                    snackbar?.show()
                     resource.data?.let { updateTopRatedShows(it) }
                     binding.swipeRefreshLayout.isRefreshing = false
                 }
@@ -174,28 +204,6 @@ class ShowsFragment : Fragment() {
             updateProfileIcons(user.imageUrl)
             bottomSheetBinding.userEmail.text = user.email
         })
-
-        showsViewModel.getShowsResultLiveData()
-            .observe(viewLifecycleOwner, { isGetShowsSuccessful ->
-                if (!isGetShowsSuccessful) {
-//                    Toast.makeText(
-//                        activity,
-//                        getString(R.string.error_failure_response),
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-                }
-            })
-
-        showsViewModel.getCurrentUserResultLiveData()
-            .observe(viewLifecycleOwner, { isGetCurrentUserSuccessful ->
-                if (!isGetCurrentUserSuccessful) {
-//                    Toast.makeText(
-//                        activity,
-//                        getString(R.string.error_failure_response),
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-                }
-            })
 
         showsViewModel.getChangeProfilePictureResultLiveDataLiveData()
             .observe(viewLifecycleOwner, { isChangeProfilePictureSuccessful ->
@@ -209,7 +217,7 @@ class ShowsFragment : Fragment() {
             })
 
         showsViewModel.getCurrentUser()
-        showsViewModel.getShows()
+        showsViewModel.fetchShows()
         showsViewModel.fetchTopRatedShows()
 
         initUserProfileButton()
@@ -377,9 +385,8 @@ class ShowsFragment : Fragment() {
         if (isTopRatedShowsChecked) {
             showsViewModel.fetchTopRatedShows()
         } else {
-            //
+            showsViewModel.fetchShows()
         }
-
     }
 
     override fun onDestroyView() {
