@@ -145,7 +145,7 @@ class ShowsRepository(activity: Activity) : Repository(activity) {
                 }
             })
         } else {
-            changeProfilePictureResultLiveData.postValue(Resource.error("", false))
+            changeProfilePictureResultLiveData.postValue(Resource.error(NO_INTERNET_ERROR, false))
         }
     }
 

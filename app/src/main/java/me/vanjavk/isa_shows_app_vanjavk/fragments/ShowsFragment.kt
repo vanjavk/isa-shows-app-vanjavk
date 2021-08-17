@@ -236,10 +236,11 @@ class ShowsFragment : Fragment() {
 
         showsViewModel.changeProfilePictureResultLiveData
             .observe(viewLifecycleOwner, { resource ->
+                val dialogView = dialog.window?.decorView ?: return@observe
                 when (resource.status) {
                     Status.LOADING -> {
                         snackbar = Snackbar.make(
-                            view,
+                            dialogView,
                             getString(R.string.info_uploading_profile_picture),
                             Snackbar.LENGTH_LONG
                         )
@@ -247,23 +248,23 @@ class ShowsFragment : Fragment() {
                     }
                     Status.SUCCESS -> {
                         snackbar = Snackbar.make(
-                            view,
+                            dialogView,
                             getString(R.string.info_profile_picture_upload_success),
-                            Snackbar.LENGTH_SHORT
+                            Snackbar.LENGTH_LONG
                         )
                         snackbar?.show()
                     }
                     Status.ERROR -> {
                         if (resource.message != NO_INTERNET_ERROR) {
                             snackbar = Snackbar.make(
-                                view,
+                                dialogView,
                                 getString(R.string.error_change_profile_picture),
-                                Snackbar.LENGTH_SHORT
+                                Snackbar.LENGTH_LONG
                             )
                             snackbar?.show()
                         } else {
                             snackbar = Snackbar.make(
-                                view,
+                                dialogView,
                                 getString(R.string.error_no_internet),
                                 Snackbar.LENGTH_LONG
                             )
