@@ -6,32 +6,22 @@ import androidx.lifecycle.ViewModel
 import me.vanjavk.isa_shows_app_vanjavk.models.network.RegisterRequest
 import me.vanjavk.isa_shows_app_vanjavk.models.network.RegisterResponse
 import me.vanjavk.isa_shows_app_vanjavk.modules.ApiModule
+import me.vanjavk.isa_shows_app_vanjavk.networking.Resource
+import me.vanjavk.isa_shows_app_vanjavk.repository.LoginRepository
+import me.vanjavk.isa_shows_app_vanjavk.repository.RegistrationRepository
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class RegistrationViewModel : ViewModel() {
+class RegistrationViewModel(
+    private val repository: RegistrationRepository
+) : ViewModel() {
 
-    private val registrationResultLiveData: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
-
-    fun getRegistrationResultLiveData(): LiveData<Boolean> {
-        return registrationResultLiveData
+    fun getRegistrationResultLiveData(): LiveData<Resource<Boolean>> {
+        return repository.getRegistrationLiveData()
     }
 
     fun register(email: String, password: String) {
-        ApiModule.retrofit.register(RegisterRequest(email, password, password)).enqueue(object :
-            Callback<RegisterResponse> {
-            override fun onResponse(
-                call: Call<RegisterResponse>,
-                response: Response<RegisterResponse>
-            ) {
-                registrationResultLiveData.value = response.isSuccessful
-            }
-
-            override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
-                registrationResultLiveData.value = false
-            }
-
-        })
+        repository.register(email, password)
     }
 }

@@ -47,4 +47,6 @@
     <string name="error_email_and_password_combination">Email and password combination is incorrect!</string>
     <string name="error_no_internet">No internet connection.</string>
     <string name="logging_in">Logging in...</string>
+    <string name="error_email_already_in_use">E-mail already in use!</string>
+    <string name="registering">Registering...</string>
 </resources>
