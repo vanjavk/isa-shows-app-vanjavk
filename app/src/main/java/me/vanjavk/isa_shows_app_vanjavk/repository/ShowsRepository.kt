@@ -6,6 +6,7 @@ import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import me.vanjavk.isa_shows_app_vanjavk.NO_INTERNET_ERROR
 import me.vanjavk.isa_shows_app_vanjavk.USER_ID_KEY
 import me.vanjavk.isa_shows_app_vanjavk.USER_IMAGE_URL_KEY
 import me.vanjavk.isa_shows_app_vanjavk.isOnline
@@ -30,13 +31,22 @@ import java.util.concurrent.Executors
 
 class ShowsRepository(activity: Activity) : Repository(activity) {
 
+    private val userLiveData = MutableLiveData<Resource<User>>()
+
+    private val changeProfilePictureResultLiveData = MutableLiveData<Resource<Boolean>>()
+
     private val showsResultLiveData = MutableLiveData<Resource<Boolean>>()
 
     private val topRatedShowsLiveData = MutableLiveData<Resource<List<Show>>>()
 
+    fun getUserLiveData(): LiveData<Resource<User>> = userLiveData
+
+    fun getChangeProfilePictureResultLiveData(): LiveData<Resource<Boolean>> =
+        changeProfilePictureResultLiveData
+
     fun getTopRatedShowsLiveData(): LiveData<Resource<List<Show>>> = topRatedShowsLiveData
 
-    fun getShowsResultLiveData(): MutableLiveData<Resource<Boolean>> = showsResultLiveData
+    fun getShowsResultLiveData(): LiveData<Resource<Boolean>> = showsResultLiveData
 
     fun fetchTopRatedShows() {
         topRatedShowsLiveData.value = Resource.loading(topRatedShowsLiveData.value?.data)
@@ -56,7 +66,7 @@ class ShowsRepository(activity: Activity) : Repository(activity) {
                 }
             })
         } else {
-            topRatedShowsLiveData.postValue(Resource.error(null, null))
+            topRatedShowsLiveData.postValue(Resource.error(NO_INTERNET_ERROR, null))
         }
     }
 
@@ -78,7 +88,7 @@ class ShowsRepository(activity: Activity) : Repository(activity) {
                 ) {
                     val shows = response.body()?.shows
                     if (shows != null) {
-                        showsResultLiveData.postValue(Resource.success( true))
+                        showsResultLiveData.postValue(Resource.success(true))
                         Executors.newSingleThreadExecutor().execute {
                             database.showDao().insertAllShows(
                                 shows.map {
@@ -100,45 +110,46 @@ class ShowsRepository(activity: Activity) : Repository(activity) {
     }
 
     fun uploadProfilePicture(
-        file: File,
-        userLiveData: MutableLiveData<User>,
-        changeProfilePictureResult: MutableLiveData<Boolean>
+        file: File
     ) {
-        val requestFile: RequestBody = file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
-        val body: MultipartBody.Part =
-            MultipartBody.Part.createFormData("image", file.name, requestFile)
-        val email: RequestBody = sharedPref.getString("USER_AUTH_UID_TYPE_KEY", "").orEmpty()
-            .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-        ApiModule.retrofit.changeProfilePicture(email, body).enqueue(object :
-            Callback<UserResponse> {
-            override fun onResponse(
-                call: Call<UserResponse>,
-                response: Response<UserResponse>
-            ) {
-                val user = response.body()?.user
-                if (user != null) {
-                    userLiveData.value = user
-                    sharedPref.edit {
-                        putString(USER_IMAGE_URL_KEY, user.imageUrl)
-                        putString(USER_ID_KEY, user.userId)
-                        apply()
+        changeProfilePictureResultLiveData.value = Resource.loading(true)
+        if (activity.isOnline()) {
+            val requestFile: RequestBody =
+                file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+            val body: MultipartBody.Part =
+                MultipartBody.Part.createFormData("image", file.name, requestFile)
+            val email: RequestBody = sharedPref.getString("USER_AUTH_UID_TYPE_KEY", "").orEmpty()
+                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
+            ApiModule.retrofit.changeProfilePicture(email, body).enqueue(object :
+                Callback<UserResponse> {
+                override fun onResponse(
+                    call: Call<UserResponse>,
+                    response: Response<UserResponse>
+                ) {
+                    val user = response.body()?.user
+                    if (user != null) {
+                        userLiveData.postValue(Resource.success(user))
+                        sharedPref.edit {
+                            putString(USER_IMAGE_URL_KEY, user.imageUrl)
+                            putString(USER_ID_KEY, user.userId)
+                            apply()
+                        }
+                        changeProfilePictureResultLiveData.postValue(Resource.success(true))
+                    } else {
+                        changeProfilePictureResultLiveData.postValue(Resource.error("", true))
                     }
-                    changeProfilePictureResult.value = true
-                } else {
-                    changeProfilePictureResult.value = false
                 }
-            }
 
-            override fun onFailure(call: Call<UserResponse>, t: Throwable) {
-                Log.d("CHANGEPROFILEFAILURE", t.message.toString())
-                changeProfilePictureResult.value = false
-            }
-        })
+                override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+                    changeProfilePictureResultLiveData.postValue(Resource.error("", true))
+                }
+            })
+        } else {
+            changeProfilePictureResultLiveData.postValue(Resource.error("", false))
+        }
     }
 
-    fun getCurrentUser(
-        userLiveData: MutableLiveData<User>, currentUserResult: MutableLiveData<Boolean>
-    ) {
+    fun getCurrentUser() {
         ApiModule.retrofit.getCurrentUser().enqueue(object :
             Callback<UserResponse> {
             override fun onResponse(
@@ -151,14 +162,12 @@ class ShowsRepository(activity: Activity) : Repository(activity) {
                         putString(USER_ID_KEY, user.userId)
                         apply()
                     }
-                    userLiveData.value = user
-                    currentUserResult.value = true
+                    userLiveData.postValue(Resource.success(user))
                 }
             }
 
             override fun onFailure(call: Call<UserResponse>, t: Throwable) {
-                Log.d("GETUSERFAILURE", t.message.toString())
-                currentUserResult.value = false
+                userLiveData.postValue(Resource.error("", userLiveData.value?.data))
             }
         })
     }

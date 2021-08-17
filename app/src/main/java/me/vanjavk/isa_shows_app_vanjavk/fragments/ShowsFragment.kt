@@ -33,6 +33,7 @@ import java.io.File
 import java.util.*
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import me.vanjavk.isa_shows_app_vanjavk.NO_INTERNET_ERROR
 import me.vanjavk.isa_shows_app_vanjavk.R
 import me.vanjavk.isa_shows_app_vanjavk.getFileFromUri
 import me.vanjavk.isa_shows_app_vanjavk.models.Show
@@ -156,18 +157,27 @@ class ShowsFragment : Fragment() {
         showsViewModel.showsResultLiveData.observe(viewLifecycleOwner, { resource ->
             when (resource.status) {
                 Status.LOADING -> {
+                    snackbar = Snackbar.make(
+                        view,
+                        getString(R.string.info_loading_shows),
+                        Snackbar.LENGTH_LONG
+                    )
+                    snackbar?.show()
                     binding.swipeRefreshLayout.isRefreshing = true
-                    snackbar?.dismiss()
                 }
                 Status.SUCCESS -> {
-                    binding.swipeRefreshLayout.isRefreshing = false
                     snackbar?.dismiss()
+                    binding.swipeRefreshLayout.isRefreshing = false
                 }
                 Status.ERROR -> {
-                    if (resource.data==true){
+                    if (resource.data == true) {
                         snackbar?.dismiss()
-                    }else{
-                        snackbar = Snackbar.make(view, getString(R.string.error_no_internet), Snackbar.LENGTH_LONG)
+                    } else {
+                        snackbar = Snackbar.make(
+                            view,
+                            getString(R.string.error_no_internet),
+                            Snackbar.LENGTH_LONG
+                        )
                         snackbar?.show()
                     }
                     binding.swipeRefreshLayout.isRefreshing = false
@@ -179,20 +189,31 @@ class ShowsFragment : Fragment() {
         showsViewModel.topRatedShowsLiveData.observe(viewLifecycleOwner, { resource ->
             when (resource.status) {
                 Status.LOADING -> {
+                    snackbar = Snackbar.make(
+                        view,
+                        getString(R.string.info_loading_shows),
+                        Snackbar.LENGTH_LONG
+                    )
+                    snackbar?.show()
                     resource.data?.let { updateTopRatedShows(it) }
                     binding.swipeRefreshLayout.isRefreshing = true
                 }
                 Status.SUCCESS -> {
+                    snackbar?.dismiss()
                     resource.data?.let { updateTopRatedShows(it) }
                     binding.swipeRefreshLayout.isRefreshing = false
                 }
                 Status.ERROR -> {
-                    snackbar = Snackbar.make(
-                        view,
-                        getString(R.string.error_no_internet),
-                        Snackbar.LENGTH_LONG
-                    )
-                    snackbar?.show()
+                    if (resource.message != NO_INTERNET_ERROR) {
+                        snackbar?.dismiss()
+                    } else {
+                        snackbar = Snackbar.make(
+                            view,
+                            getString(R.string.error_no_internet),
+                            Snackbar.LENGTH_LONG
+                        )
+                        snackbar?.show()
+                    }
                     resource.data?.let { updateTopRatedShows(it) }
                     binding.swipeRefreshLayout.isRefreshing = false
                 }
@@ -200,19 +221,55 @@ class ShowsFragment : Fragment() {
             checkShowsEmpty()
         })
 
-        showsViewModel.getUserLiveData().observe(viewLifecycleOwner, { user ->
-            updateProfileIcons(user.imageUrl)
-            bottomSheetBinding.userEmail.text = user.email
+        showsViewModel.userLiveData.observe(viewLifecycleOwner, { resource ->
+            when (resource.status) {
+                Status.LOADING -> {
+                }
+                Status.SUCCESS -> {
+                    updateProfileIcons(resource.data?.imageUrl)
+                    bottomSheetBinding.userEmail.text = resource.data?.email
+                }
+                Status.ERROR -> {
+                }
+            }
         })
 
-        showsViewModel.getChangeProfilePictureResultLiveDataLiveData()
-            .observe(viewLifecycleOwner, { isChangeProfilePictureSuccessful ->
-                if (!isChangeProfilePictureSuccessful) {
-                    Toast.makeText(
-                        activity,
-                        getString(R.string.error_changing_profile_picture),
-                        Toast.LENGTH_SHORT
-                    ).show()
+        showsViewModel.changeProfilePictureResultLiveData
+            .observe(viewLifecycleOwner, { resource ->
+                when (resource.status) {
+                    Status.LOADING -> {
+                        snackbar = Snackbar.make(
+                            view,
+                            getString(R.string.info_uploading_profile_picture),
+                            Snackbar.LENGTH_LONG
+                        )
+                        snackbar?.show()
+                    }
+                    Status.SUCCESS -> {
+                        snackbar = Snackbar.make(
+                            view,
+                            getString(R.string.info_profile_picture_upload_success),
+                            Snackbar.LENGTH_SHORT
+                        )
+                        snackbar?.show()
+                    }
+                    Status.ERROR -> {
+                        if (resource.message != NO_INTERNET_ERROR) {
+                            snackbar = Snackbar.make(
+                                view,
+                                getString(R.string.error_change_profile_picture),
+                                Snackbar.LENGTH_SHORT
+                            )
+                            snackbar?.show()
+                        } else {
+                            snackbar = Snackbar.make(
+                                view,
+                                getString(R.string.error_no_internet),
+                                Snackbar.LENGTH_LONG
+                            )
+                            snackbar?.show()
+                        }
+                    }
                 }
             })
 

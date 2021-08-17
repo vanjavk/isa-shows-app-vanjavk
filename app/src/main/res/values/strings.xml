@@ -49,4 +49,8 @@
     <string name="logging_in">Logging in...</string>
     <string name="error_email_already_in_use">E-mail already in use!</string>
     <string name="registering">Registering...</string>
+    <string name="info_loading_shows">Loading shows...</string>
+    <string name="info_uploading_profile_picture">Uploading profile picture...</string>
+    <string name="info_profile_picture_upload_success">Profile picture successfully uploaded!</string>
+    <string name="error_change_profile_picture">Error occured while changing profile picture</string>
 </resources>

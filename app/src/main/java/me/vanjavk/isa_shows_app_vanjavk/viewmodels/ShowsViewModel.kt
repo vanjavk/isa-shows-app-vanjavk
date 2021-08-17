@@ -17,15 +17,14 @@ class ShowsViewModel(
     private val repository: ShowsRepository
 ) : ViewModel() {
 
-    private val changeProfilePictureResultLiveData: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+    val userLiveData: LiveData<Resource<User>> = repository.getUserLiveData()
 
-    private val userLiveData: MutableLiveData<User> by lazy { MutableLiveData<User>() }
+    val topRatedShowsLiveData: LiveData<Resource<List<Show>>> =
+        repository.getTopRatedShowsLiveData()
 
-    private val currentUserResultLiveData: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+    val showsResultLiveData: LiveData<Resource<Boolean>> = repository.getShowsResultLiveData()
 
-    val topRatedShowsLiveData: LiveData<Resource<List<Show>>> = repository.getTopRatedShowsLiveData()
-
-    val showsResultLiveData: LiveData<Resource<Boolean>>  = repository.getShowsResultLiveData()
+    val changeProfilePictureResultLiveData=repository.getChangeProfilePictureResultLiveData()
 
     fun getShowsLiveData(): LiveData<List<Show>> = repository.getShowsLiveData()
 
@@ -33,22 +32,9 @@ class ShowsViewModel(
 
     fun fetchShows() = repository.fetchShows()
 
-    fun getChangeProfilePictureResultLiveDataLiveData(): LiveData<Boolean> {
-        return changeProfilePictureResultLiveData
-    }
+    fun uploadProfilePicture(file: File) = repository.uploadProfilePicture(file)
 
-    fun getUserLiveData(): LiveData<User> {
-        return userLiveData
-    }
-
-    fun uploadProfilePicture(file: File) {
-        repository.uploadProfilePicture(file, userLiveData, changeProfilePictureResultLiveData)
-    }
-
-    fun getCurrentUser() {
-        currentUserResultLiveData.value = false
-        repository.getCurrentUser(userLiveData, currentUserResultLiveData)
-    }
+    fun getCurrentUser() = repository.getCurrentUser()
 
     fun logout() {
         with(sharedPref.edit()) {
