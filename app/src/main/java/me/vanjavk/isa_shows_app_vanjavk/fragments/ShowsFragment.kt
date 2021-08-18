@@ -32,6 +32,8 @@ import me.vanjavk.isa_shows_app_vanjavk.viewmodels.ViewModelFactory
 import java.io.File
 import java.util.*
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
+import me.vanjavk.isa_shows_app_vanjavk.NO_INTERNET_ERROR
 import me.vanjavk.isa_shows_app_vanjavk.R
 import me.vanjavk.isa_shows_app_vanjavk.getFileFromUri
 import me.vanjavk.isa_shows_app_vanjavk.models.Show
@@ -51,6 +53,7 @@ class ShowsFragment : Fragment() {
 
     private lateinit var bottomSheetBinding: DialogUserProfileBinding
     private lateinit var dialog: BottomSheetDialog
+    private var snackbar: Snackbar? = null
 
     private var showsAdapter: ShowsAdapter? = null
 
@@ -149,21 +152,68 @@ class ShowsFragment : Fragment() {
         showsViewModel.getShowsLiveData().observe(viewLifecycleOwner, { shows ->
             binding.showsRecyclerView.isVisible = !shows.isNullOrEmpty()
             updateShows(shows)
+        })
 
+        showsViewModel.showsResultLiveData.observe(viewLifecycleOwner, { resource ->
+            when (resource.status) {
+                Status.LOADING -> {
+                    snackbar = Snackbar.make(
+                        view,
+                        getString(R.string.info_loading_shows),
+                        Snackbar.LENGTH_LONG
+                    )
+                    snackbar?.show()
+                    binding.swipeRefreshLayout.isRefreshing = true
+                }
+                Status.SUCCESS -> {
+                    snackbar?.dismiss()
+                    binding.swipeRefreshLayout.isRefreshing = false
+                }
+                Status.ERROR -> {
+                    if (resource.data == true) {
+                        snackbar?.dismiss()
+                    } else {
+                        snackbar = Snackbar.make(
+                            view,
+                            getString(R.string.error_no_internet),
+                            Snackbar.LENGTH_LONG
+                        )
+                        snackbar?.show()
+                    }
+                    binding.swipeRefreshLayout.isRefreshing = false
+                }
+            }
+            checkShowsEmpty()
         })
 
         showsViewModel.topRatedShowsLiveData.observe(viewLifecycleOwner, { resource ->
-            //binding.pullToRefresh.isVisible = !resource.data.isNullOrEmpty()
             when (resource.status) {
                 Status.LOADING -> {
+                    snackbar = Snackbar.make(
+                        view,
+                        getString(R.string.info_loading_shows),
+                        Snackbar.LENGTH_LONG
+                    )
+                    snackbar?.show()
                     resource.data?.let { updateTopRatedShows(it) }
                     binding.swipeRefreshLayout.isRefreshing = true
                 }
                 Status.SUCCESS -> {
+                    snackbar?.dismiss()
                     resource.data?.let { updateTopRatedShows(it) }
                     binding.swipeRefreshLayout.isRefreshing = false
                 }
                 Status.ERROR -> {
+                    if (resource.message != NO_INTERNET_ERROR) {
+                        snackbar?.dismiss()
+                    } else {
+                        snackbar = Snackbar.make(
+                            view,
+                            getString(R.string.error_no_internet),
+                            Snackbar.LENGTH_LONG
+                        )
+                        snackbar?.show()
+                    }
                     resource.data?.let { updateTopRatedShows(it) }
                     binding.swipeRefreshLayout.isRefreshing = false
                 }
@@ -171,46 +221,61 @@ class ShowsFragment : Fragment() {
             checkShowsEmpty()
         })
 
-        showsViewModel.getUserLiveData().observe(viewLifecycleOwner, { user ->
-            updateProfileIcons(user.imageUrl)
-            bottomSheetBinding.userEmail.text = user.email
+        showsViewModel.userLiveData.observe(viewLifecycleOwner, { resource ->
+            when (resource.status) {
+                Status.LOADING -> {
+                }
+                Status.SUCCESS -> {
+                    updateProfileIcons(resource.data?.imageUrl)
+                    bottomSheetBinding.userEmail.text = resource.data?.email
+                }
+                Status.ERROR -> {
+                }
+            }
         })
 
-        showsViewModel.getShowsResultLiveData()
-            .observe(viewLifecycleOwner, { isGetShowsSuccessful ->
-                if (!isGetShowsSuccessful) {
-//                    Toast.makeText(
-//                        activity,
-//                        getString(R.string.error_failure_response),
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-                }
-            })
-
-        showsViewModel.getCurrentUserResultLiveData()
-            .observe(viewLifecycleOwner, { isGetCurrentUserSuccessful ->
-                if (!isGetCurrentUserSuccessful) {
-//                    Toast.makeText(
-//                        activity,
-//                        getString(R.string.error_failure_response),
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-                }
-            })
-
-        showsViewModel.getChangeProfilePictureResultLiveDataLiveData()
-            .observe(viewLifecycleOwner, { isChangeProfilePictureSuccessful ->
-                if (!isChangeProfilePictureSuccessful) {
-                    Toast.makeText(
-                        activity,
-                        getString(R.string.error_changing_profile_picture),
-                        Toast.LENGTH_SHORT
-                    ).show()
+        showsViewModel.changeProfilePictureResultLiveData
+            .observe(viewLifecycleOwner, { resource ->
+                val dialogView = dialog.window?.decorView ?: return@observe
+                when (resource.status) {
+                    Status.LOADING -> {
+                        snackbar = Snackbar.make(
+                            dialogView,
+                            getString(R.string.info_uploading_profile_picture),
+                            Snackbar.LENGTH_LONG
+                        )
+                        snackbar?.show()
+                    }
+                    Status.SUCCESS -> {
+                        snackbar = Snackbar.make(
+                            dialogView,
+                            getString(R.string.info_profile_picture_upload_success),
+                            Snackbar.LENGTH_LONG
+                        )
+                        snackbar?.show()
+                    }
+                    Status.ERROR -> {
+                        if (resource.message != NO_INTERNET_ERROR) {
+                            snackbar = Snackbar.make(
+                                dialogView,
+                                getString(R.string.error_change_profile_picture),
+                                Snackbar.LENGTH_LONG
+                            )
+                            snackbar?.show()
+                        } else {
+                            snackbar = Snackbar.make(
+                                dialogView,
+                                getString(R.string.error_no_internet),
+                                Snackbar.LENGTH_LONG
+                            )
+                            snackbar?.show()
+                        }
+                    }
                 }
             })
 
         showsViewModel.getCurrentUser()
-        showsViewModel.getShows()
+        showsViewModel.fetchShows()
         showsViewModel.fetchTopRatedShows()
 
         initUserProfileButton()
@@ -378,9 +443,8 @@ class ShowsFragment : Fragment() {
         if (isTopRatedShowsChecked) {
             showsViewModel.fetchTopRatedShows()
         } else {
-            //
+            showsViewModel.fetchShows()
         }
-
     }
 
     override fun onDestroyView() {

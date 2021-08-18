@@ -1,5 +1,6 @@
 package me.vanjavk.isa_shows_app_vanjavk.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,11 +10,16 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import me.vanjavk.isa_shows_app_vanjavk.MIN_PASSWORD_LENGTH
 import me.vanjavk.isa_shows_app_vanjavk.R
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentRegisterBinding
 import me.vanjavk.isa_shows_app_vanjavk.isValidEmail
+import me.vanjavk.isa_shows_app_vanjavk.networking.Status
+import me.vanjavk.isa_shows_app_vanjavk.repository.LoginRepository
+import me.vanjavk.isa_shows_app_vanjavk.repository.RegistrationRepository
 import me.vanjavk.isa_shows_app_vanjavk.viewmodels.RegistrationViewModel
+import me.vanjavk.isa_shows_app_vanjavk.viewmodels.ViewModelFactory
 
 class RegisterFragment : Fragment() {
 
@@ -21,12 +27,17 @@ class RegisterFragment : Fragment() {
 
     private val binding get() = _binding!!
 
-    private val registrationViewModel: RegistrationViewModel by viewModels()
+    private val registrationViewModel: RegistrationViewModel by viewModels {
+        ViewModelFactory(
+            repository = RegistrationRepository(requireActivity())
+        )
+    }
 
     private var emailValid = false
     private var passwordValid = false
     private var passwordConfirmationValid = false
     private var registrationInProcess = false
+    private var snackbar : Snackbar? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,20 +53,41 @@ class RegisterFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         registrationViewModel.getRegistrationResultLiveData()
-            .observe(this.viewLifecycleOwner) { isRegisterSuccessful ->
-                if (isRegisterSuccessful) {
-                    RegisterFragmentDirections.actionRegisterToLogin()
-                        .apply {
-                        this.email = binding.emailInput.text.toString()
+            .observe(this.viewLifecycleOwner) { resource ->
+                when (resource.status) {
+                    Status.LOADING -> {
+                        registrationInProcess = true
+                        snackbar = Snackbar.make(view, getString(R.string.registering), Snackbar.LENGTH_SHORT)
+                        snackbar?.show()
                     }
-                        .let { findNavController().navigate(it) }
+                    Status.SUCCESS -> {
+                        registrationInProcess = false
+                        snackbar?.dismiss()
+                        RegisterFragmentDirections.actionRegisterToLogin()
+                            .apply {
+                                this.email = binding.emailInput.text.toString()
+                            }
+                            .let { findNavController().navigate(it) }
+                    }
+                    Status.ERROR -> {
+                        registrationInProcess = false
+                        if (resource.data == true) {
+                            snackbar?.dismiss()
+                            binding.emailInputLayout.error =
+                                getString(R.string.error_email_already_in_use)
 
-                } else {
-                    Toast.makeText(activity, "Registration unsuccessful!", Toast.LENGTH_SHORT)
-                        .show()
-                    registrationInProcess = false
-                    checkRegisterButtonEnableable()
+                        } else {
+                            snackbar = Snackbar.make(
+                                view,
+                                getString(R.string.error_no_internet),
+                                Snackbar.LENGTH_LONG
+                            )
+                            snackbar?.show()
+                        }
+
+                    }
                 }
+                checkRegisterButtonEnableable()
             }
 
         initRegisterButton()
@@ -113,7 +145,8 @@ class RegisterFragment : Fragment() {
         }
 
         if (binding.passwordInput.text.toString() != binding.passwordConfirmationInput.text.toString()) {
-            binding.passwordConfirmationInputLayout.error = getString(R.string.passwords_do_not_match)
+            binding.passwordConfirmationInputLayout.error =
+                getString(R.string.passwords_do_not_match)
             passwordConfirmationValid = false
         } else {
             binding.passwordConfirmationInputLayout.error = null
