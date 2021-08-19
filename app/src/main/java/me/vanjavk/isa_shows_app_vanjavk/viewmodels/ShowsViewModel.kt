@@ -24,9 +24,9 @@ class ShowsViewModel(
 
     val showsResultLiveData: LiveData<Resource<Boolean>> = repository.getShowsResultLiveData()
 
-    val changeProfilePictureResultLiveData=repository.getChangeProfilePictureResultLiveData()
+    val changeProfilePictureResultLiveData: LiveData<Resource<Boolean>> = repository.getChangeProfilePictureResultLiveData()
 
-    fun getShowsLiveData(): LiveData<List<Show>> = repository.getShowsLiveData()
+    val showsLiveData: LiveData<List<Show>> = repository.getShowsLiveData()
 
     fun fetchTopRatedShows() = repository.fetchTopRatedShows()
 

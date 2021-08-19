@@ -148,7 +148,7 @@ class ShowsFragment : Fragment() {
 
         initShowsRecycler()
 
-        showsViewModel.getShowsLiveData().observe(viewLifecycleOwner, { shows ->
+        showsViewModel.showsLiveData.observe(viewLifecycleOwner, { shows ->
             binding.showsRecyclerView.isVisible = !shows.isNullOrEmpty()
             updateShows(shows)
         })
