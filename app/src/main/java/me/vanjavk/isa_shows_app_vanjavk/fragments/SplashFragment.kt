@@ -17,15 +17,23 @@ class SplashFragment : Fragment() {
     private var _binding: FragmentSplashBinding? = null
 
     private val binding get() = _binding!!
+    private val timeCreated: Long = System.currentTimeMillis()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         _binding = FragmentSplashBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (System.currentTimeMillis()-timeCreated>2*1000){
+            SplashFragmentDirections.actionSplashToLogin()
+                .let { findNavController().navigate(it) }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -37,18 +45,19 @@ class SplashFragment : Fragment() {
         }
 
         Handler(Looper.getMainLooper()).postDelayed({
-            animateTitle1()
+            animateTitleScaleBig()
             Handler (Looper.getMainLooper()).postDelayed({
-                animateTitle2()
+                animateTitleScaleToNormal()
             }, 400)
         }, 1200)
+
         Handler(Looper.getMainLooper()).postDelayed({
             SplashFragmentDirections.actionSplashToLogin()
                 .let { findNavController().navigate(it) }
         }, 2000)
     }
 
-    private fun animateTitle1() {
+    private fun animateTitleScaleBig() {
         with(binding.showsText) {
             alpha = 1f
             animate()
@@ -61,7 +70,7 @@ class SplashFragment : Fragment() {
 
     }
 
-    private fun animateTitle2() {
+    private fun animateTitleScaleToNormal() {
         with(binding.showsText) {
             scaleX = 1.5f
             scaleY = 1.5f

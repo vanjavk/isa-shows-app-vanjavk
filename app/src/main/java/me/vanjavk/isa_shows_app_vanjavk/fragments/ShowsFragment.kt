@@ -56,7 +56,6 @@ class ShowsFragment : Fragment() {
     private var snackbar: Snackbar? = null
 
     private var showsAdapter: ShowsAdapter? = null
-
     private var topRatedShowsAdapter: ShowsAdapter? = null
 
     private val showsViewModel: ShowsViewModel by viewModels {
@@ -86,10 +85,6 @@ class ShowsFragment : Fragment() {
         getCameraImage.launch(uri)
     })
 
-    private val permissionForFiles = preparePermissionsContract(onPermissionsGranted = {
-        selectImageFromGallery.launch("image/*")
-    })
-
     private val getCameraImage =
         registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
             if (success) {
@@ -101,6 +96,10 @@ class ShowsFragment : Fragment() {
                 }
             }
         }
+
+    private val permissionForFiles = preparePermissionsContract(onPermissionsGranted = {
+        selectImageFromGallery.launch("image/*")
+    })
 
     private val selectImageFromGallery =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
