@@ -13,43 +13,19 @@ class ShowDetailsViewModel(
     private val repository: ShowDetailsRepository
 ) : ViewModel() {
 
-    private val showDetailsResultLiveData: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
-
-    private val reviewsResultLiveData: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
-
-    private val showLiveData: MutableLiveData<Show> by lazy { MutableLiveData<Show>() }
-
-    private val reviewLiveData: MutableLiveData<Review> by lazy {
-        MutableLiveData<Review>()
-    }
-
-    private val reviewsLiveData: MutableLiveData<List<Review>> by lazy {
-        MutableLiveData<List<Review>>()
-    }
-
     fun getShowLiveData(showId: String): LiveData<List<Show>> = repository.getShowLiveData(showId)
 
     fun getReviewsLiveData(showId: String): LiveData<List<Review>> = repository.getReviewsLiveData(showId)
 
-    fun getShowDetailsResultLiveData(): LiveData<Boolean> {
-        return showDetailsResultLiveData
-    }
-
-    fun getReviewLiveData(): LiveData<Review> {
-        return reviewLiveData
-    }
-
-    fun getShow(showId: String) {
-        showDetailsResultLiveData.value = false
-        repository.getShow(showId, showDetailsResultLiveData)
+    fun fetchShow(showId: String) {
+        repository.getShow(showId)
     }
 
     fun getReviews(showId: String) {
-        reviewsResultLiveData.value = false
-        repository.getReviews(showId, reviewsLiveData, reviewsResultLiveData)
+        repository.getReviews(showId)
     }
 
     fun addReview(rating: Int, comment: String?, showId: Int) {
-        repository.addReview(rating, comment, showId, reviewsResultLiveData)
+        repository.addReview(rating, comment, showId)
     }
 }

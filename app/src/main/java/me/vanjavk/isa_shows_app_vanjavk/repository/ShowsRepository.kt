@@ -48,6 +48,13 @@ class ShowsRepository(activity: Activity) : Repository(activity) {
 
     fun getShowsResultLiveData(): LiveData<Resource<Boolean>> = showsResultLiveData
 
+    fun getShowsLiveData(): LiveData<List<Show>> =
+        Transformations.map(database.showDao().getAllShows()) {
+            it.map {
+                it.toShow()
+            }
+        }
+
     fun fetchTopRatedShows() {
         topRatedShowsLiveData.value = Resource.loading(topRatedShowsLiveData.value?.data)
         if (activity.isOnline()) {
@@ -69,13 +76,6 @@ class ShowsRepository(activity: Activity) : Repository(activity) {
             topRatedShowsLiveData.postValue(Resource.error(NO_INTERNET_ERROR, null))
         }
     }
-
-    fun getShowsLiveData(): LiveData<List<Show>> =
-        Transformations.map(database.showDao().getAllShows()) {
-            it.map {
-                it.toShow()
-            }
-        }
 
     fun fetchShows() {
         showsResultLiveData.value = Resource.loading(true)

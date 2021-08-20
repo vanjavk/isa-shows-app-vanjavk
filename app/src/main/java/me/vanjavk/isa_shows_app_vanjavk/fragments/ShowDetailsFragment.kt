@@ -67,23 +67,14 @@ class ShowDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val activity = activity as AppCompatActivity
-
-        activity.setSupportActionBar(binding.toolbar)
-        activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        activity.supportActionBar?.setDisplayShowHomeEnabled(true)
-        binding.toolbarLayout.title = getString(R.string.loading)
-        binding.toolbar.setNavigationOnClickListener {
-            findNavController().navigateUp()
-        }
 
         val showId = args.showID
 
-        showDetailsViewModel.getShow(showId)
+        showDetailsViewModel.fetchShow(showId)
         showDetailsViewModel.getReviews(showId)
 
         showDetailsViewModel.getShowLiveData(showId).observe(viewLifecycleOwner, { show ->
-            if (show.isNotEmpty()){
+            if (show.isNotEmpty()) {
                 updateShow(show.first())
             }
         })
@@ -94,15 +85,21 @@ class ShowDetailsFragment : Fragment() {
                 updateReviews(reviews)
             })
 
-        showDetailsViewModel.getReviewLiveData().observe(
-            viewLifecycleOwner,
-            { review ->
-                updateReviews(review)
-            })
-
+        initSupportActionBar()
         initWriteReviewButton()
         initReviewsRecycler()
         initAddReviewBottomSheet()
+    }
+
+    private fun initSupportActionBar() {
+        val activity = activity as AppCompatActivity
+        activity.setSupportActionBar(binding.toolbar)
+        activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        activity.supportActionBar?.setDisplayShowHomeEnabled(true)
+        binding.toolbarLayout.title = getString(R.string.loading)
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController().navigateUp()
+        }
     }
 
     private fun updateShow(show: Show) {
@@ -159,7 +156,7 @@ class ShowDetailsFragment : Fragment() {
             dialog.dismiss()
         }
 
-        bottomSheetBinding.closeButton.setOnClickListener{
+        bottomSheetBinding.closeButton.setOnClickListener {
             dialog.dismiss()
         }
     }
