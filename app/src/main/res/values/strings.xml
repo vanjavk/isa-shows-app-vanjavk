@@ -53,4 +53,7 @@
     <string name="info_uploading_profile_picture">Uploading profile picture...</string>
     <string name="info_profile_picture_upload_success">Profile picture successfully uploaded!</string>
     <string name="error_change_profile_picture">Error occured while changing profile picture</string>
+    <string name="info_adding_review">Adding review...</string>
+    <string name="info_review_successfully_added">Review successfully added!</string>
+    <string name="error_add_review">Error occurred while adding review.</string>
 </resources>

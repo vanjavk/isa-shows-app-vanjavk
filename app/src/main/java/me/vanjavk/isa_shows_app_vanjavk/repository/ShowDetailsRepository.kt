@@ -24,6 +24,10 @@ class ShowDetailsRepository(activity: Activity) : Repository(activity) {
 
     private val addReviewResultLiveData = MutableLiveData<Resource<Boolean>>()
 
+    fun getReviewsResultLiveData(): LiveData<Resource<Boolean>> = reviewsResultLiveData
+
+    fun getAddReviewResultLiveData(): LiveData<Resource<Boolean>> = addReviewResultLiveData
+
     fun getShowLiveData(showId: String): LiveData<List<Show>> =
         Transformations.map(database.showDao().getShow(showId)) {
             it.map { it.toShow() }

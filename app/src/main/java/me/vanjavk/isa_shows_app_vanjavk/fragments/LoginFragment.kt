@@ -39,7 +39,7 @@ class LoginFragment : Fragment() {
     private var emailValid = false
     private var passwordValid = false
     private var loginInProcess = false
-    private var snackbar : Snackbar? = null
+    private var snackbar: Snackbar? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -72,7 +72,11 @@ class LoginFragment : Fragment() {
                 when (resource.status) {
                     Status.LOADING -> {
                         loginInProcess = true
-                        snackbar = Snackbar.make(view, getString(R.string.logging_in), Snackbar.LENGTH_SHORT)
+                        snackbar = Snackbar.make(
+                            view,
+                            getString(R.string.logging_in),
+                            Snackbar.LENGTH_SHORT
+                        )
                         snackbar?.show()
                     }
                     Status.SUCCESS -> {
@@ -83,12 +87,16 @@ class LoginFragment : Fragment() {
                     }
                     Status.ERROR -> {
                         loginInProcess = false
-                        if (resource.data==true){
+                        if (resource.data == true) {
                             binding.passwordInputLayout.error =
                                 getString(R.string.error_email_and_password_combination)
                             snackbar?.dismiss()
-                        }else{
-                            snackbar = Snackbar.make(view, getString(R.string.error_no_internet), Snackbar.LENGTH_LONG)
+                        } else {
+                            snackbar = Snackbar.make(
+                                view,
+                                getString(R.string.error_no_internet),
+                                Snackbar.LENGTH_LONG
+                            )
                             snackbar?.show()
                         }
 

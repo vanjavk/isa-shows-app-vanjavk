@@ -7,6 +7,7 @@ import me.vanjavk.isa_shows_app_vanjavk.USER_EMAIL_KEY
 import me.vanjavk.isa_shows_app_vanjavk.USER_ID_KEY
 import me.vanjavk.isa_shows_app_vanjavk.USER_IMAGE_URL_KEY
 import me.vanjavk.isa_shows_app_vanjavk.models.*
+import me.vanjavk.isa_shows_app_vanjavk.networking.Resource
 import me.vanjavk.isa_shows_app_vanjavk.repository.ShowDetailsRepository
 
 
@@ -14,6 +15,10 @@ class ShowDetailsViewModel(
     private val sharedPref: SharedPreferences,
     private val repository: ShowDetailsRepository
 ) : ViewModel() {
+
+    val reviewsResultLiveData: LiveData<Resource<Boolean>> = repository.getReviewsResultLiveData()
+
+    val addReviewResultLiveData: LiveData<Resource<Boolean>> = repository.getAddReviewResultLiveData()
 
     fun getShowLiveData(showId: String): LiveData<List<Show>> = repository.getShowLiveData(showId)
 

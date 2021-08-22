@@ -18,16 +18,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
-import me.vanjavk.isa_shows_app_vanjavk.R
-import me.vanjavk.isa_shows_app_vanjavk.USER_EMAIL_KEY
-import me.vanjavk.isa_shows_app_vanjavk.USER_ID_KEY
-import me.vanjavk.isa_shows_app_vanjavk.USER_IMAGE_URL_KEY
+import me.vanjavk.isa_shows_app_vanjavk.*
 import me.vanjavk.isa_shows_app_vanjavk.adapters.ReviewsAdapter
 import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogAddReviewBinding
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowDetailsBinding
 import me.vanjavk.isa_shows_app_vanjavk.models.Review
 import me.vanjavk.isa_shows_app_vanjavk.models.Show
 import me.vanjavk.isa_shows_app_vanjavk.models.User
+import me.vanjavk.isa_shows_app_vanjavk.networking.Status
 import me.vanjavk.isa_shows_app_vanjavk.repository.ShowDetailsRepository
 import me.vanjavk.isa_shows_app_vanjavk.utils.GlideUrlCustomCacheKey
 import me.vanjavk.isa_shows_app_vanjavk.viewmodels.ShowDetailsViewModel
@@ -78,6 +76,69 @@ class ShowDetailsFragment : Fragment() {
 
         showDetailsViewModel.fetchShow(showId)
         showDetailsViewModel.fetchReviews(showId)
+        binding.swipeRefreshLayout.isRefreshing = true
+        showDetailsViewModel.reviewsResultLiveData.observe(viewLifecycleOwner, { resource ->
+            when (resource.status) {
+                Status.LOADING -> {
+
+                }
+                Status.SUCCESS -> {
+
+                }
+                Status.ERROR -> {
+                    if (resource.message != NO_INTERNET_ERROR) {
+                        binding.swipeRefreshLayout.isRefreshing = false
+                    } else {
+                        snackbar = Snackbar.make(
+                            view,
+                            getString(R.string.error_no_internet),
+                            Snackbar.LENGTH_LONG
+                        )
+                        snackbar?.show()
+                    }
+                    binding.swipeRefreshLayout.isRefreshing = false
+                }
+            }
+        })
+
+        showDetailsViewModel.addReviewResultLiveData.observe(viewLifecycleOwner, { resource ->
+            when (resource.status) {
+                Status.LOADING -> {
+                    snackbar = Snackbar.make(
+                        view,
+                        getString(R.string.info_adding_review),
+                        Snackbar.LENGTH_LONG
+                    )
+                    snackbar?.show()
+                }
+                Status.SUCCESS -> {
+                    snackbar = Snackbar.make(
+                        view,
+                        getString(R.string.info_review_successfully_added),
+                        Snackbar.LENGTH_LONG
+                    )
+                    snackbar?.show()
+                }
+                Status.ERROR -> {
+                    if (resource.message != NO_INTERNET_ERROR) {
+                        snackbar = Snackbar.make(
+                            view,
+                            getString(R.string.error_add_review),
+                            Snackbar.LENGTH_LONG
+                        )
+                        snackbar?.show()
+                    } else {
+                        snackbar = Snackbar.make(
+                            view,
+                            getString(R.string.error_no_internet),
+                            Snackbar.LENGTH_LONG
+                        )
+                        snackbar?.show()
+                    }
+                    binding.swipeRefreshLayout.isRefreshing = false
+                }
+            }
+        })
 
         showDetailsViewModel.getShowLiveData(showId).observe(viewLifecycleOwner, { show ->
             if (show.isNotEmpty()) {
