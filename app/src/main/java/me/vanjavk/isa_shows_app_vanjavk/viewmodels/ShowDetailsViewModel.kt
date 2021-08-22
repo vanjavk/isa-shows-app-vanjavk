@@ -20,6 +20,8 @@ class ShowDetailsViewModel(
 
     val addReviewResultLiveData: LiveData<Resource<Boolean>> = repository.getAddReviewResultLiveData()
 
+    val addReviewLiveData: LiveData<Resource<Review>> = repository.getAddReviewLiveData()
+
     fun getShowLiveData(showId: String): LiveData<List<Show>> = repository.getShowLiveData(showId)
 
     fun getReviewsLiveData(showId: String): LiveData<List<Review>> =

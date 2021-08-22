@@ -30,6 +30,7 @@ import me.vanjavk.isa_shows_app_vanjavk.repository.ShowDetailsRepository
 import me.vanjavk.isa_shows_app_vanjavk.utils.GlideUrlCustomCacheKey
 import me.vanjavk.isa_shows_app_vanjavk.viewmodels.ShowDetailsViewModel
 import me.vanjavk.isa_shows_app_vanjavk.viewmodels.ViewModelFactory
+import java.util.*
 
 
 class ShowDetailsFragment : Fragment() {
@@ -45,6 +46,8 @@ class ShowDetailsFragment : Fragment() {
     private val args: ShowDetailsFragmentArgs by navArgs()
 
     private var reviewsAdapter: ReviewsAdapter? = null
+    private var refreshed = false
+    private val reviewsQueue: Queue<Review> = LinkedList<Review>()
 
     private val showDetailsViewModel: ShowDetailsViewModel by viewModels {
         ViewModelFactory(
@@ -83,22 +86,40 @@ class ShowDetailsFragment : Fragment() {
 
                 }
                 Status.SUCCESS -> {
-
+                    binding.swipeRefreshLayout.isRefreshing = false
                 }
                 Status.ERROR -> {
+                    binding.swipeRefreshLayout.isRefreshing = false
+
                     if (resource.message != NO_INTERNET_ERROR) {
-                        binding.swipeRefreshLayout.isRefreshing = false
                     } else {
                         snackbar = Snackbar.make(
                             view,
                             getString(R.string.error_no_internet),
                             Snackbar.LENGTH_LONG
-                        )
+                        ).apply {
+                            anchorView = binding.bottomWriteReviewBar
+                        }
                         snackbar?.show()
                     }
-                    binding.swipeRefreshLayout.isRefreshing = false
                 }
             }
+        })
+
+
+        showDetailsViewModel.addReviewLiveData.observe(viewLifecycleOwner, { resource ->
+            when (resource.status) {
+                Status.LOADING -> {
+                    resource.data?.let {
+                        if (refreshed) {
+                            updateReviews(it)
+                        } else {
+                            reviewsQueue.add(it)
+                        }
+                    }
+                }
+            }
+
         })
 
         showDetailsViewModel.addReviewResultLiveData.observe(viewLifecycleOwner, { resource ->
@@ -108,7 +129,9 @@ class ShowDetailsFragment : Fragment() {
                         view,
                         getString(R.string.info_adding_review),
                         Snackbar.LENGTH_LONG
-                    )
+                    ).apply {
+                        anchorView = binding.bottomWriteReviewBar
+                    }
                     snackbar?.show()
                 }
                 Status.SUCCESS -> {
@@ -116,26 +139,32 @@ class ShowDetailsFragment : Fragment() {
                         view,
                         getString(R.string.info_review_successfully_added),
                         Snackbar.LENGTH_LONG
-                    )
+                    ).apply {
+                        anchorView = binding.bottomWriteReviewBar
+                    }
                     snackbar?.show()
                 }
                 Status.ERROR -> {
+
                     if (resource.message != NO_INTERNET_ERROR) {
                         snackbar = Snackbar.make(
                             view,
                             getString(R.string.error_add_review),
                             Snackbar.LENGTH_LONG
-                        )
+                        ).apply {
+                            anchorView = binding.bottomWriteReviewBar
+                        }
                         snackbar?.show()
                     } else {
                         snackbar = Snackbar.make(
                             view,
                             getString(R.string.error_no_internet),
                             Snackbar.LENGTH_LONG
-                        )
+                        ).apply {
+                            anchorView = binding.bottomWriteReviewBar
+                        }
                         snackbar?.show()
                     }
-                    binding.swipeRefreshLayout.isRefreshing = false
                 }
             }
         })
@@ -149,9 +178,10 @@ class ShowDetailsFragment : Fragment() {
         showDetailsViewModel.getReviewsLiveData(showId).observe(
             viewLifecycleOwner,
             { reviews ->
-                if (binding.swipeRefreshLayout.isRefreshing) {
+                if (!refreshed && !reviews.isNullOrEmpty()) {
                     updateReviews(reviews)
                     binding.swipeRefreshLayout.isRefreshing = false
+                    refreshed = true
                 }
             })
 
@@ -168,6 +198,7 @@ class ShowDetailsFragment : Fragment() {
         activity.supportActionBar?.setDisplayShowHomeEnabled(true)
         binding.toolbarLayout.title = getString(R.string.loading)
         binding.toolbar.setNavigationOnClickListener {
+            snackbar?.dismiss()
             findNavController().navigateUp()
         }
     }
@@ -196,6 +227,9 @@ class ShowDetailsFragment : Fragment() {
 
     private fun updateReviews(reviews: List<Review>) {
         reviewsAdapter?.setItems(reviews)
+        while (reviewsQueue.count() > 0) {
+            updateReviews(reviewsQueue.remove())
+        }
     }
 
     private fun updateReviews(review: Review) {
@@ -218,13 +252,13 @@ class ShowDetailsFragment : Fragment() {
 
         bottomSheetBinding.confirmButton.setOnClickListener {
 
-            reviewsAdapter?.addItem(
-                showDetailsViewModel.addReview(
-                    bottomSheetBinding.starRatingBar.rating.toInt(),
-                    bottomSheetBinding.commentInput.text.toString(),
-                    args.showID.toInt()
-                )
+
+            showDetailsViewModel.addReview(
+                bottomSheetBinding.starRatingBar.rating.toInt(),
+                bottomSheetBinding.commentInput.text.toString(),
+                args.showID.toInt()
             )
+
             dialog.dismiss()
         }
 
@@ -251,6 +285,7 @@ class ShowDetailsFragment : Fragment() {
 
         binding.swipeRefreshLayout.setOnRefreshListener {
             showDetailsViewModel.fetchReviews(showId = showId)
+            refreshed = false
         }
     }
 

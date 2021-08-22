@@ -22,11 +22,16 @@ class ShowDetailsRepository(activity: Activity) : Repository(activity) {
 
     private val reviewsResultLiveData = MutableLiveData<Resource<Boolean>>()
 
+    private val addReviewLiveData = MutableLiveData<Resource<Review>>()
+
     private val addReviewResultLiveData = MutableLiveData<Resource<Boolean>>()
 
     fun getReviewsResultLiveData(): LiveData<Resource<Boolean>> = reviewsResultLiveData
 
+    fun getAddReviewLiveData(): LiveData<Resource<Review>> = addReviewLiveData
+
     fun getAddReviewResultLiveData(): LiveData<Resource<Boolean>> = addReviewResultLiveData
+
 
     fun getShowLiveData(showId: String): LiveData<List<Show>> =
         Transformations.map(database.showDao().getShow(showId)) {
@@ -95,7 +100,7 @@ class ShowDetailsRepository(activity: Activity) : Repository(activity) {
                 }
             })
         } else {
-            reviewsResultLiveData.value = Resource.error(NO_INTERNET_ERROR, false)
+            reviewsResultLiveData.postValue(Resource.error(NO_INTERNET_ERROR, false))
         }
     }
 
@@ -114,7 +119,23 @@ class ShowDetailsRepository(activity: Activity) : Repository(activity) {
     fun addReview(
         rating: Int, comment: String?, showId: Int, offline: Boolean = false
     ) {
-        reviewsResultLiveData.value = Resource.loading(!offline)
+        addReviewLiveData.postValue(
+            Resource.loading(
+                Review(
+                    id = "",
+                    comment = comment,
+                    rating = rating,
+                    showId = showId,
+                    user = User(
+                        userId = sharedPref.getString(USER_ID_KEY, "").orEmpty(),
+                        email = sharedPref.getString(USER_EMAIL_KEY, "").orEmpty(),
+                        imageUrl = sharedPref.getString(USER_IMAGE_URL_KEY, "")
+                            .orEmpty()
+                    ),
+                    sync = false
+                )
+            )
+        )
         if (activity.isOnline()) {
             ApiModule.retrofit.addReview(AddReviewRequest(rating, comment, showId)).enqueue(object :
                 Callback<AddReviewResponse> {
@@ -135,7 +156,7 @@ class ShowDetailsRepository(activity: Activity) : Repository(activity) {
                 }
 
                 override fun onFailure(call: Call<AddReviewResponse>, t: Throwable) {
-                    addReviewResultLiveData.postValue(Resource.error("", !offline))
+                    addReviewResultLiveData.postValue(Resource.error("", null))
                     Executors.newSingleThreadExecutor().execute {
                         database.reviewDao().addReview(
                             ReviewEntity(
@@ -156,7 +177,7 @@ class ShowDetailsRepository(activity: Activity) : Repository(activity) {
                 }
             })
         } else {
-            addReviewResultLiveData.value = Resource.error(NO_INTERNET_ERROR, !offline)
+            addReviewResultLiveData.postValue(Resource.error(NO_INTERNET_ERROR, null))
             Executors.newSingleThreadExecutor().execute {
                 database.reviewDao().addReview(
                     ReviewEntity(

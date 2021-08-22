@@ -53,7 +53,7 @@ class ReviewsAdapter(
             binding.reviewContent.text = item.comment
             binding.reviewerName.text = item.user.email.getUsername()
 
-            binding.frameLayout.setBackgroundColor( if (item.sync) Color.parseColor("#ffffff") else Color.parseColor("#808080"))
+//            binding.frameLayout.setBackgroundColor( if (item.sync) Color.parseColor("#ffffff") else Color.parseColor("#808080"))
             if (item.user.imageUrl!=null){
                 Glide.with(itemView.context).load(GlideUrlCustomCacheKey(item.user.imageUrl)).into(binding.profileIconImage)
             }else{
