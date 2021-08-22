@@ -61,7 +61,7 @@ class ShowDetailsRepository(activity: Activity) : Repository(activity) {
         }
     }
 
-    fun getReviews(
+    fun fetchReviews(
         showId: String
     ) {
         reviewsResultLiveData.value = Resource.loading(true)

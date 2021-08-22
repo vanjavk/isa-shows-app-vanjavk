@@ -2,7 +2,6 @@ package me.vanjavk.isa_shows_app_vanjavk.viewmodels
 
 import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import me.vanjavk.isa_shows_app_vanjavk.models.*
 import me.vanjavk.isa_shows_app_vanjavk.repository.ShowDetailsRepository
@@ -21,8 +20,8 @@ class ShowDetailsViewModel(
         repository.getShow(showId)
     }
 
-    fun getReviews(showId: String) {
-        repository.getReviews(showId)
+    fun fetchReviews(showId: String) {
+        repository.fetchReviews(showId)
     }
 
     fun addReview(rating: Int, comment: String?, showId: Int) {

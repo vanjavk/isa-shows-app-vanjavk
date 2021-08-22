@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.snackbar.Snackbar
 import me.vanjavk.isa_shows_app_vanjavk.R
 import me.vanjavk.isa_shows_app_vanjavk.adapters.ReviewsAdapter
 import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogAddReviewBinding
@@ -37,6 +38,7 @@ class ShowDetailsFragment : Fragment() {
 
     private lateinit var bottomSheetBinding: DialogAddReviewBinding
     private lateinit var dialog: BottomSheetDialog
+    private var snackbar: Snackbar? = null
 
     private val args: ShowDetailsFragmentArgs by navArgs()
 
@@ -71,7 +73,7 @@ class ShowDetailsFragment : Fragment() {
         val showId = args.showID
 
         showDetailsViewModel.fetchShow(showId)
-        showDetailsViewModel.getReviews(showId)
+        showDetailsViewModel.fetchReviews(showId)
 
         showDetailsViewModel.getShowLiveData(showId).observe(viewLifecycleOwner, { show ->
             if (show.isNotEmpty()) {
@@ -82,12 +84,15 @@ class ShowDetailsFragment : Fragment() {
         showDetailsViewModel.getReviewsLiveData(showId).observe(
             viewLifecycleOwner,
             { reviews ->
-                updateReviews(reviews)
+                if (binding.swipeRefreshLayout.isRefreshing){
+                    updateReviews(reviews)
+                    binding.swipeRefreshLayout.isRefreshing = false
+                }
             })
 
         initSupportActionBar()
         initWriteReviewButton()
-        initReviewsRecycler()
+        initReviewsRecycler(showId)
         initAddReviewBottomSheet()
     }
 
@@ -159,7 +164,10 @@ class ShowDetailsFragment : Fragment() {
         }
     }
 
-    private fun initReviewsRecycler() {
+    private fun initReviewsRecycler(showId: String) {
+        binding.swipeRefreshLayout.setColorSchemeResources(R.color.purple_infinum_dark)
+        binding.swipeRefreshLayout.isRefreshing = true
+
         reviewsAdapter = ReviewsAdapter(emptyList())
 
         binding.reviewsRecyclerView.layoutManager = LinearLayoutManager(activity)
@@ -170,6 +178,11 @@ class ShowDetailsFragment : Fragment() {
                 DividerItemDecoration.VERTICAL
             )
         )
+
+
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            showDetailsViewModel.fetchReviews(showId = showId)
+        }
     }
 
     override fun onDestroyView() {

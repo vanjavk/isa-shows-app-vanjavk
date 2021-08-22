@@ -324,6 +324,8 @@ class ShowsFragment : Fragment() {
     }
 
     private fun logout() {
+
+        snackbar?.dismiss()
         showsViewModel.logout()
         ShowsFragmentDirections.actionLogout()
             .let { findNavController().navigate(it) }
@@ -363,7 +365,10 @@ class ShowsFragment : Fragment() {
             ShowsFragmentDirections.actionShowToDetails(
                 item.id
             )
-                .let { findNavController().navigate(it) }
+                .let {
+                    findNavController().navigate(it)
+                    snackbar?.dismiss()
+                }
         }.apply {
             stateRestorationPolicy = StateRestorationPolicy.PREVENT_WHEN_EMPTY
         }
