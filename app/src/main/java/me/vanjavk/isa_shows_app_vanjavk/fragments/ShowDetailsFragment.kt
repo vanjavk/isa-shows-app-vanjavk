@@ -104,9 +104,7 @@ class ShowDetailsFragment : Fragment() {
 
     private fun updateShow(show: Show) {
         binding.toolbarLayout.title = show.title
-        if (binding.showImage.drawable == null) {
-            Glide.with(this).load(GlideUrlCustomCacheKey(show.imageUrl)).into(binding.showImage)
-        }
+        Glide.with(this).load(GlideUrlCustomCacheKey(show.imageUrl)).into(binding.showImage)
         binding.showDescription.text = show.description
         updateRatingInfo(show.numberOfReviews, show.averageRating)
     }
