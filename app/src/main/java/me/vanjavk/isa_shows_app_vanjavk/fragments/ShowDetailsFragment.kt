@@ -19,11 +19,15 @@ import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import me.vanjavk.isa_shows_app_vanjavk.R
+import me.vanjavk.isa_shows_app_vanjavk.USER_EMAIL_KEY
+import me.vanjavk.isa_shows_app_vanjavk.USER_ID_KEY
+import me.vanjavk.isa_shows_app_vanjavk.USER_IMAGE_URL_KEY
 import me.vanjavk.isa_shows_app_vanjavk.adapters.ReviewsAdapter
 import me.vanjavk.isa_shows_app_vanjavk.databinding.DialogAddReviewBinding
 import me.vanjavk.isa_shows_app_vanjavk.databinding.FragmentShowDetailsBinding
 import me.vanjavk.isa_shows_app_vanjavk.models.Review
 import me.vanjavk.isa_shows_app_vanjavk.models.Show
+import me.vanjavk.isa_shows_app_vanjavk.models.User
 import me.vanjavk.isa_shows_app_vanjavk.repository.ShowDetailsRepository
 import me.vanjavk.isa_shows_app_vanjavk.utils.GlideUrlCustomCacheKey
 import me.vanjavk.isa_shows_app_vanjavk.viewmodels.ShowDetailsViewModel
@@ -84,7 +88,7 @@ class ShowDetailsFragment : Fragment() {
         showDetailsViewModel.getReviewsLiveData(showId).observe(
             viewLifecycleOwner,
             { reviews ->
-                if (binding.swipeRefreshLayout.isRefreshing){
+                if (binding.swipeRefreshLayout.isRefreshing) {
                     updateReviews(reviews)
                     binding.swipeRefreshLayout.isRefreshing = false
                 }
@@ -141,6 +145,7 @@ class ShowDetailsFragment : Fragment() {
         binding.writeReviewButton.setOnClickListener {
             bottomSheetBinding.starRatingBar.rating = 0f
             bottomSheetBinding.commentInput.text?.clear()
+            bottomSheetBinding.confirmButton.isEnabled = false
             dialog.show()
         }
     }
@@ -151,10 +156,13 @@ class ShowDetailsFragment : Fragment() {
         }
 
         bottomSheetBinding.confirmButton.setOnClickListener {
-            showDetailsViewModel.addReview(
-                bottomSheetBinding.starRatingBar.rating.toInt(),
-                bottomSheetBinding.commentInput.text.toString(),
-                args.showID.toInt()
+
+            reviewsAdapter?.addItem(
+                showDetailsViewModel.addReview(
+                    bottomSheetBinding.starRatingBar.rating.toInt(),
+                    bottomSheetBinding.commentInput.text.toString(),
+                    args.showID.toInt()
+                )
             )
             dialog.dismiss()
         }
