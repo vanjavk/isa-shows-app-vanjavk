@@ -95,6 +95,7 @@
                     android:textSize="17sp"
                     tools:text="@string/placeholder_rating_info" />
 
+
                 <RatingBar
                     android:id="@+id/showRatingBar"
                     style="@style/Widget.AppCompat.RatingBar.Indicator"
@@ -114,7 +115,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
                     android:visibility="visible"
-                    tools:listitem="@layout/item_review" />
+                    tools:listitem="@layout/item_review"
+                    tools:visibility="gone" />
+
 
                 <TextView
                     android:id="@+id/noReviewsYet"
@@ -124,7 +127,9 @@
                     android:layout_marginVertical="40dp"
                     android:text="@string/no_reviews_yet"
                     android:textAlignment="center"
-                    android:textSize="17sp" />
+                    android:textColor="@color/black"
+                    android:textSize="17sp"
+                    tools:visibility="visible" />
 
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>

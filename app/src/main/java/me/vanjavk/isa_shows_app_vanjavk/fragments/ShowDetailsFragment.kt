@@ -189,6 +189,7 @@ class ShowDetailsFragment : Fragment() {
         initWriteReviewButton()
         initReviewsRecycler(showId)
         initAddReviewBottomSheet()
+        checkShowReviewEmptyState()
     }
 
     private fun initSupportActionBar() {
@@ -215,7 +216,6 @@ class ShowDetailsFragment : Fragment() {
         binding.reviewsRecyclerView.isVisible = !noReviews
         binding.showReviewRating.isVisible = !noReviews
         binding.showRatingBar.isVisible = !noReviews
-        binding.noReviewsYet.isVisible = noReviews
         if (!noReviews) {
             binding.showReviewRating.text = getString(R.string.reviews_rating_info).format(
                 numberOfReviews,
@@ -223,6 +223,12 @@ class ShowDetailsFragment : Fragment() {
             )
             binding.showRatingBar.rating = averageRating ?: 0f
         }
+        checkShowReviewEmptyState()
+    }
+
+    private fun checkShowReviewEmptyState(){
+        val noReviews = reviewsAdapter?.itemCount == 0 ?: false
+        binding.noReviewsYet.isVisible = noReviews
     }
 
     private fun updateReviews(reviews: List<Review>) {
@@ -230,10 +236,12 @@ class ShowDetailsFragment : Fragment() {
         while (reviewsQueue.count() > 0) {
             updateReviews(reviewsQueue.remove())
         }
+        checkShowReviewEmptyState()
     }
 
     private fun updateReviews(review: Review) {
         reviewsAdapter?.addItem(review)
+        checkShowReviewEmptyState()
     }
 
     private fun initWriteReviewButton() {
