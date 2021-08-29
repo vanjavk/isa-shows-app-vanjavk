@@ -6,12 +6,12 @@
     android:id="@+id/showItemFrameLayoutParent"
     android:layout_width="match_parent"
     android:layout_height="320dp"
-    android:layout_marginHorizontal="24dp"
+    android:layout_marginHorizontal="8dp"
     android:clipChildren="false"
     android:clipToPadding="false"
     android:paddingBottom="16dp">
 
-    <me.vanjavk.isa_shows_app_vanjavk.view.ShowCardView
+    <me.vanjavk.isa_shows_app_vanjavk.views.ShowCardView
         android:id="@+id/showItemCardView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

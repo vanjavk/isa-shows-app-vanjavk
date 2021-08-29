@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
-    android:orientation="vertical"
-    android:clipChildren="false">
+    android:background="@drawable/rounded_top_corners_background"
+    android:clipChildren="false"
+    android:orientation="vertical">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/userProfileImage"
@@ -14,11 +14,11 @@
         android:layout_gravity="center"
         android:layout_marginTop="40dp"
         android:layout_marginBottom="32dp"
-        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"
+        android:padding="8dp"
         android:src="@drawable/ic_painting_art"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"
         app:strokeColor="@color/purple_infinum"
         app:strokeWidth="2dp"
-        android:padding="8dp"
 
         />
 

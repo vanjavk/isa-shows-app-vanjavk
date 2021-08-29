@@ -21,12 +21,23 @@
     <style name="ShapeAppearanceOverlay.App.CornerSize50Percent" parent="">
         <item name="cornerSize">50%</item>
         <item name="cornerFamily">rounded</item>
-
-
     </style>
 
     <style name="ShapeAppearanceOverlay.App.CornerSize12dp" parent="">
         <item name="cornerSize">12dp</item>
         <item name="cornerFamily">rounded</item>
+    </style>
+
+    <style name="BottomSheetDialog" parent="@style/ThemeOverlay.MaterialComponents.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/BottomSheet</item>
+        <item name="android:colorBackground">@color/white</item>
+
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowSoftInputMode">stateHidden|adjustResize</item>
+    </style>
+
+    <style name="BottomSheet" parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="backgroundTint">@android:color/transparent</item>
     </style>
 </resources>

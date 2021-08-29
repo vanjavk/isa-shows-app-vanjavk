@@ -4,5 +4,6 @@
 
     <dimen name="card_padding_bottom">16dp</dimen>
     <dimen name="card_corner_radius">4dp</dimen>
+    <dimen name="recycler_view_extra_space">250dp</dimen>
 
 </resources>

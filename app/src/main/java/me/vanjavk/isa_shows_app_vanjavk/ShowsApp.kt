@@ -1,7 +1,7 @@
 package me.vanjavk.isa_shows_app_vanjavk
 
 import android.app.Application
-import me.vanjavk.isa_shows_app_vanjavk.database.ShowsDatabase
+import me.vanjavk.isa_shows_app_vanjavk.repository.ShowsDatabase
 
 
 class ShowsApp : Application() {
