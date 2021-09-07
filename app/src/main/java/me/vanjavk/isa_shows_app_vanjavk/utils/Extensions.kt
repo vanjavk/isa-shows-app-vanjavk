@@ -16,6 +16,11 @@ import java.net.InetSocketAddress
 import java.net.Socket
 import java.net.SocketAddress
 import java.net.URL
+import android.graphics.Bitmap
+
+import android.content.ContentValues
+import java.io.OutputStream
+
 
 const val MIN_PASSWORD_LENGTH = 6
 

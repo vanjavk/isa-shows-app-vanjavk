@@ -1,10 +1,13 @@
 package me.vanjavk.isa_shows_app_vanjavk.fragments
 
 import android.Manifest
+import android.content.ContentValues
 import android.content.Context
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,6 +44,12 @@ import me.vanjavk.isa_shows_app_vanjavk.networking.Status
 import me.vanjavk.isa_shows_app_vanjavk.preparePermissionsContract
 import me.vanjavk.isa_shows_app_vanjavk.repository.ShowsRepository
 import me.vanjavk.isa_shows_app_vanjavk.utils.GlideUrlCustomCacheKey
+import java.io.IOException
+import java.io.OutputStream
+import android.os.Build
+
+import androidx.annotation.RequiresApi
+import androidx.core.net.toUri
 
 
 class ShowsFragment : Fragment() {
@@ -85,15 +94,60 @@ class ShowsFragment : Fragment() {
         getCameraImage.launch(uri)
     })
 
+//    @RequiresApi(api = Build.VERSION_CODES.Q)
+//    fun saveBitmapToDownloads(bitmap: Bitmap) {
+//        val contentValues = ContentValues()
+//
+//        // Enter the name of the file here. Note the extension isn't necessary
+//        contentValues.put(MediaStore.Downloads.DISPLAY_NAME, "Test.jpg")
+//        // Here we define the file type. Do check the MIME_TYPE for your file. For jpegs it is "image/jpeg"
+//        contentValues.put(MediaStore.Downloads.MIME_TYPE, "image/jpeg")
+//        contentValues.put(MediaStore.Downloads.IS_PENDING, true)
+//        val uri = MediaStore.Downloads.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+//
+//        val itemUri: Uri = getContentResolver().insert(uri, contentValues)
+//        if (itemUri != null) {
+//            try {
+//                val outputStream: OutputStream = getContentResolver().openOutputStream(itemUri)
+//                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+//                outputStream.close()
+//                contentValues.put(MediaStore.Images.Media.IS_PENDING, false)
+//                getContentResolver().update(itemUri, contentValues, null, null)
+//            } catch (e: IOException) {
+//                e.printStackTrace()
+//            }
+//        }
+//    }
+
+
+    @RequiresApi(Build.VERSION_CODES.Q)
     private val getCameraImage =
         registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
             if (success) {
                 val imageFile = getImageFile(
                     requireContext()
                 )
+                val downloads =
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                val contentValues = ContentValues()
+
+                // Enter the name of the file here. Note the extension isn't necessary
+                contentValues.put(MediaStore.Downloads.DISPLAY_NAME, "Test.jpg")
+                contentValues.put(MediaStore.Downloads.MIME_TYPE, "image/jpeg")
+
+                contentValues.put(MediaStore.Downloads.IS_PENDING, false)
+                ///storage/self/primary/Picturesself
+                //val uri = MediaStore.Downloads.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)\
+                val uri = "/storage/self/primary/Pictures/JPEG_FILE_NAME.jpg".toUri()
                 if (imageFile != null) {
+                    uri.getFileFromUri(requireContext())?.let {
+                        imageFile?.copyTo(
+                            it, true
+                        )
+                    }
                     showsViewModel.uploadProfilePicture(imageFile)
                 }
+
             }
         }
 

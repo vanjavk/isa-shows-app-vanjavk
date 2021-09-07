@@ -38,18 +38,18 @@ class SplashFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        animateTriangle()
-
-        with(binding.showsText) {
-            alpha = 0f
-        }
-
-        Handler(Looper.getMainLooper()).postDelayed({
-            animateTitleScaleBig()
-            Handler (Looper.getMainLooper()).postDelayed({
-                animateTitleScaleToNormal()
-            }, 400)
-        }, 1200)
+//        animateTriangle()
+//
+//        with(binding.showsText) {
+//            alpha = 0f
+//        }
+//
+//        Handler(Looper.getMainLooper()).postDelayed({
+//            animateTitleScaleBig()
+//            Handler (Looper.getMainLooper()).postDelayed({
+//                animateTitleScaleToNormal()
+//            }, 400)
+//        }, 1200)
 
         Handler(Looper.getMainLooper()).postDelayed({
             SplashFragmentDirections.actionSplashToLogin()
