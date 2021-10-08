@@ -26,7 +26,7 @@ The application allows a user to create and upload show reviews. Alongside creat
 <div align="center" style="height:200px">
   <img alt="Light" src="https://cdn.discordapp.com/attachments/413272824749490178/895770480735309854/Screenshot_2021-10-07-22-30-28-816_me.vanjavk.isa_shows_app_vanjavk.png" width="30%">
 &nbsp; &nbsp; &nbsp; &nbsp;
-  <img alt="Dark" src="https://cdn.discordapp.com/attachments/413272824749490178/895770481037307924/Screenshot_2021-10-07-22-30-16-677_me.vanjavk.isa_shows_app_vanjavk.png" width="30%">
+  <img alt="Dark" src="https://cdn.discordapp.com/attachments/413272824749490178/895770480412340266/Screenshot_2021-10-07-22-30-34-191_me.vanjavk.isa_shows_app_vanjavk.png" width="30%">
 &nbsp; &nbsp; &nbsp; &nbsp;
   <img alt="Dark" src="https://cdn.discordapp.com/attachments/413272824749490178/895770480085172345/Screenshot_2021-10-07-22-30-42-882_me.vanjavk.isa_shows_app_vanjavk.png" width="30%">
 </div>
