@@ -1,11 +1,5 @@
-# feature_esports
+## Shows app
 
-## Overview
+Application allows a user to create and upload show reviews. Alongside creating a review, the user can browse through a list of shows defined on the  backend. When on the show details screen, the user can see the show description and reviews  uploaded by themself or other app users. A single review contains a user profile image, comment, and rating grade. The first screen of the app is the splash screen with a short  animation. If the user is already logged in, the Login screen must be skipped and the shows list should be displayed. Logged in users can log out on the shows list screen, from within the profile bottom sheet. Users have to be able to register an account through the app over the Register screen.
 
-Module for the Esports Tab
-
-## Rules
-
-### What This Module Should Contain
-
-Specialized classes for the Esports Tab
+![Video](https://cdn.discordapp.com/attachments/413272824749490178/896035396587249774/Shows-VanjaButurac.mp4)
